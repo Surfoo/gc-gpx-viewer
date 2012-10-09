@@ -1,4 +1,5 @@
-function createXmlHttpRequest() {
+function createXmlHttpRequest() 
+{
  try {
    if (typeof ActiveXObject != 'undefined') {
      return new ActiveXObject('Microsoft.XMLHTTP');
@@ -74,8 +75,8 @@ function validateXML(data, xml, tmp)
 }
 */
 
-function displayCaches(data) {
-
+function displayCaches(data) 
+{
     var waypoints = data.documentElement.getElementsByTagName("wpt");
     if(waypoints.length == 0)
     {
@@ -83,15 +84,18 @@ function displayCaches(data) {
       return false;
     }
 
-    var lat_sum = 0;
-    var lon_sum = 0;
-    var infowindow = new google.maps.InfoWindow();
+    var oMap, oMarker, oInfo;
+    var i, contentString, nb = waypoints.length;
+    var oInfo = new google.maps.InfoWindow();
+    var bounds = new google.maps.LatLngBounds();
 
-    for (var i = 0; i < waypoints.length; i++) 
+    for (var i = 0; i < nb; i++) 
     {
         var wpt_data = waypoints[i];
         var sym = wpt_data.getElementsByTagName('sym')[0].childNodes[0] || false;
-        if(sym && (sym.nodeValue.substr(9) != "Geocache" && sym.nodeValue.substr(9) != "") )
+        if(sym && (sym.nodeValue.substr(9) != "Geocache" && 
+                   sym.nodeValue.substr(9) != "Geocache Found" && 
+                   sym.nodeValue.substr(9) != "") )
         {
           continue;
         }
@@ -126,28 +130,23 @@ function displayCaches(data) {
             var icon = 'webcam.gif';
             break;
           default:
-            //console.log('type unknown');
-            //continue;
+            continue;
         }
-
-        lat_sum += parseFloat(wpt_data.getAttribute("lat")); 
-        lon_sum += parseFloat(wpt_data.getAttribute("lon")); 
 
         var latlng = new google.maps.LatLng(parseFloat(wpt_data.getAttribute("lat")),
                                             parseFloat(wpt_data.getAttribute("lon")));
 
         var Oicon  = new google.maps.MarkerImage("img/" + icon, null, null, null, new google.maps.Size(16, 16));
         
-        /*var contentString = '<div>' +
-                            '<h5><img src="img/' + icon + '" alt="" width="16" height="16" /><a href="http://coord.info/' + wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);">' + wpt_data.getElementsByTagName('desc')[0].childNodes[0].nodeValue + '</a></h5>'+
+        contentString = '<div>' +
+                            '<h5><img src="img/' + icon + '" alt="" width="16" height="16" style="vertical-align:middle;" /> ' +
+                            '<a href="http://coord.info/' + wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + 
+                            wpt_data.getElementsByTagName('desc')[0].childNodes[0].nodeValue + '</a></h5>'+
                             '<p>' + wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</p>'+
+                            '</div>'; 
 
-                            '</div>';
-        var infowindow = new google.maps.InfoWindow({content: contentString
-        
-        });*/
-
-        var marker = new google.maps.Marker({position: latlng,
+        oMarker = new google.maps.Marker({
+                             position: latlng,
                              icon: Oicon,
                              title: wpt_data.getElementsByTagName('desc')[0].childNodes[0].nodeValue,
                              draggable: false,
@@ -155,9 +154,7 @@ function displayCaches(data) {
                              map: map
         });
 
-        /*google.maps.event.addListener(marker, 'click', function() {
-          infowindow.open(map, this);
-        });*/
+        setEventMarker(oMarker, oInfo, contentString);
 
         var myOptions = {
           content: wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue,
@@ -168,15 +165,24 @@ function displayCaches(data) {
           closeBoxURL: "",
           isHidden: false,
           pane: "mapPane",
+          maxWidth: 0,
           enableEventPropagation: true
         };
-
         var ibLabel = new InfoBox(myOptions);
         ibLabel.open(map);
-    }
 
-    map.setCenter(new google.maps.LatLng(parseFloat(lat_sum/waypoints.length), 
-                                         parseFloat(lon_sum/waypoints.length)));
+        bounds.extend(oMarker.getPosition());
+    }
+    map.fitBounds(bounds);
+}
+
+
+function setEventMarker(marker, infowindow, string)
+{
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.setContent(string);
+    infowindow.open(this.getMap(), this);
+  });
 }
 
 function load() 

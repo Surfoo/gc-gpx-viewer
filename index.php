@@ -25,7 +25,7 @@
         </div>
     </div>
 </form>
-<p class="source"><a href="http://github.com/Surfoo/gc-gpx-viewer" onclick="window.open(this.href);return false;">Source on Github.com</a></p>
+<p class="source"><a href="https://github.com/Surfoo/gc-gpx-viewer" onclick="window.open(this.href);return false;">Source on Github.com</a></p>
 <p style="text-align: center;"><button id="fullscreen">Fullscreen</button></p>
 
 <div id="map_canvas" style="width:100%; height:100%;"></div>
