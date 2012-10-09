@@ -4,7 +4,7 @@ $fn = isset($_SERVER['HTTP_X_FILENAME']) ? $_SERVER['HTTP_X_FILENAME'] : false;
 
 if ($fn) 
 {
-	$new_file = sprintf('upload/%d_%s.gpx', date('YmdHis'), uniqid());
+	$new_file = sprintf('upload/%s_%s.gpx', date('YmdHis'), uniqid());
 
 	file_put_contents($new_file, file_get_contents('php://input'));
 
