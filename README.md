@@ -1,7 +1,7 @@
 gc-gpx-viewer is a web app to display your caches from a gpx file on google maps. 
 It can be very useful for a roadbook. Take multiple screenshots, and use gimp/photoshop/whatever to create a big map.
 
-gc-gpx-viewer use HTML5 with Drap & Drop API and FullScreen API but you must use a browser wich support that (Firefox, Chrome, Safari)
+gc-gpx-viewer use HTML5 with Drap & Drop, FileReader, and FullScreen API but you must use a browser wich support these features (Firefox, Chrome, Safari)
 
 Get the source
 --------------
