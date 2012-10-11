@@ -14,9 +14,11 @@ a {
 {
   display: none;
   font-weight: bold;
+  height: 20px;
+  font-size: 0.8em;
   text-align: center;
   padding: 1em 0;
-  margin: 1em 1em;
+  margin: 1em;
   color: #555;
   border: 2px dashed #555;
   border-radius: 7px;
@@ -29,29 +31,6 @@ a {
   border-color: #f00;
   border-style: solid;
   box-shadow: inset 0 3px 4px #888;
-}
-#filedrag span {
-  font-size: 0.8em;
-}
-#progress p
-{
-  display: block;
-  width: 240px;
-  padding: 2px 5px;
-  margin: 2px 0;
-  border: 1px inset #446;
-  border-radius: 5px;
-  background: #eee url("progress.png") 100% 0 repeat-y;
-}
-
-#progress p.success
-{
-  background: #0c0 none 0 0 no-repeat;
-}
-
-#progress p.failed
-{
-  background: #c00 none 0 0 no-repeat;
 }
 
 .labels {
@@ -69,10 +48,6 @@ a {
 
 #fullscreen {
   font-size: 1.2em;
-}
-
-#InfoWindowContent h1 {
-  font-size: 1em;
 }
 
 .source {

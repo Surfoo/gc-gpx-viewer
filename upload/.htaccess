@@ -1,2 +1,0 @@
-Header set Cache-Control "no-transform"
-Header set Content-Type "text/xml; charset=utf-8"

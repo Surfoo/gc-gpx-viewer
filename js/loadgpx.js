@@ -1,80 +1,3 @@
-function createXmlHttpRequest() 
-{
- try {
-   if (typeof ActiveXObject != 'undefined') {
-     return new ActiveXObject('Microsoft.XMLHTTP');
-   } else if (window["XMLHttpRequest"]) {
-     return new XMLHttpRequest();
-   }
- } catch (e) {
-   changeStatus(e);
- }
- return null;
-};
-
-
-function downloadGpx(url)
-{
-  var response = downloadUrl(url);
-  console.log(response);
-  if(response)
-  {
-    displayCaches(response.responseXML);
-  }
-}
-
-function downloadGpx(url) 
-{
-    var status = -1;
-    var request = createXmlHttpRequest();
-    if (!request) {
-        return false;
-    }
-
-    request.onreadystatechange = function() {
-      if (request.readyState == 4) {
-          try {
-            status = request.status;
-          } catch (e) {
-          }
-          if(status == 200) 
-          {
-            displayCaches(request.responseXML);
-          }
-      }
-    }
-    request.open('GET', url, true);
-    try {
-       request.send(null);
-    } catch (e) {
-       changeStatus(e);
-    }
-}
-
-/*
-function validateXML(data, xml, tmp) 
-{
-  if (window.DOMParser) { // Standard
-    tmp = new DOMParser();
-    xml = tmp.parseFromString(data, "text/xml");
-  } 
-  else { // IE
-    xml = new ActiveXObject("Microsoft.XMLDOM");
-    xml.async = "false";
-    xml.loadXML(data);
-  }
-
-  tmp = xml.documentElement;
-
-  if ( !tmp || !tmp.nodeName || tmp.nodeName == "parsererror") {
-    alert( "Invalid XML: " + data );
-    return false;
-  }
-
-  return true;
-}
-*/
-
 function displayCaches(data) 
 {
     var waypoints = data.documentElement.getElementsByTagName("wpt");
@@ -84,15 +7,14 @@ function displayCaches(data)
       return false;
     }
 
-    var oMap, oMarker, oInfo;
-    var i, contentString, nb = waypoints.length;
-    var oInfo = new google.maps.InfoWindow();
+    var icon, type, wpt_data, sym, latlng, Oicon, oMarker, infoContent, InfoBoxOptions, ibLabel, i = 0, nb = waypoints.length;
+    var oInfo  = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
 
-    for (var i = 0; i < nb; i++) 
+    for (i; i < nb; i++) 
     {
-        var wpt_data = waypoints[i];
-        var sym = wpt_data.getElementsByTagName('sym')[0].childNodes[0] || false;
+        wpt_data = waypoints[i];
+        sym = wpt_data.getElementsByTagName('sym')[0].childNodes[0] || false;
         if(sym && (sym.nodeValue.substr(9) != "Geocache" && 
                    sym.nodeValue.substr(9) != "Geocache Found" && 
                    sym.nodeValue.substr(9) != "") )
@@ -100,48 +22,48 @@ function displayCaches(data)
           continue;
         }
         
-        var type = wpt_data.getElementsByTagName('type')[0].childNodes[0].nodeValue.substr(9);
+        type = wpt_data.getElementsByTagName('type')[0].childNodes[0].nodeValue.substr(9);
         switch(type){
           case "Unknown Cache":
-            var icon = 'mystery.gif';
+            icon = 'mystery.gif';
             break;
           case "Traditional Cache":
-            var icon = 'traditional.gif';
+            icon = 'traditional.gif';
             break;
           case "Multi-cache":
-            var icon = 'multi.gif';
+            icon = 'multi.gif';
             break;
           case "Wherigo Cache":
-            var icon = 'wherigo.gif';
+            icon = 'wherigo.gif';
             break;
           case "Event Cache":
-            var icon = 'event.gif';
+            icon = 'event.gif';
             break;
           case "Virtual Cache":
-            var icon = 'virtual.gif';
+            icon = 'virtual.gif';
             break;
           case "Earthcache":
-            var icon = 'earthcache.gif';
+            icon = 'earthcache.gif';
             break;
           case "Letterbox Hybrid":
-            var icon = 'letterbox.gif';
+            icon = 'letterbox.gif';
             break;
           case "Webcam Cache":
-            var icon = 'webcam.gif';
+            icon = 'webcam.gif';
             break;
           default:
             continue;
         }
 
-        var latlng = new google.maps.LatLng(parseFloat(wpt_data.getAttribute("lat")),
+        latlng = new google.maps.LatLng(parseFloat(wpt_data.getAttribute("lat")),
                                             parseFloat(wpt_data.getAttribute("lon")));
 
-        var Oicon  = new google.maps.MarkerImage("img/" + icon, null, null, null, new google.maps.Size(16, 16));
+        Oicon  = new google.maps.MarkerImage("img/" + icon, null, null, null, new google.maps.Size(16, 16));
         
-        contentString = '<div>' +
+        infoContent = '<div>' +
                             '<h5><img src="img/' + icon + '" alt="" width="16" height="16" style="vertical-align:middle;" /> ' +
-                            '<a href="http://coord.info/' + wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + 
-                            wpt_data.getElementsByTagName('desc')[0].childNodes[0].nodeValue + '</a></h5>'+
+                            '<a href="http://coord.info/' + wpt_data.getElementsByTagName('urlname')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + 
+                            wpt_data.getElementsByTagName('urlname')[0].childNodes[0].nodeValue + '</a></h5>'+
                             '<p>' + wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</p>'+
                             '</div>'; 
 
@@ -154,9 +76,9 @@ function displayCaches(data)
                              map: map
         });
 
-        setEventMarker(oMarker, oInfo, contentString);
+        setEventMarker(oMarker, oInfo, infoContent);
 
-        var myOptions = {
+        InfoBoxOptions = {
           content: wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue,
           boxClass: 'labels',
           disableAutoPan: true,
@@ -168,7 +90,7 @@ function displayCaches(data)
           maxWidth: 0,
           enableEventPropagation: true
         };
-        var ibLabel = new InfoBox(myOptions);
+        ibLabel = new InfoBox(InfoBoxOptions);
         ibLabel.open(map);
 
         bounds.extend(oMarker.getPosition());
@@ -201,17 +123,15 @@ function load()
                 docElm.webkitRequestFullScreen();
             }
             else {
-              alert('Votre navigateur ne supporte pas le mode plein écran, il est temps de passer à un plus récent ;)');
+              alert('Your browser doesn\'t support fullscreen mode, please upgrade it (or use Firefox or Chrome).');
             }
         }, false);
     }
 
-    var myLatlng = new google.maps.LatLng(48.85693,2.3412);
-    var myOptions = {
-      zoom: 12,
-      center: myLatlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
+    var myOptions = { zoom: 6,
+                      center: new google.maps.LatLng(46,2.9),
+                      mapTypeId: google.maps.MapTypeId.ROADMAP
+                    }
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 }
 
@@ -223,31 +143,92 @@ function detectFullscreen()
   }
   return false;
 }
+
 /*
-function enterFullscreen(element) {
-    if(element.requestFullScreen) {
-      element.requestFullScreen();
-    } 
-    else if(element.webkitRequestFullScreen) {
-      element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-    } 
-    else if(element.mozRequestFullScreen){
-      element.mozRequestFullScreen();
-    } 
-    else {
-      alert('Votre navigateur ne supporte pas le mode plein écran, il est temps de passer à un plus récent ;)');
+filedrag.js - HTML5 File Drag & Drop demonstration
+Featured on SitePoint.com
+Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
+*/
+(function() {
+
+    function FileDragHover(e)
+    {
+        e.stopPropagation();
+        e.preventDefault();
+        e.target.className = (e.type == "dragover" ? "hover" : "");
     }
-}
-function exitFullscreen() {
-    if(document.cancelFullScreen) {
-            //fonction officielle du w3c
-            document.cancelFullScreen();
-    } else if(document.webkitCancelFullScreen) {
-            //fonction pour Google Chrome
-            document.webkitCancelFullScreen();
-    } else if(document.mozCancelFullScreen){
-            //fonction pour Firefox
-            document.mozCancelFullScreen();
+
+    function FileSelectHandler(e)
+    {
+        // cancel event and hover styling
+        FileDragHover(e);
+
+        // fetch FileList object
+        var files = e.target.files || e.dataTransfer.files;
+
+        // process all File objects
+        for (var i = 0, f; f = files[i]; i++) 
+        {
+            var reader = new FileReader();
+            var el = document.getElementById('filedrag');
+
+            reader.onprogress = function(e) 
+            {
+                el.innerHTML = '<img src="img/ajax-loader.gif" alt="" width="200" height="19" />';
+            }
+
+            reader.onload = function(e) 
+            {
+                if (window.DOMParser) 
+                {
+                    parser = new DOMParser();
+                    doc = parser.parseFromString(e.target.result, "text/xml");
+                } 
+                else 
+                {
+                    doc = new ActiveXObject("Microsoft.XMLDOM");
+                    doc.async = "false";
+                    doc.loadXML(e.target.result);
+                }
+
+                doc = parser.parseFromString(e.target.result, "application/xml");
+                if(!doc || doc.documentElement.tagName != "gpx")
+                {
+                    alert("Invalid file.");
+                    return false;
+                }
+                displayCaches(doc);
+            }
+            reader.onloadend = function(e) 
+            {
+                el.innerHTML = 'Drop your GPX files here';
+            }
+            
+            reader.readAsText(f, 'UTF-8');
+        }
+
     }
-}*/
+
+    // initialize
+    function Init() 
+    {
+        var filedrag = document.getElementById("filedrag");
+        filedrag.addEventListener("dragover", FileDragHover, false);
+        filedrag.addEventListener("dragleave", FileDragHover, false);
+        filedrag.addEventListener("drop", FileSelectHandler, false);
+        filedrag.style.display = "block";
+    }
+
+    // call initialization file
+    if (window.File && window.FileList && window.FileReader) 
+    {
+        Init();
+    }
+    else 
+    {
+        alert('Your browser doesn\'t support this feature, please upgrade it (or use Firefox or Chrome).');
+    }
+
+})();
+
 window.onload = load;
