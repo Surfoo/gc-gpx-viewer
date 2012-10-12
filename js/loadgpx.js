@@ -15,9 +15,9 @@ function displayCaches(data)
     {
         wpt_data = waypoints[i];
         sym = wpt_data.getElementsByTagName('sym')[0].childNodes[0] || false;
-        if(sym && (sym.nodeValue.substr(9) != "Geocache" && 
-                   sym.nodeValue.substr(9) != "Geocache Found" && 
-                   sym.nodeValue.substr(9) != "") )
+        if(sym && (sym.nodeValue != "Geocache" && 
+                   sym.nodeValue != "Geocache Found" && 
+                   sym.nodeValue != "") )
         {
           continue;
         }
