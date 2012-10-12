@@ -6,9 +6,14 @@ gc-gpx-viewer use HTML5 with Drap & Drop, FileReader, and FullScreen API but you
 Get the source
 --------------
 
-Fork the project source code on [github](https://github.com/Surfoo/georoadbook/):
+Fork the project source code on [github](https://github.com/Surfoo/gc-gpx-viewer/):
 
 	git clone git://github.com/Surfoo/gc-gpx-viewer.git
+
+Demo
+----
+
+http://vaguelibre.net/gc/gc-gpx-viewer/
 
 License
 -------
