@@ -62,7 +62,7 @@ function displayCaches(data)
         
         infoContent = '<div>' +
                             '<h5><img src="img/' + icon + '" alt="" width="16" height="16" style="vertical-align:middle;" /> ' +
-                            '<a href="http://coord.info/' + wpt_data.getElementsByTagName('urlname')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + 
+                            '<a href="http://coord.info/' + wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + 
                             wpt_data.getElementsByTagName('urlname')[0].childNodes[0].nodeValue + '</a></h5>'+
                             '<p>' + wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</p>'+
                             '</div>'; 
