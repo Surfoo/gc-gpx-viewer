@@ -115,7 +115,8 @@ function displayCaches(wpts)
         bounds.extend(oMarker.getPosition());
 
     }
-    if(wpt.length > 0) 
+
+    if(!bounds.isEmpty()) 
     {
       map.fitBounds(bounds);
     }
