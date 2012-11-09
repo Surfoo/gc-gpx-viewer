@@ -96,6 +96,9 @@ function displayCaches(wpts)
         });
 
         setEventMarker(oMarker, oInfo, infoContent);
+        
+        
+        mc.addMarker(oMarker, false);
 
         InfoBoxOptions = {
           content: wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue,
@@ -110,7 +113,8 @@ function displayCaches(wpts)
           enableEventPropagation: true
         };
         ibLabel = new InfoBox(InfoBoxOptions);
-        ibLabel.open(map);
+
+        displayInfoxBox(oMarker, ibLabel);
 
         bounds.extend(oMarker.getPosition());
 
@@ -128,20 +132,17 @@ function displayTrack(wpts)
     var wpt, latlng, i = 0, nb = wpts.length;
     var bounds = new google.maps.LatLngBounds();
     var oPolygon;
-    var colors = ['blue', 'red', 'yellow', 'green'];
-    console.log('nb', nb);
+
     for (i; i < nb; i++) 
     {
         wpt = wpts[i];
         var trksegs = wpt.getElementsByTagName('trkseg');
 
-        console.log('trksegs', trksegs.length);
         for(var j = 0; j < trksegs.length; j++)
         {
             var trkseg = trksegs[j];
             var path = new Array();
             trkpts = trkseg.getElementsByTagName('trkpt');
-            console.log('trkpts', trkpts.length);
             for(var k = 0; k < trkpts.length; k++)
             {
               var trkpt = trkpts[k];
@@ -160,7 +161,10 @@ function displayTrack(wpts)
         }
         bounds.extend(latlng);
     }
-    map.fitBounds(bounds);
+    if(!bounds.isEmpty()) 
+    {
+      map.fitBounds(bounds);
+    }
 }
 
 function setEventMarker(marker, infowindow, string)
@@ -168,6 +172,18 @@ function setEventMarker(marker, infowindow, string)
   google.maps.event.addListener(marker, 'click', function() {
     infowindow.setContent(string);
     infowindow.open(this.getMap(), this);
+  });
+}
+
+function displayInfoxBox(marker, infobox)
+{
+  infobox.open(map);
+  google.maps.event.addListener(map, 'zoom_changed', function() {
+      infobox.hide();
+      if(map.getZoom() > mcMaxZoom) 
+      {
+        infobox.show();
+      }
   });
 }
 
@@ -191,18 +207,24 @@ function load()
             }
         }, false);
     }
-
-    var myOptions = { zoom: 6,
-                      center: new google.maps.LatLng(46,2.9),
-                      mapTypeId: google.maps.MapTypeId.ROADMAP
-                    }
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    mcMaxZoom  = 13;
+    var mapOptions = { zoom: 6,
+                       center: new google.maps.LatLng(46,2.9),
+                       mapTypeId: google.maps.MapTypeId.ROADMAP
+                     };
+    var mcOptions  = { gridSize: 80, 
+                       maxZoom: mcMaxZoom,
+                     };
+    map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+    
+    mc  = new MarkerClusterer(map, [], mcOptions);
 }
 
 function detectFullscreen()
 {
   var docElm = document.documentElement;
-  if (docElm.requestFullscreen || docElm.mozRequestFullScreen || docElm.webkitRequestFullScreen ) {
+  if (docElm.requestFullscreen || docElm.mozRequestFullScreen || docElm.webkitRequestFullScreen ) 
+  {
      return true;
   }
   return false;
@@ -239,7 +261,7 @@ Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
             reader.onprogress = function(e) 
             {
                 el.innerHTML = '<img src="img/ajax-loader.gif" alt="" width="200" height="19" />';
-            }
+            },
 
             reader.onload = function(e) 
             {
@@ -262,11 +284,11 @@ Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
                     return false;
                 }
                 display(doc);
-            }
+            },
             reader.onloadend = function(e) 
             {
                 el.innerHTML = 'Drop your GPX files here';
-            }
+            },
             
             reader.readAsText(f, 'UTF-8');
         }
