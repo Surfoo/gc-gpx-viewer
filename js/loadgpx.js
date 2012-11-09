@@ -1,20 +1,39 @@
-function displayCaches(data) 
+function display(data)
 {
-    var waypoints = data.documentElement.getElementsByTagName("wpt");
-    if(waypoints.length == 0)
-    {
+  var waypoints = data.documentElement.getElementsByTagName("wpt");
+  var trks      = data.documentElement.getElementsByTagName("trk");
+  if(waypoints.length == 0 && trks.length == 0)
+  {
       alert('No waypoints found.');
-      return false;
-    }
+  }
+  else if(waypoints.length > 0) 
+  {
+    displayCaches(waypoints);
+  }
 
-    var icon, type, wpt_data, sym, latlng, Oicon, oMarker, infoContent, InfoBoxOptions, ibLabel, i = 0, nb = waypoints.length;
+  if(waypoints.length == 0 && trks.length == 0)
+  {
+      alert('No track found.');
+  }
+  else if(trks.length > 0) 
+  {
+    displayTrack(trks);
+  }
+}
+
+function displayCaches(wpts) 
+{
+    var icon, type, wpt, sym, latlng, Oicon, oMarker, infoContent, InfoBoxOptions, ibLabel, i = 0, nb = wpts.length;
     var oInfo  = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
+    var oPolygon;
+    var path = new Array();
+    var polygonOptions;
 
     for (i; i < nb; i++) 
     {
-        wpt_data = waypoints[i];
-        sym = wpt_data.getElementsByTagName('sym')[0].childNodes[0] || false;
+        wpt = wpts[i];
+        sym = wpt.getElementsByTagName('sym')[0].childNodes[0] || false;
         if(sym && (sym.nodeValue != "Geocache" && 
                    sym.nodeValue != "Geocache Found" && 
                    sym.nodeValue != "") )
@@ -22,7 +41,7 @@ function displayCaches(data)
           continue;
         }
         
-        type = wpt_data.getElementsByTagName('type')[0].childNodes[0].nodeValue.substr(9);
+        type = wpt.getElementsByTagName('type')[0].childNodes[0].nodeValue.substr(9);
         switch(type){
           case "Unknown Cache":
             icon = 'mystery.gif';
@@ -55,22 +74,22 @@ function displayCaches(data)
             continue;
         }
 
-        latlng = new google.maps.LatLng(parseFloat(wpt_data.getAttribute("lat")),
-                                            parseFloat(wpt_data.getAttribute("lon")));
+        latlng = new google.maps.LatLng(parseFloat(wpt.getAttribute("lat")),
+                                        parseFloat(wpt.getAttribute("lon")));
 
         Oicon  = new google.maps.MarkerImage("img/" + icon, null, null, null, new google.maps.Size(16, 16));
         
         infoContent = '<div>' +
                             '<h5><img src="img/' + icon + '" alt="" width="16" height="16" style="vertical-align:middle;" /> ' +
-                            '<a href="http://coord.info/' + wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + 
-                            wpt_data.getElementsByTagName('urlname')[0].childNodes[0].nodeValue + '</a></h5>'+
-                            '<p>' + wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</p>'+
+                            '<a href="http://coord.info/' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + 
+                            wpt.getElementsByTagName('urlname')[0].childNodes[0].nodeValue + '</a></h5>'+
+                            '<p>' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</p>'+
                             '</div>'; 
 
         oMarker = new google.maps.Marker({
                              position: latlng,
                              icon: Oicon,
-                             title: wpt_data.getElementsByTagName('desc')[0].childNodes[0].nodeValue,
+                             title: wpt.getElementsByTagName('desc')[0].childNodes[0].nodeValue,
                              draggable: false,
                              raiseOnDrag: true,
                              map: map
@@ -79,7 +98,7 @@ function displayCaches(data)
         setEventMarker(oMarker, oInfo, infoContent);
 
         InfoBoxOptions = {
-          content: wpt_data.getElementsByTagName('name')[0].childNodes[0].nodeValue,
+          content: wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue,
           boxClass: 'labels',
           disableAutoPan: true,
           pixelOffset: new google.maps.Size(-25, 0),
@@ -94,10 +113,54 @@ function displayCaches(data)
         ibLabel.open(map);
 
         bounds.extend(oMarker.getPosition());
+
+    }
+    if(wpt.length > 0) 
+    {
+      map.fitBounds(bounds);
+    }
+
+}
+
+function displayTrack(wpts)
+{
+    var wpt, latlng, i = 0, nb = wpts.length;
+    var bounds = new google.maps.LatLngBounds();
+    var oPolygon;
+    var colors = ['blue', 'red', 'yellow', 'green'];
+    console.log('nb', nb);
+    for (i; i < nb; i++) 
+    {
+        wpt = wpts[i];
+        var trksegs = wpt.getElementsByTagName('trkseg');
+
+        console.log('trksegs', trksegs.length);
+        for(var j = 0; j < trksegs.length; j++)
+        {
+            var trkseg = trksegs[j];
+            var path = new Array();
+            trkpts = trkseg.getElementsByTagName('trkpt');
+            console.log('trkpts', trkpts.length);
+            for(var k = 0; k < trkpts.length; k++)
+            {
+              var trkpt = trkpts[k];
+              latlng = new google.maps.LatLng(parseFloat(trkpt.getAttribute("lat")),
+                                              parseFloat(trkpt.getAttribute("lon")));
+              path.push(latlng);
+              bounds.extend(latlng);
+            }
+            new google.maps.Polyline({
+                  map: map,
+                  path: path,
+                  strokeColor: '#FF0000',
+                  strokeOpacity: 0.5,
+                  strokeWeight: 5
+                });
+        }
+        bounds.extend(latlng);
     }
     map.fitBounds(bounds);
 }
-
 
 function setEventMarker(marker, infowindow, string)
 {
@@ -197,7 +260,7 @@ Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
                     alert("Invalid file.");
                     return false;
                 }
-                displayCaches(doc);
+                display(doc);
             }
             reader.onloadend = function(e) 
             {
