@@ -30,7 +30,7 @@ function displayCaches(wpts)
     var path = new Array();
     var polygonOptions;
 
-    for (i; i < nb; i++) 
+    for(i; i < nb; i++) 
     {
         wpt = wpts[i];
         sym = wpt.getElementsByTagName('sym')[0].childNodes[0] || false;
@@ -40,52 +40,57 @@ function displayCaches(wpts)
         {
           continue;
         }
-        
+        var grdspk = wpt.getElementsByTagNameNS("*", "cache");
+        //console.log(grdspk[0].getAttribute('id'));
+        var oName       = grdspk[0].getElementsByTagNameNS("*", "name");
+        var oDifficulty = grdspk[0].getElementsByTagNameNS("*", "difficulty");
+        var oTerrain    = grdspk[0].getElementsByTagNameNS("*", "terrain");
+        var oOwner      = grdspk[0].getElementsByTagNameNS("*", "owner");
+        var oContainer  = grdspk[0].getElementsByTagNameNS("*", "container");
+        var oDate       = new Date(wpt.getElementsByTagName('time')[0].childNodes[0].nodeValue);
+        var date        = oDate.format("yyyy/mm/dd");
+
         type = wpt.getElementsByTagName('type')[0].childNodes[0].nodeValue.substr(9);
-        switch(type){
-          case "Unknown Cache":
-            icon = 'mystery.gif';
+
+
+        for(var j = 0; j < typeCaches.length; j += 1) 
+        {
+          if(typeCaches[j]['type'] == type) 
+          {
+            icon = 'img/' + typeCaches[j]['id'] + '.gif';
             break;
-          case "Traditional Cache":
-            icon = 'traditional.gif';
-            break;
-          case "Multi-cache":
-            icon = 'multi.gif';
-            break;
-          case "Wherigo Cache":
-            icon = 'wherigo.gif';
-            break;
-          case "Event Cache":
-            icon = 'event.gif';
-            break;
-          case "Virtual Cache":
-            icon = 'virtual.gif';
-            break;
-          case "Earthcache":
-            icon = 'earthcache.gif';
-            break;
-          case "Letterbox Hybrid":
-            icon = 'letterbox.gif';
-            break;
-          case "Webcam Cache":
-            icon = 'webcam.gif';
-            break;
-          default:
-            continue;
+          }
+        }
+        if(!icon) {
+          continue;
         }
 
         latlng = new google.maps.LatLng(parseFloat(wpt.getAttribute("lat")),
                                         parseFloat(wpt.getAttribute("lon")));
 
-        Oicon  = new google.maps.MarkerImage("img/" + icon, null, null, null, new google.maps.Size(16, 16));
-        
-        infoContent = '<div>' +
-                            '<h5><img src="img/' + icon + '" alt="" width="16" height="16" style="vertical-align:middle;" /> ' +
-                            '<a href="http://coord.info/' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + 
-                            wpt.getElementsByTagName('urlname')[0].childNodes[0].nodeValue + '</a></h5>'+
-                            '<p>' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</p>'+
-                            '</div>'; 
+        Oicon  = new google.maps.MarkerImage(icon, null, null, null, new google.maps.Size(16, 16));
 
+        infoContent = '<div class="infowindow">';
+        infoContent+= '<div class="code">' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</div>';
+        infoContent+= '    <h4>';
+        infoContent+= '        <img src="' + icon + '">';
+        infoContent+= '        <a href="//coord.info/' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + oName[0].childNodes[0].nodeValue + '</a>';
+        infoContent+= '    </h4>';
+        infoContent+= '    <dl style="float:left;margin-right:2em;width:50%;">';
+        infoContent+= '        <dt>Created by:</dt>';
+        infoContent+= '        <dd>' + oOwner[0].childNodes[0].nodeValue + '</dd>';
+        infoContent+= '        <dt>Difficulty:</dt>';
+        infoContent+= '        <dd>' + oDifficulty[0].childNodes[0].nodeValue + '</dd>';
+        infoContent+= '        <dt>Cache size:</dt>';
+        infoContent+= '        <dd>' + oContainer[0].childNodes[0].nodeValue + '</dd>';
+        infoContent+= '    </dl>';
+        infoContent+= '    <dl style="margin-left:50%">';
+        infoContent+= '        <dt>Date Hidden:</dt>';
+        infoContent+= '        <dd>' + date + '</dd>';
+        infoContent+= '        <dt>Terrain:</dt>';
+        infoContent+= '        <dd>' + oTerrain[0].childNodes[0].nodeValue + '</dd>';
+        infoContent+= '    </dl>';
+        infoContent+= '</div>';
         oMarker = new google.maps.Marker({
                              position: latlng,
                              icon: Oicon,
@@ -96,7 +101,6 @@ function displayCaches(wpts)
         });
 
         setEventMarker(oMarker, oInfo, infoContent);
-        
         
         mc.addMarker(oMarker, false);
 
@@ -114,10 +118,19 @@ function displayCaches(wpts)
         };
         ibLabel = new InfoBox(InfoBoxOptions);
 
-        displayInfoxBox(oMarker, ibLabel);
+        circle  = new google.maps.Circle({
+                              map: map,
+                              radius: 161,
+                              center: latlng,
+                              strokeColor: '#ff0000',
+                              strokeOpacity: 0.8,
+                              strokeWeight: 1,
+                              fillColor: 'transparent',
+                              visible: false
+                            });
 
+        displayInfos(oMarker, ibLabel, circle);
         bounds.extend(oMarker.getPosition());
-
     }
 
     if(!bounds.isEmpty()) 
@@ -151,6 +164,7 @@ function displayTrack(wpts)
               path.push(latlng);
               bounds.extend(latlng);
             }
+            
             new google.maps.Polyline({
                   map: map,
                   path: path,
@@ -175,14 +189,19 @@ function setEventMarker(marker, infowindow, string)
   });
 }
 
-function displayInfoxBox(marker, infobox)
+function displayInfos(marker, infobox, circle)
 {
   infobox.open(map);
+
   google.maps.event.addListener(map, 'zoom_changed', function() {
-      infobox.hide();
       if(map.getZoom() > mcMaxZoom) 
       {
         infobox.show();
+        circle.setVisible(true);
+      }
+      else {
+        infobox.hide();
+        circle.setVisible(false);
       }
   });
 }
@@ -190,6 +209,7 @@ function displayInfoxBox(marker, infobox)
 function load() 
 {
     var viewFullScreen = document.getElementById("fullscreen");
+
     if (viewFullScreen) {
         viewFullScreen.addEventListener("click", function () {
             var docElm = document.getElementById("map_canvas");
@@ -207,16 +227,36 @@ function load()
             }
         }, false);
     }
+
+    typeCaches = [{'id':2   , 'type':'Traditional Cache'},
+                  {'id':3   , 'type':'Multi-cache'},
+                  {'id':4   , 'type':'Virtual Cache'},
+                  {'id':5   , 'type':'Letterbox Hybrid'},
+                  {'id':6   , 'type':'Event Cache'},
+                  {'id':8   , 'type':'Unknown Cache'},
+                  {'id':11  , 'type':'Webcam Cache'},
+                  {'id':13  , 'type':'Cache In Trash Out Event'},
+                  {'id':137 , 'type':'Earthcache'},
+                  {'id':453 , 'type':'Mega-Event Cache'},
+                  {'id':1304, 'type':'GPS Adventures Exhibit'},
+                  {'id':1858, 'type':'Wherigo Cache'}
+                 ];
     mcMaxZoom  = 13;
+    
     var mapOptions = { zoom: 6,
                        center: new google.maps.LatLng(46,2.9),
                        mapTypeId: google.maps.MapTypeId.ROADMAP
                      };
     var mcOptions  = { gridSize: 80, 
                        maxZoom: mcMaxZoom,
+                       styles: [{url: 'img/m1.png', height: 53, width: 52}, 
+                                {url: 'img/m2.png', height: 56, width: 55}, 
+                                {url: 'img/m3.png', height: 66, width: 65}, 
+                                {url: 'img/m4.png', height: 78, width: 77}, 
+                                {url: 'img/m5.png', height: 90, width: 89}
+                               ]
                      };
     map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-    
     mc  = new MarkerClusterer(map, [], mcOptions);
 }
 

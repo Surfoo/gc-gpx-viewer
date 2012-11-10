@@ -56,3 +56,43 @@ a {
   right:1em;
   font-size: 0.8em;
 }
+
+.infowindow {
+  font-size: 0.8em;
+  font-family: Verdana, sans-serif;
+  width: 420px; 
+  height: 90px;
+}
+.infowindow .code{
+  float:right;
+  padding: 0 2px;
+}
+.infowindow h4, .infowindow .code {
+  font-weight: bold;
+  font-size: 1em;
+}
+.infowindow h4 img {
+  vertical-align: middle;
+}
+.infowindow dl dt {
+  float:left;
+  font-weight:bold;
+  margin-right:.5em;
+}
+.infowindow dl dd,.infowindow h4 {
+  margin-bottom: .25em;
+}
+
+h1, h2, h3, h4, h5, h6, p, a, img, dl, dt, dd, fieldset, legend {
+    border: 0 none;
+    font-family: inherit;
+    font-size: 100%;
+    font-style: inherit;
+    font-weight: inherit;
+    
+    vertical-align: baseline;
+}
+.infowindow a {
+    color: #594A42;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
