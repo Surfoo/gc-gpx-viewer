@@ -277,6 +277,7 @@ function load()
                   {'id':'regular'   , 'label':'Regular'},
                   {'id':'large'     , 'label':'Large'},
                   {'id':'not_chosen', 'label':'Not chosen'},
+                  {'id':'not chosen', 'label':'Not chosen'},
                   {'id':'unknown'   , 'label':'Unknown'}
                  ];
     mcMaxZoom      = 13;
@@ -376,7 +377,7 @@ http://www.sitepoint.com/html5-file-drag-and-drop/
               doc = parser.parseFromString(e.target.result, 'application/xml');
               if(!doc || doc.documentElement.tagName != 'gpx')
               {
-                  alert(file[0]['name'] + ' in an invalid file.');
+                  alert(fileinfo[0]['name'] + ' in an invalid file.');
                   return false;
               }
               display(doc);
