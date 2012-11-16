@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <title>Geocaching GPX viewer</title>
     <link href="design.css" type="text/css" rel="stylesheet" />
@@ -11,16 +10,29 @@
     <script type="text/javascript" src="js/date.format.js"></script>
 </head>
 <body>
-    <div id="filedrag">Drop your GPX files here</div>
+    <div>
+        <fieldset id="filedrag">
+            <legend>Drop your GPX files here</legend>
+        </fieldset>
 
-    <p class="source">
-        <a href="https://github.com/Surfoo/gc-gpx-viewer" onclick="window.open(this.href);return false;">Source on Github.com</a>
-    </p>
+        <div id="files">
+            <ul id="list"><li></li></ul>
+        </div>
 
-    <p style="text-align: center;"><button id="fullscreen">Fullscreen</button></p>
+        <div id="loader"></div>
 
+        <fieldset>
+            <legend>Options</legend>
+            <p><input id="display_label" type="checkbox" checked="checked" /> <label for="display_label">Display labels</label></p>
+            <p><input id="display_circle" type="checkbox" checked="checked" /> <label for="display_circle">Display circles</label></p>
+            <p><input type="button" id="fullscreen" value="Fullscreen" /></p>
+        </fieldset>
+
+        <p class="source">
+            <a href="https://github.com/Surfoo/gc-gpx-viewer" onclick="window.open(this.href);return false;">Source on Github.com</a>
+        </p>
+    </div>
     <div id="map_canvas" style="width:100%; height:100%;"></div>
-
-    <script type="text/javascript" src="js/gcgpxviewer_packed.js?20121109"></script>
+    <script type="text/javascript" src="js/gcgpxviewer_packed.js?20121112"></script>
 </body>
 </html>

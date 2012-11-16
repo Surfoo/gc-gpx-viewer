@@ -5,60 +5,95 @@ body {
   height: 100%; 
   margin: 0; 
   padding: 0;
-  font: 1em Verdana;
+  font: 0.8em Verdana;
 }
 a {
   color: #000;
 }
-#filedrag
-{
-  display: none;
-  font-weight: bold;
-  height: 20px;
-  font-size: 0.8em;
-  text-align: center;
-  padding: 1em 0;
+
+fieldset {
+  width: 210px;
+  height: 80px;
+  border-radius: 7px;
+  border: 1px solid #555;
+  padding: 0 1em 1em 1em;
   margin: 1em;
+  display: inline-block;
+}
+
+fieldset#filedrag
+{
+  font-weight: bold;
+  text-align: center;
   color: #555;
-  border: 2px dashed #555;
   border-radius: 7px;
   cursor: pointer;
+  float: left;
+  z-index: 3;
+  position: relative;
 }
-
+#files {
+  overflow: auto;
+  height: 70px;
+  width: 215px;
+  z-index: 1;
+  position: absolute;
+  top: 33px;
+  left: 22px;
+}
+ul#list {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  font-size: 0.8em;
+  text-align: left;
+}
+#list li {
+  margin: 0;  
+  padding: 0; 
+  list-style-type: none; 
+}
 #filedrag.hover
 {
-  color: #f00;
-  border-color: #f00;
-  border-style: solid;
-  box-shadow: inset 0 3px 4px #888;
+  box-shadow: inset 0 0 10px #888;
 }
 
+fieldset p {
+  margin: 0;
+  line-height: 1.5em;
+}
+#loader {
+  background-color: red;
+  width: 236px;
+  height: 87px;
+  position: absolute;
+  top: 20px;
+  left: 13px;
+  border-radius: 7px;
+  background: #fff url('img/ajax-loader.gif') center center no-repeat;
+  display: none;
+  z-index: 2;
+}
 .labels {
-     color: #000;
-     background-color: white;
-     font-family: "Lucida Grande", "Arial", sans-serif;
-     font-size: 10px;
-     font-weight: bold;
-     text-align: center;
-     width: 50px;
-     border: 1px solid black;
-     white-space: nowrap;
-     opacity: 0.8
-}
-
-#fullscreen {
-  font-size: 1.2em;
+  color: #000;
+  background-color: white;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  width: 50px;
+  border: 1px solid black;
+  white-space: nowrap;
+  opacity: 0.8
 }
 
 .source {
-  float: right; 
   position:absolute;
   right:1em;
-  font-size: 0.8em;
+  top: 80px;
 }
 
 .infowindow {
-  font-size: 0.8em;
   font-family: Verdana, sans-serif;
   width: 420px; 
   height: 90px;
@@ -83,13 +118,11 @@ a {
   margin-bottom: .25em;
 }
 
-h1, h2, h3, h4, h5, h6, p, a, img, dl, dt, dd, fieldset, legend {
+h1, h2, h3, h4, h5, h6, p, a, img, dl, dt, dd {
     border: 0 none;
     font-family: inherit;
-    font-size: 100%;
     font-style: inherit;
     font-weight: inherit;
-    
     vertical-align: baseline;
 }
 .infowindow a {
