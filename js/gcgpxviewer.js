@@ -302,8 +302,8 @@ function load()
     map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
     mc  = new MarkerClusterer(map, [], mcOptions);
 
-    google.maps.event.addDomListener(document.getElementById('display_label'), 'click', refreshMap);
-    google.maps.event.addDomListener(document.getElementById('display_circle'), 'click', refreshMap);
+    google.maps.event.addDomListener(document.getElementById('display_label'), 'change', refreshMap);
+    google.maps.event.addDomListener(document.getElementById('display_circle'), 'change', refreshMap);
 }
 
 function detectFullscreen()
