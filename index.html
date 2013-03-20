@@ -4,14 +4,14 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <title>Geocaching GPX viewer</title>
     <meta name="description" content="Web app to display your geocaches or tracks from a gpx file on google maps."/>
-    <link href="design.css" type="text/css" rel="stylesheet" media="all" />
+    <link href="design.css?20130320" type="text/css" rel="stylesheet" media="all" />
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=true"></script>
     <script type="text/javascript" src="js/infobox_packed.js"></script>
     <script type="text/javascript" src="js/markerclusterer_packed.js"></script>
     <script type="text/javascript" src="js/date.format.js"></script>
 </head>
 <body>
-    <div>
+    <div id="options">
         <fieldset id="filedrag">
             <legend>Drop your GPX files here</legend>
         </fieldset>
@@ -33,7 +33,18 @@
             <a href="https://github.com/Surfoo/gc-gpx-viewer" onclick="window.open(this.href);return false;">Source on Github.com</a>
         </p>
     </div>
-    <div id="map_canvas" style="width:100%; height:100%;"></div>
-    <script type="text/javascript" src="js/gcgpxviewer_packed.js?20121112"></script>
+    <div id="map_canvas"></div>
+    <script type="text/javascript" src="js/gcgpxviewer.js?20130320"></script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-206471-8']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 </body>
 </html>

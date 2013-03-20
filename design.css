@@ -1,9 +1,9 @@
-html { 
+html {
   height: 100%;
 }
-body { 
-  height: 100%; 
-  margin: 0; 
+body {
+  height: 100%;
+  margin: 0;
   padding: 0;
   font: 0.8em Verdana;
 }
@@ -11,6 +11,14 @@ a {
   color: #000;
 }
 
+#options {
+  height: 120px;
+}
+#map_canvas {
+  height: calc(100% - 120px);
+  height: -webkit-calc(100% - 120px);
+  width: 100%;
+}
 fieldset {
   width: 210px;
   height: 80px;
@@ -49,9 +57,9 @@ ul#list {
   text-align: left;
 }
 #list li {
-  margin: 0;  
-  padding: 0; 
-  list-style-type: none; 
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
 }
 #filedrag.hover
 {
@@ -95,7 +103,7 @@ fieldset p {
 
 .infowindow {
   font-family: Verdana, sans-serif;
-  width: 420px; 
+  width: 420px;
   height: 90px;
 }
 .infowindow .code{

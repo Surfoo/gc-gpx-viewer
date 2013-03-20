@@ -1,42 +1,34 @@
-function display(data)
-{
+function display(data) {
     var waypoints = data.documentElement.getElementsByTagName('wpt');
     var trks      = data.documentElement.getElementsByTagName('trk');
-    if(waypoints.length == 0 && trks.length == 0)
-    {
+    if(waypoints.length == 0 && trks.length == 0) {
         alert('No waypoints found.');
     }
-    else if(waypoints.length > 0)
-    {
+    else if(waypoints.length > 0) {
         displayCaches(waypoints);
     }
 
-    if(waypoints.length == 0 && trks.length == 0)
-    {
+    if(waypoints.length == 0 && trks.length == 0) {
         alert('No track found.');
     }
-    else if(trks.length > 0)
-    {
+    else if(trks.length > 0) {
         displayTrack(trks);
     }
 }
 
-function displayCaches(wpts)
-{
+function displayCaches(wpts) {
     var icon, type, wpt, sym, latlng, Oicon, oMarker, infoContent, InfoBoxOptions, ibLabel, i = 0, nb = wpts.length;
     var oInfo  = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
     var oPolygon, polygonOptions;
     var path = [];
 
-    for(i; i < nb; i++)
-    {
+    for(i; i < nb; i++){
         wpt = wpts[i];
         sym = wpt.getElementsByTagName('sym')[0].childNodes[0] || false;
         if(sym && (sym.nodeValue != 'Geocache' &&
                    sym.nodeValue != 'Geocache Found' &&
-                   sym.nodeValue != '') )
-        {
+                   sym.nodeValue != '') ) {
             continue;
         }
         var grdspk = wpt.getElementsByTagNameNS('*', 'cache');
@@ -50,23 +42,18 @@ function displayCaches(wpts)
         var date        = oDate.format('yyyy/mm/dd');
         var size        = null;
 
-        for(var j = 0; j < typeCaches.length; j += 1)
-        {
-            if(typeCaches[j]['type'] == wpt.getElementsByTagName('type')[0].childNodes[0].nodeValue.substr(9))
-            {
+        for(var j = 0; j < typeCaches.length; j++) {
+            if(typeCaches[j]['type'] == wpt.getElementsByTagName('type')[0].childNodes[0].nodeValue.substr(9)) {
                 icon = 'img/' + typeCaches[j]['id'] + '.gif';
                 break;
             }
         }
-        if(!icon)
-        {
+        if(!icon) {
             continue;
         }
 
-        for(var j = 0; j < sizeCaches.length; j += 1)
-        {
-            if(sizeCaches[j]['id'] == oContainer[0].childNodes[0].nodeValue.toLowerCase())
-            {
+        for(var j = 0; j < sizeCaches.length; j++) {
+            if(sizeCaches[j]['id'] == oContainer[0].childNodes[0].nodeValue.toLowerCase()) {
                 size = sizeCaches[j]['label'];
                 break;
             }
@@ -84,8 +71,10 @@ function displayCaches(wpts)
         infoContent+= '        <a href="//coord.info/' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + oName[0].childNodes[0].nodeValue + '</a>';
         infoContent+= '    </h4>';
         infoContent+= '    <dl style="float:left;margin-right:2em;width:50%;">';
-        infoContent+= '        <dt>Created by:</dt>';
-        infoContent+= '        <dd>' + oOwner[0].childNodes[0].nodeValue + '</dd>';
+        if(oOwner[0].childNodes[0]) {
+            infoContent+= '        <dt>Created by:</dt>';
+            infoContent+= '        <dd>' + oOwner[0].childNodes[0].nodeValue + '</dd>';
+        }
         infoContent+= '        <dt>Difficulty:</dt>';
         infoContent+= '        <dd>' + oDifficulty[0].childNodes[0].nodeValue + '</dd>';
         infoContent+= '        <dt>Cache size:</dt>';
@@ -142,30 +131,25 @@ function displayCaches(wpts)
         displayInfos(oMarker, ibLabel, circle);
         bounds.extend(oMarker.getPosition());
     }
-    if(!bounds.isEmpty())
-    {
+    if(!bounds.isEmpty()) {
         map.fitBounds(bounds);
     }
 }
 
-function displayTrack(wpts)
-{
+function displayTrack(wpts) {
     var wpt, latlng, i = 0, nb = wpts.length;
     var bounds = new google.maps.LatLngBounds();
     var oPolygon;
 
-    for (i; i < nb; i++)
-    {
+    for (i; i < nb; i++) {
         wpt = wpts[i];
         var trksegs = wpt.getElementsByTagName('trkseg');
 
-        for(var j = 0; j < trksegs.length; j++)
-        {
+        for(var j = 0; j < trksegs.length; j++) {
             var trkseg = trksegs[j];
             var path = new Array();
             trkpts = trkseg.getElementsByTagName('trkpt');
-            for(var k = 0; k < trkpts.length; k++)
-            {
+            for(var k = 0; k < trkpts.length; k++) {
                 var trkpt = trkpts[k];
                 latlng    = new google.maps.LatLng(parseFloat(trkpt.getAttribute('lat')),
                                                 parseFloat(trkpt.getAttribute('lon')));
@@ -183,27 +167,23 @@ function displayTrack(wpts)
         }
         bounds.extend(latlng);
     }
-    if(!bounds.isEmpty())
-    {
+    if(!bounds.isEmpty()) {
       map.fitBounds(bounds);
     }
 }
 
-function setEventMarker(marker, infowindow, string)
-{
+function setEventMarker(marker, infowindow, string) {
     google.maps.event.addListener(marker, 'click', function() {
       infowindow.setContent(string);
       infowindow.open(this.getMap(), this);
     });
 }
 
-function displayInfos(marker, infobox, circle)
-{
+function displayInfos(marker, infobox, circle) {
     infobox.open(map);
 
     google.maps.event.addListener(map, 'zoom_changed', function() {
-        if(map.getZoom() > mcMaxZoom)
-        {
+        if(map.getZoom() > mcMaxZoom) {
             if(document.getElementById('display_label').checked)  infobox.show();
             if(document.getElementById('display_circle').checked) circle.setVisible(true);
         }
@@ -214,8 +194,7 @@ function displayInfos(marker, infobox, circle)
     });
 }
 
-function refreshMap()
-{
+function refreshMap() {
     var updated_label = updated_circle = false;
 
     if(display_label != document.getElementById('display_label').checked) {
@@ -228,8 +207,7 @@ function refreshMap()
         updated_circle = true;
     }
 
-    for(i in markers)
-    {
+    for(i in markers) {
         if(updated_label)
             display_label ? labelList[i].show() : labelList[i].hide();
         if(updated_circle)
@@ -237,8 +215,7 @@ function refreshMap()
     }
 }
 
-function load()
-{
+function load() {
     var viewFullScreen = document.getElementById('fullscreen');
 
     if (viewFullScreen) {
@@ -289,7 +266,9 @@ function load()
 
     var mapOptions = { zoom: 6,
                        center: new google.maps.LatLng(46,2.9),
-                       mapTypeId: google.maps.MapTypeId.ROADMAP
+                       mapTypeId: google.maps.MapTypeId.ROADMAP,
+                       streetViewControl: false,
+                       scaleControl: true
                      };
     var mcOptions  = { gridSize: 80,
                        maxZoom: mcMaxZoom,
@@ -307,11 +286,9 @@ function load()
     google.maps.event.addDomListener(document.getElementById('display_circle'), 'change', refreshMap);
 }
 
-function detectFullscreen()
-{
+function detectFullscreen() {
     var docElm = document.documentElement;
-    if (docElm.requestFullscreen || docElm.mozRequestFullScreen || docElm.webkitRequestFullScreen )
-    {
+    if(docElm.requestFullscreen || docElm.mozRequestFullScreen || docElm.webkitRequestFullScreen) {
         return true;
     }
     return false;
@@ -326,81 +303,69 @@ http://www.sitepoint.com/html5-file-drag-and-drop/
 (function() {
 
     // output information
-    function Output(msg)
-    {
-      var li = document.createElement('li');
-      li.innerHTML = msg;
-      list.appendChild(li);
+    function Output(msg) {
+        var li = document.createElement('li');
+        li.innerHTML = msg;
+        list.appendChild(li);
     }
 
-    function FileDragHover(e)
-    {
-      e.stopPropagation();
-      e.preventDefault();
-      e.target.className = (e.type == 'dragover' ? 'hover' : '');
+    function FileDragHover(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.target.className = (e.type == 'dragover' ? 'hover' : '');
     }
 
-    function FileSelectHandler(e)
-    {
-      // cancel event and hover styling
-      FileDragHover(e);
+    function FileSelectHandler(e) {
+        // cancel event and hover styling
+        FileDragHover(e);
 
-      // fetch FileList object
-      var files = e.target.files || e.dataTransfer.files;
+        // fetch FileList object
+        var files = e.target.files || e.dataTransfer.files;
 
-      // process all File objects
-      for (var i = 0, f; f = files[i]; i++)
-      {
-          var reader = new FileReader();
-          var el = document.getElementById('loader');
-          var fileinfo = [{'name': f.name, 'size': f.size}];
-
-          reader.onprogress = function(e)
-          {
-              el.style.display = 'block';
-          },
-
-          reader.onload = function(e)
-          {
-              if (window.DOMParser)
-              {
-                  parser = new DOMParser();
-                  doc = parser.parseFromString(e.target.result, 'text/xml');
-              }
-              else
-              {
-                  doc = new ActiveXObject('Microsoft.XMLDOM');
-                  doc.async = 'false';
-                  doc.loadXML(e.target.result);
-              }
-
-              doc = parser.parseFromString(e.target.result, 'application/xml');
-              if(!doc || doc.documentElement.tagName != 'gpx')
-              {
-                  alert(fileinfo[0]['name'] + ' in an invalid file.');
-                  return false;
-              }
-              display(doc);
-              ParseFile(fileinfo);
-          },
-          reader.onloadend = function(e)
-          {
-              el.style.display = 'none';
-          },
-
-          reader.readAsText(f, 'UTF-8');
-      }
+        // process all File objects
+        for (var i = 0, f; f = files[i]; i++) {
+            ParseFile(f);
+        }
     }
 
     // output file information
-    function ParseFile(file)
-    {
-        Output(file[0]['name'] + ' (' + Math.round(file[0]['size']/1024*100)/100 + 'Ko)');
+    function ParseFile(file) {
+        var reader = new FileReader();
+        var el = document.getElementById('loader');
+        var fileinfo = [{'name': file.name, 'size': file.size}];
+
+        reader.onprogress = function(e) {
+            el.style.display = 'block';
+        },
+
+        reader.onload = function(e) {
+            if(window.DOMParser) {
+                parser = new DOMParser();
+                doc = parser.parseFromString(e.target.result, 'text/xml');
+            }
+            else {
+                doc = new ActiveXObject('Microsoft.XMLDOM');
+                doc.async = 'false';
+                doc.loadXML(e.target.result);
+            }
+
+            doc = parser.parseFromString(e.target.result, 'application/xml');
+            if(!doc || doc.documentElement.tagName != 'gpx') {
+                alert(fileinfo[0]['name'] + ' in an invalid file.');
+                return false;
+            }
+            Output(fileinfo[0]['name'] + ' (' + Math.round(fileinfo[0]['size']/1024*100)/100 + 'Ko)');
+            display(doc);
+        },
+        reader.onloadend = function(e) {
+            el.style.display = 'none';
+        },
+
+        reader.readAsText(file, 'UTF-8');
     }
 
     // initialize
-    function Init()
-    {
+    function Init() {
         var filedrag = document.getElementById('filedrag');
         filedrag.addEventListener('dragover', FileDragHover, false);
         filedrag.addEventListener('dragleave', FileDragHover, false);
@@ -408,12 +373,10 @@ http://www.sitepoint.com/html5-file-drag-and-drop/
     }
 
     // call initialization file
-    if (window.File && window.FileList && window.FileReader)
-    {
+    if(window.File && window.FileList && window.FileReader) {
         Init();
     }
-    else
-    {
+    else {
         alert('Your browser doesn\'t support this feature, please upgrade it (or use Firefox or Chrome).');
     }
 
