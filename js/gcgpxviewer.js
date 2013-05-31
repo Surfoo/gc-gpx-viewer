@@ -279,6 +279,7 @@ function load() {
                                 {url: 'img/m5.png', height: 90, width: 89}
                                ]
                      };
+    google.maps.visualRefresh = true;
     map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
     mc  = new MarkerClusterer(map, [], mcOptions);
 
