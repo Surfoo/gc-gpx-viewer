@@ -8,12 +8,12 @@ Get the source
 
 Fork the project source code on [github](https://github.com/Surfoo/gc-gpx-viewer/):
 
-	git clone git://github.com/Surfoo/gc-gpx-viewer.git
+    git clone git://github.com/Surfoo/gc-gpx-viewer.git
 
 Demo
 ----
 
-http://vaguelibre.net/gc/gc-gpx-viewer/
+http://gc-gpx-viewer.vaguelibre.net/
 
 License
 -------
