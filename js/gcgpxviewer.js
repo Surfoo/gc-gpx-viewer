@@ -255,7 +255,8 @@ function load() {
                   {'id':'large'     , 'label':'Large'},
                   {'id':'not_chosen', 'label':'Not chosen'},
                   {'id':'not chosen', 'label':'Not chosen'},
-                  {'id':'unknown'   , 'label':'Unknown'}
+                  {'id':'unknown'   , 'label':'Unknown'},
+                  {'id':'other'     , 'label':'Other'}
                  ];
     mcMaxZoom      = 13;
     display_label  = document.getElementById('display_label').checked;
