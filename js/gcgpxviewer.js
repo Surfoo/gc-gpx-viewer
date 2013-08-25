@@ -22,6 +22,7 @@ function displayCaches(wpts) {
     var bounds = new google.maps.LatLngBounds();
     var oPolygon, polygonOptions;
     var path = [];
+    var regexType = /[a-z]*?\|([a-z-\s]*)\|?/i;
 
     for(i; i < nb; i++){
         wpt = wpts[i];
@@ -41,11 +42,14 @@ function displayCaches(wpts) {
         var oDate       = new Date(wpt.getElementsByTagName('time')[0].childNodes[0].nodeValue);
         var date        = oDate.format('yyyy/mm/dd');
         var size        = null;
+        var match       = wpt.getElementsByTagName('type')[0].childNodes[0].nodeValue.match(regexType);
 
-        for(var j = 0; j < typeCaches.length; j++) {
-            if(typeCaches[j]['type'] == wpt.getElementsByTagName('type')[0].childNodes[0].nodeValue.substr(9)) {
-                icon = 'img/' + typeCaches[j]['id'] + '.gif';
-                break;
+        if(match) {
+            for(var j = 0; j < typeCaches.length; j++) {
+                if(typeCaches[j]['type'] == match[1]) {
+                    icon = 'img/' + typeCaches[j]['id'] + '.gif';
+                    break;
+                }
             }
         }
         if(!icon) {
@@ -256,7 +260,8 @@ function load() {
                   {'id':'not_chosen', 'label':'Not chosen'},
                   {'id':'not chosen', 'label':'Not chosen'},
                   {'id':'unknown'   , 'label':'Unknown'},
-                  {'id':'other'     , 'label':'Other'}
+                  {'id':'other'     , 'label':'Other'},
+                  {'id':'virtual'   , 'label':'Virtual'}
                  ];
     mcMaxZoom      = 13;
     display_label  = document.getElementById('display_label').checked;
