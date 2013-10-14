@@ -306,7 +306,45 @@
 
     var load = function() {
         var viewFullScreen = document.getElementById('fullscreen'),
-            clearTheMap = document.getElementById('clear');
+            clearTheMap = document.getElementById('clear'),
+            mapOptions = {
+                zoom: 6,
+                center: new google.maps.LatLng(46, 2.9),
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                streetViewControl: false,
+                scaleControl: true
+            },
+            mcOptions = {
+                gridSize: 80,
+                maxZoom: mcMaxZoom,
+                styles: [{
+                    url: 'img/m1.png',
+                    height: 53,
+                    width: 52
+                }, {
+                    url: 'img/m2.png',
+                    height: 56,
+                    width: 55
+                }, {
+                    url: 'img/m3.png',
+                    height: 66,
+                    width: 65
+                }, {
+                    url: 'img/m4.png',
+                    height: 78,
+                    width: 77
+                }, {
+                    url: 'img/m5.png',
+                    height: 90,
+                    width: 89
+                }]
+            };
+        google.maps.visualRefresh = true;
+        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+        mc = new MarkerClusterer(map, [], mcOptions);
+
+        google.maps.event.addDomListener(document.getElementById('display_label'), 'change', refreshMap);
+        google.maps.event.addDomListener(document.getElementById('display_circle'), 'change', refreshMap);
 
         if (viewFullScreen) {
             viewFullScreen.addEventListener('click', function() {
@@ -326,7 +364,7 @@
         if (clearTheMap) {
             clearTheMap.addEventListener('click', function() {
                 mc.clearMarkers();
-                var i, j;
+                var i, j, element = document.getElementById('list');
                 if (circleList) {
                     for (i in circleList) {
                         circleList[i].setMap(null);
@@ -340,52 +378,12 @@
                 labelList.length = 0;
                 circleList.length = 0;
                 markers.length = 0;
-                var element = document.getElementById('list');
+
                 while (element.firstChild) {
                     element.removeChild(element.firstChild);
                 }
             }, false);
         }
-
-
-        var mapOptions = {
-            zoom: 6,
-            center: new google.maps.LatLng(46, 2.9),
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            streetViewControl: false,
-            scaleControl: true
-        };
-        var mcOptions = {
-            gridSize: 80,
-            maxZoom: mcMaxZoom,
-            styles: [{
-                url: 'img/m1.png',
-                height: 53,
-                width: 52
-            }, {
-                url: 'img/m2.png',
-                height: 56,
-                width: 55
-            }, {
-                url: 'img/m3.png',
-                height: 66,
-                width: 65
-            }, {
-                url: 'img/m4.png',
-                height: 78,
-                width: 77
-            }, {
-                url: 'img/m5.png',
-                height: 90,
-                width: 89
-            }]
-        };
-        google.maps.visualRefresh = true;
-        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-        mc = new MarkerClusterer(map, [], mcOptions);
-
-        google.maps.event.addDomListener(document.getElementById('display_label'), 'change', refreshMap);
-        google.maps.event.addDomListener(document.getElementById('display_circle'), 'change', refreshMap);
     };
 
     /*var detectFullscreen = function() {
@@ -396,17 +394,17 @@
         return false;
     };*/
 
-    /*
-filedrag.js - HTML5 File Drag & Drop demonstration
-Featured on SitePoint.com
-Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
-http://www.sitepoint.com/html5-file-drag-and-drop/
-*/
+    /**
+     * filedrag.js - HTML5 File Drag & Drop demonstration
+     * Featured on SitePoint.com
+     * Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
+     * http://www.sitepoint.com/html5-file-drag-and-drop/
+     */
 
     // output information
-
     var Output = function(msg) {
-        var li = document.createElement('li');
+        var li = document.createElement('li'),
+            list = document.getElementById('list');
         li.innerHTML = msg;
         list.appendChild(li);
     };
@@ -417,32 +415,18 @@ http://www.sitepoint.com/html5-file-drag-and-drop/
         e.target.className = (e.type === 'dragover' ? 'hover' : '');
     };
 
-    var FileSelectHandler = function(e) {
-        // cancel event and hover styling
-        FileDragHover(e);
-
-        // fetch FileList object
-        var files = e.target.files || e.dataTransfer.files;
-
-        // process all File objects
-        for (var i = 0, f; f = files[i]; ++i) {
-            ParseFile(f);
-        }
-    };
-
     // output file information
-
     var ParseFile = function(file) {
-        var reader = new FileReader();
-        var el = document.getElementById('loader');
-        var fileinfo = [{
-            'name': file.name,
-            'size': file.size
-        }];
+        var reader = new FileReader(),
+            el = document.getElementById('loader'),
+            fileinfo = [{
+                'name': file.name,
+                'size': file.size
+            }];
 
         reader.onprogress = function() {
             el.style.display = 'block';
-        },
+        };
 
         reader.onload = function(e) {
             if (window.DOMParser) {
@@ -461,16 +445,30 @@ http://www.sitepoint.com/html5-file-drag-and-drop/
             }
             Output(fileinfo[0].name + ' (' + Math.round(fileinfo[0].size / 1024 * 100) / 100 + 'Ko)');
             display(doc);
-        },
+        };
+
         reader.onloadend = function() {
             el.style.display = 'none';
-        },
+        };
 
         reader.readAsText(file, 'UTF-8');
     };
 
-    // initialize
+    var FileSelectHandler = function(e) {
+        // cancel event and hover styling
+        FileDragHover(e);
 
+        // fetch FileList object
+        var files = e.target.files || e.dataTransfer.files,
+            i, f;
+
+        // process all File objects
+        for (i = 0; f = files[i]; ++i) {
+            ParseFile(f);
+        }
+    };
+
+    // initialize
     var Init = function() {
         var filedrag = document.getElementById('filedrag');
         filedrag.addEventListener('dragover', FileDragHover, false);
