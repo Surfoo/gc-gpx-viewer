@@ -11,7 +11,7 @@ a {
   color: #000;
 }
 
-#options {
+#actions {
   height: 120px;
 }
 #map_canvas {
@@ -69,6 +69,24 @@ ul#list {
 fieldset p {
   margin: 0;
   line-height: 1.5em;
+}
+
+#options {
+  width: 350px;
+}
+#options > p {
+  float: left;
+  width: auto;
+}
+#options p:last-child {
+  float: right;
+  width: auto;
+}
+#options [type=button] {
+  width: 100px;
+}
+#options [type=button]:hover {
+  cursor: pointer;
 }
 #loader {
   background-color: red;

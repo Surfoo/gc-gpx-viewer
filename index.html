@@ -5,28 +5,29 @@
     <title>Geocaching GPX viewer</title>
     <meta name="description" content="Web app to display your geocaches or tracks from a gpx file on google maps."/>
     <link href="design.css?20130320" type="text/css" rel="stylesheet" media="all" />
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=true"></script>
-    <script type="text/javascript" src="js/infobox_packed.js"></script>
-    <script type="text/javascript" src="js/markerclusterer_packed.js"></script>
-    <script type="text/javascript" src="js/date.format.js"></script>
 </head>
 <body>
-    <div id="options">
+    <div id="actions">
         <fieldset id="filedrag">
             <legend>Drop your GPX files here</legend>
         </fieldset>
 
         <div id="files">
-            <ul id="list"><li></li></ul>
+            <ul id="list"></ul>
         </div>
 
         <div id="loader"></div>
 
-        <fieldset>
+        <fieldset id="options">
             <legend>Options</legend>
-            <p><input id="display_label" type="checkbox" checked="checked" /> <label for="display_label">Display labels</label></p>
-            <p><input id="display_circle" type="checkbox" checked="checked" /> <label for="display_circle">Display circles</label></p>
-            <p><input type="button" id="fullscreen" value="Fullscreen" /></p>
+            <p>
+               <input id="display_label" type="checkbox" checked="checked" /> <label for="display_label">Display labels</label><br />
+               <input id="display_circle" type="checkbox" checked="checked" /> <label for="display_circle">Display circles (161 meters)</label>
+            </p>
+            <p>
+                <input type="button" id="clear" value="Clear the map" /><br />
+                <input type="button" id="fullscreen" value="Fullscreen" />
+            </p>
         </fieldset>
 
         <p class="source">
@@ -34,6 +35,10 @@
         </p>
     </div>
     <div id="map_canvas"></div>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=true"></script>
+    <script type="text/javascript" src="js/infobox.min.js"></script>
+    <script type="text/javascript" src="js/markerclusterer.min.js"></script>
+    <script type="text/javascript" src="js/date.format.js"></script>
     <script type="text/javascript" src="js/gcgpxviewer.min.js?20130825"></script>
 </body>
 </html>
