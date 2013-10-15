@@ -246,7 +246,7 @@
                     bounds.extend(latlng);
                 }
 
-                google.maps.Polyline({
+                new google.maps.Polyline({
                     map: map,
                     path: path,
                     strokeColor: '#FF0000',
