@@ -1,44 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" manifest="cache.manifest">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <title>Geocaching GPX viewer</title>
-    <meta name="description" content="Web app to display your geocaches or tracks from a gpx file on google maps."/>
-    <link href="design.css?20131015" type="text/css" rel="stylesheet" media="all" />
+    <meta charset="UTF-8">
+    <title>Geocaching GPX Viewer</title>
+    <meta name="description" content="Geocaching GPX viewer is web app to display your geocaches or tracks from a GPX file."/>
+    <link rel="stylesheet" type="text/css" href="gcgpxviewer.min.css" media="all" />
 </head>
 <body>
-    <div id="actions">
-        <fieldset id="filedrag">
-            <legend>Drop your GPX files here</legend>
-        </fieldset>
+    <div id="sidebar">
+        <h1>Options</h1>
 
-        <div id="files">
-            <ul id="list"></ul>
-        </div>
-
+        <legend>Select your GPX files:</legend>
+        <input type="file" id="files" name="files[]" multiple />
         <div id="loader"></div>
+        <output id="list"></output>
 
-        <fieldset id="options">
-            <legend>Options</legend>
-            <p>
-               <input id="display_label" type="checkbox" checked="checked" /> <label for="display_label">Display labels</label><br />
-               <input id="display_circle" type="checkbox" checked="checked" /> <label for="display_circle">Display circles (161 meters)</label>
-            </p>
-            <p>
-                <input type="button" id="clear" value="Clear the map" /><br />
-                <input type="button" id="fullscreen" value="Fullscreen" />
-            </p>
-        </fieldset>
+        <hr />
 
-        <p class="source">
-            <a href="https://github.com/Surfoo/gc-gpx-viewer" onclick="window.open(this.href);return false;">Source on Github.com</a>
+        <p id="options">
+            <input id="display_label" type="checkbox" checked="checked" /> <label for="display_label">Display labels</label><br />
+            <input id="display_circle" type="checkbox" checked="checked" /> <label for="display_circle">Display perimeters</label>
         </p>
+        <p>
+            <input type="button" id="clear" value="Clear the map" />
+        </p>
+
+        <hr />
+
+        <div id="footer">
+            <a href="https://github.com/Surfoo/gc-gpx-viewer">GitHub Project</a> &middot;
+            <a href="https://github.com/Surfoo/gc-gpx-viewer/issues">Issues</a> &middot;
+            <div id="flattr"></div>
+        </div>
     </div>
-    <div id="map_canvas"></div>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=true"></script>
-    <script type="text/javascript" src="js/infobox.min.js"></script>
-    <script type="text/javascript" src="js/markerclusterer.min.js"></script>
-    <script type="text/javascript" src="js/date.format.js"></script>
-    <script type="text/javascript" src="js/gcgpxviewer.min.js?20131015"></script>
+
+    <div id="map"></div>
+    <script type="text/javascript" src="js/gcgpxviewer.min.js"></script>
 </body>
 </html>

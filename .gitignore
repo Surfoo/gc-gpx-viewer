@@ -1,1 +1,4 @@
 *.gpx
+node_modules
+js/all.js
+gpx/

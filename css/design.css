@@ -1,0 +1,112 @@
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font: 0.8em Verdana;
+}
+
+a {
+  color: #000;
+}
+
+#actions {
+  height: 120px;
+}
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+#sidebar {
+  font-size: 1.2em;
+  display: none;
+}
+#sidebar h1 {
+  margin: 0 0 0.2em 0;
+}
+hr {
+  border: 0;
+  height: 1px;
+  background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+  background-image: -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+  background-image: -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+  background-image: -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+}
+
+input {
+  font-size: 1.2em;
+}
+#list {
+  font-weight: normal;
+  font-size: 0.8em;
+}
+#list li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+#options {
+  line-height: 2em;
+}
+
+#options [type=button] {
+  width: 100px;
+}
+#options [type=button]:hover {
+  cursor: pointer;
+}
+#loader {
+  height: 19px;
+  background: url('img/ajax-loader.gif') center center no-repeat;
+  display: none;
+}
+
+#footer {
+  text-align: center;
+}
+
+.infowindow {
+  font-family: Verdana, sans-serif;
+  width: 420px;
+  height: 90px;
+}
+.infowindow .code{
+  float:right;
+  padding: 0 2px;
+}
+.infowindow h4, .infowindow .code {
+  font-weight: bold;
+  font-size: 1em;
+}
+.infowindow h4 img {
+  vertical-align: middle;
+}
+.infowindow dl dt {
+  float:left;
+  font-weight:bold;
+  margin-right:.5em;
+}
+.infowindow dl dd,.infowindow h4 {
+  margin-bottom: 0.25em;
+}
+
+h1, h2, h3, h4, h5, h6, p, a, img, dl, dt, dd {
+    border: 0 none;
+    font-family: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    vertical-align: baseline;
+}
+.infowindow a {
+    color: #594A42;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+.leaflet-control-options {
+  background-image: url(icon-options.png);
+}

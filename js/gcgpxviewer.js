@@ -1,7 +1,7 @@
 (function() {
     'use strict';
-    var typeCaches, sizeCaches, mcMaxZoom, display_label, display_circle, labelList, circleList, markers,
-        map, mc, parser, doc, circle;
+    var typeCaches, sizeCaches, display_label, display_circle, circleList, markers,
+        map, parser, doc, circle, sidebar;
     typeCaches = [{
         'id': 2,
         'type': 'Traditional Cache'
@@ -68,42 +68,14 @@
         'id': 'virtual',
         'label': 'Virtual'
     }];
-    mcMaxZoom = 13;
     display_label = document.getElementById('display_label').checked;
     display_circle = document.getElementById('display_circle').checked;
-    labelList = [];
     circleList = [];
     markers = [];
 
-    var setEventMarker = function(marker, infowindow, string) {
-        google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent(string);
-            infowindow.open(this.getMap(), this);
-        });
-    };
-
-    var displayInfos = function(infobox, circle) {
-        infobox.open(map);
-
-        google.maps.event.addListener(map, 'zoom_changed', function() {
-            if (map.getZoom() > mcMaxZoom) {
-                if (document.getElementById('display_label').checked) {
-                    infobox.show();
-                }
-                if (document.getElementById('display_circle').checked) {
-                    circle.setVisible(true);
-                }
-            } else {
-                infobox.hide();
-                circle.setVisible(false);
-            }
-        });
-    };
-
     var displayCaches = function(wpts) {
-        var icon, wpt, sym, latlng, Oicon, oMarker, infoContent, InfoBoxOptions, ibLabel, i, nbWpts, j, nbTypeCaches, nbSizeCaches,
-            oInfo = new google.maps.InfoWindow(),
-            bounds = new google.maps.LatLngBounds(),
+        var icon, wpt, sym, latlng, oMarker, infoContent, i, nbWpts, j, nbTypeCaches, nbSizeCaches,
+            //oInfo = new google.maps.InfoWindow(),
             regexType = /[a-z]*?\|([a-z-\s]*)\|?/i,
             grdspk, oName, oDifficulty, oTerrain, oOwner, oContainer, oDate, date, size, match;
 
@@ -130,7 +102,10 @@
             if (match) {
                 for (j = 0, nbTypeCaches = typeCaches.length; j < nbTypeCaches; ++j) {
                     if (typeCaches[j].type === match[1]) {
-                        icon = 'img/' + typeCaches[j].id + '.gif';
+                        icon = L.icon({
+                            iconSize: [16, 16],
+                            iconUrl: 'img/' + typeCaches[j].id + '.gif'
+                        });
                         break;
                     }
                 }
@@ -146,16 +121,21 @@
                 }
             }
 
-            latlng = new google.maps.LatLng(parseFloat(wpt.getAttribute('lat')),
-                parseFloat(wpt.getAttribute('lon')));
+            latlng = new L.latLng(parseFloat(wpt.getAttribute('lat')), parseFloat(wpt.getAttribute('lon')));
 
-            Oicon = new google.maps.MarkerImage(icon, null, null, null, new google.maps.Size(16, 16));
+            oMarker = L.marker(latlng, {
+                icon: icon
+            }).bindLabel(wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue, {
+                opacity: +display_label,
+                noHide: true,
+                direction: 'auto'
+            }).addTo(map);
 
             infoContent = '<div class="infowindow">';
             infoContent += '<div class="code">' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</div>';
             infoContent += '    <h4>';
-            infoContent += '        <img src="' + icon + '">';
-            infoContent += '        <a href="//coord.info/' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + oName[0].childNodes[0].nodeValue + '</a>';
+            infoContent += '        <img src="' + icon.options.iconUrl + '">';
+            infoContent += '        <a href="http://coord.info/' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + oName[0].childNodes[0].nodeValue + '</a>';
             infoContent += '    </h4>';
             infoContent += '    <dl style="float:left;margin-right:2em;width:50%;">';
             if (oOwner[0].childNodes[0]) {
@@ -174,61 +154,32 @@
             infoContent += '        <dd>' + oTerrain[0].childNodes[0].nodeValue + '</dd>';
             infoContent += '    </dl>';
             infoContent += '</div>';
-            oMarker = new google.maps.Marker({
-                position: latlng,
-                icon: Oicon,
-                title: wpt.getElementsByTagName('desc')[0].childNodes[0].nodeValue,
-                draggable: false,
-                raiseOnDrag: true,
-                map: map
-            });
+
+            oMarker.bindPopup(L.popup({
+                maxWidth: 500
+            }).setLatLng(latlng).setContent(infoContent));
             markers.push(oMarker);
 
-            setEventMarker(oMarker, oInfo, infoContent);
-
-            mc.addMarker(oMarker, false);
-
-            InfoBoxOptions = {
-                content: wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue,
-                boxClass: 'labels',
-                disableAutoPan: true,
-                pixelOffset: new google.maps.Size(-25, 0),
-                position: latlng,
-                closeBoxURL: '',
-                isHidden: false,
-                pane: 'mapPane',
-                maxWidth: 0,
-                enableEventPropagation: true
-            };
-            ibLabel = new InfoBox(InfoBoxOptions);
-            labelList.push(ibLabel);
-
-            circle = new google.maps.Circle({
-                map: map,
-                radius: 161,
-                center: latlng,
-                strokeColor: '#ff0000',
-                strokeOpacity: 0.8,
+            circle = new L.circle(latlng, 161, {
+                color: '#ff0000',
+                opacity: display_circle === true ? 0.8 : 0,
                 strokeWeight: 1,
-                fillColor: 'transparent',
-                visible: false
+                weight: 1,
+                fill: false,
+                clickable: false
             });
+            circle.addTo(map);
             circleList.push(circle);
 
-            displayInfos(ibLabel, circle);
-            bounds.extend(oMarker.getPosition());
-        }
-        if (!bounds.isEmpty()) {
-            map.fitBounds(bounds);
+            bounds.extend(latlng);
         }
     };
 
-    var displayTrack = function(wpts) {
+    var displayTracks = function(wpts) {
         var wpt, latlng, i = 0,
             j, k,
             nb = wpts.length,
-            trksegs, trkseg, trkpts, trkpt, nbTrkSegs, nbTrkPts, path,
-            bounds = new google.maps.LatLngBounds();
+            trksegs, trkseg, trkpts, trkpt, nbTrkSegs, nbTrkPts, path;
 
         for (i; i < nb; ++i) {
             wpt = wpts[i];
@@ -240,25 +191,17 @@
                 trkpts = trkseg.getElementsByTagName('trkpt');
                 for (k = 0, nbTrkPts = trkpts.length; k < nbTrkPts; ++k) {
                     trkpt = trkpts[k];
-                    latlng = new google.maps.LatLng(parseFloat(trkpt.getAttribute('lat')),
-                        parseFloat(trkpt.getAttribute('lon')));
+                    latlng = new L.latLng(parseFloat(trkpt.getAttribute('lat')), parseFloat(trkpt.getAttribute('lon')));
                     path.push(latlng);
                     bounds.extend(latlng);
                 }
-
-                new google.maps.Polyline({
-                    map: map,
-                    path: path,
-                    strokeColor: '#FF0000',
-                    strokeOpacity: 0.5,
-                    strokeWeight: 5
-                });
+                new L.Polyline(path, {
+                    color: 'red'
+                }).addTo(map);
             }
             bounds.extend(latlng);
         }
-        if (!bounds.isEmpty()) {
-            map.fitBounds(bounds);
-        }
+
     };
 
     var display = function(data) {
@@ -273,7 +216,11 @@
         if (waypoints.length === 0 && trks.length === 0) {
             alert('No track found.');
         } else if (trks.length > 0) {
-            displayTrack(trks);
+            displayTracks(trks);
+        }
+
+        if (bounds.isValid()) {
+            map.fitBounds(bounds);
         }
     };
 
@@ -294,112 +241,150 @@
 
         if (markers) {
             for (i in markers) {
+
                 if (updated_label) {
-                    display_label ? labelList[i].show() : labelList[i].hide();
+                    markers[i].setOpacity(1, true);
+                    display_label ? markers[i].showLabel() : markers[i].hideLabel();
                 }
                 if (updated_circle) {
-                    circleList[i].setVisible(display_circle);
+                    circleList[i].setStyle({
+                        opacity: display_circle ? 0.8 : 0
+                    });
                 }
             }
         }
     };
 
-    var load = function() {
-        var viewFullScreen = document.getElementById('fullscreen'),
-            clearTheMap = document.getElementById('clear'),
-            mapOptions = {
-                zoom: 6,
-                center: new google.maps.LatLng(46, 2.9),
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                streetViewControl: false,
-                scaleControl: true
-            },
-            mcOptions = {
-                gridSize: 80,
-                maxZoom: mcMaxZoom,
-                styles: [{
-                    url: 'img/m1.png',
-                    height: 53,
-                    width: 52
-                }, {
-                    url: 'img/m2.png',
-                    height: 56,
-                    width: 55
-                }, {
-                    url: 'img/m3.png',
-                    height: 66,
-                    width: 65
-                }, {
-                    url: 'img/m4.png',
-                    height: 78,
-                    width: 77
-                }, {
-                    url: 'img/m5.png',
-                    height: 90,
-                    width: 89
-                }]
-            };
-        google.maps.visualRefresh = true;
-        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-        mc = new MarkerClusterer(map, [], mcOptions);
-
-        google.maps.event.addDomListener(document.getElementById('display_label'), 'change', refreshMap);
-        google.maps.event.addDomListener(document.getElementById('display_circle'), 'change', refreshMap);
-
-        if (viewFullScreen) {
-            viewFullScreen.addEventListener('click', function() {
-                var docElm = document.getElementById('map_canvas');
-                if (docElm.requestFullscreen) {
-                    docElm.requestFullscreen();
-                } else if (docElm.mozRequestFullScreen) {
-                    docElm.mozRequestFullScreen();
-                } else if (docElm.webkitRequestFullScreen) {
-                    docElm.webkitRequestFullScreen();
-                } else {
-                    alert('Your browser doesn\'t support fullscreen mode, please upgrade it (or use Firefox or Chrome).');
-                }
-            }, false);
+    var clear = function() {
+        var i, element = document.getElementById('list');
+        for (i in circleList) {
+            map.removeLayer(circleList[i]);
         }
+        for (i in markers) {
+            map.removeLayer(markers[i]);
+        }
+        circleList.length = 0;
+        markers.length = 0;
 
-        if (clearTheMap) {
-            clearTheMap.addEventListener('click', function() {
-                mc.clearMarkers();
-                var i, j, element = document.getElementById('list');
-                if (circleList) {
-                    for (i in circleList) {
-                        circleList[i].setMap(null);
-                    }
-                }
-                if (labelList) {
-                    for (j in labelList) {
-                        labelList[j].setMap(null);
-                    }
-                }
-                labelList.length = 0;
-                circleList.length = 0;
-                markers.length = 0;
-
-                while (element.firstChild) {
-                    element.removeChild(element.firstChild);
-                }
-            }, false);
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
         }
     };
 
-    /*var detectFullscreen = function() {
-        var docElm = document.documentElement;
-        if (docElm.requestFullscreen || docElm.mozRequestFullScreen || docElm.webkitRequestFullScreen) {
-            return true;
+    var savePosition = function() {
+        sessionStorage.setItem('zoom', map.getZoom());
+        sessionStorage.setItem('latitude', map.getCenter().lat.toFixed(5));
+        sessionStorage.setItem('longitude', map.getCenter().lng.toFixed(5));
+    };
+
+    var bounds = new L.LatLngBounds();
+
+    var load = function() {
+        var cloudmadeLayer = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            minZoom: 3,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+        });
+
+        var transportLayer = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            minZoom: 3,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.thunderforest.com/">Thunderforest</a>'
+        });
+
+        var mapquestLayer = L.tileLayer('http://otile2.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            minZoom: 3,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.mapquest.com/">Mapquest</a>'
+        });
+
+        var osmLegacyLayer = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            minZoom: 3,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
+        });
+
+        var currentLatitude = 46,
+            currentLongitude = 2.9,
+            currentZoom = 6;
+
+        if (window.sessionStorage) {
+            currentLatitude = sessionStorage.getItem('latitude') || currentLatitude;
+            currentLongitude = sessionStorage.getItem('longitude') || currentLongitude;
+            currentZoom = sessionStorage.getItem('zoom') || currentZoom;
+        }
+
+        map = L.map('map', {
+            center: new L.LatLng(currentLatitude, currentLongitude),
+            zoom: currentZoom,
+            layers: [osmLegacyLayer],
+            attributionControl: false,
+            zoomControl: true,
+            inertia: false
+        });
+
+        var baseLayers = {
+            "Mapquest": mapquestLayer,
+            "CloudMade": cloudmadeLayer,
+            "Transport": transportLayer,
+            "OSM Legacy": osmLegacyLayer
+        };
+        var overlays = {};
+        L.control.layers(baseLayers, overlays).addTo(map);
+
+        // Sidebar
+        sidebar = L.control.sidebar('sidebar', {
+            position: 'left'
+        });
+        map.addControl(sidebar);
+        document.getElementById('sidebar').style.display = 'block';
+        setTimeout(function() {
+            sidebar.show();
+        }, 250);
+
+        // Fullscreen
+        map.addControl(new L.Control.FullScreen());
+
+        // Geolocation
+        L.control.locate({
+            drawCircle: false
+        }).addTo(map);
+
+        // Options
+        map.addControl(new L.Control.Options());
+
+        L.DomEvent.addListener(document.getElementById('display_label'), 'change', refreshMap);
+        L.DomEvent.addListener(document.getElementById('display_circle'), 'change', refreshMap);
+        L.DomEvent.addListener(map, 'zoomend', savePosition);
+        L.DomEvent.addListener(map, 'moveend', savePosition);
+
+        document.getElementById('clear').addEventListener('click', clear);
+    };
+
+    // App Cache
+    var onUpdateReady = function() {
+        if (confirm('Geocaching GPX Viewer has been updated!\n\nReload the page to use the new version.')) {
+            window.location.reload(true);
         }
         return false;
-    };*/
+    };
+    window.applicationCache.addEventListener('updateready', onUpdateReady);
+    if (window.applicationCache.status === window.applicationCache.UPDATEREADY) {
+        onUpdateReady();
+    }
 
-    /**
-     * filedrag.js - HTML5 File Drag & Drop demonstration
-     * Featured on SitePoint.com
-     * Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
-     * http://www.sitepoint.com/html5-file-drag-and-drop/
-     */
+    // Flattr
+    var flattr = function() {
+        var f, s = document.getElementById('flattr');
+        f = document.createElement('iframe');
+        f.src = '//api.flattr.com/button/view/?uid=Surfoo&button=compact&url=http%3A%2F%2Fgc-gpx-viewer.vaguelibre.net';
+        f.title = 'Flattr';
+        f.height = 20;
+        f.width = 110;
+        f.style.borderWidth = 0;
+        f.style.verticalAlign = 'middle';
+        s.parentNode.insertBefore(f, s);
+    }();
 
     // output information
     var Output = function(msg) {
@@ -407,12 +392,6 @@
             list = document.getElementById('list');
         li.innerHTML = msg;
         list.appendChild(li);
-    };
-
-    var FileDragHover = function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        e.target.className = (e.type === 'dragover' ? 'hover' : '');
     };
 
     // output file information
@@ -460,7 +439,7 @@
 
     var FileSelectHandler = function(e) {
         // cancel event and hover styling
-        FileDragHover(e);
+        //FileDragHover(e);
 
         // fetch FileList object
         var files = e.target.files || e.dataTransfer.files,
@@ -472,17 +451,9 @@
         }
     };
 
-    // initialize
-    var Init = function() {
-        var filedrag = document.getElementById('filedrag');
-        filedrag.addEventListener('dragover', FileDragHover, false);
-        filedrag.addEventListener('dragleave', FileDragHover, false);
-        filedrag.addEventListener('drop', FileSelectHandler, false);
-    };
-
     // call initialization file
     if (window.File && window.FileList && window.FileReader) {
-        Init();
+        document.getElementById('files').addEventListener('change', FileSelectHandler, false);
     } else {
         alert('Your browser doesn\'t support this feature, please upgrade it (or use Firefox or Chrome).');
     }
