@@ -1,6 +1,6 @@
 (function() {
     //'use strict';
-    var typeCaches, sizeCaches, display_label, display_circle, circleList, markers,
+    var typeCaches, sizeCaches, display_labels, display_perimeters, circleList, markers,
         map, parser, doc, circle;
     typeCaches = [{
         'id': 2,
@@ -68,9 +68,10 @@
         'id': 'virtual',
         'label': 'Virtual'
     }];
-    display_label = document.getElementById('display_label').checked;
-    display_circle = document.getElementById('display_circle').checked;
+    display_labels = document.getElementById('display_labels').checked;
+    display_perimeters = document.getElementById('display_perimeters').checked;
     circleList = [];
+    polylineList = [];
     markers = [];
 
     var displayCaches = function(wpts) {
@@ -126,7 +127,7 @@
             oMarker = L.marker(latlng, {
                 icon: icon
             }).bindLabel(wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue, {
-                opacity: +display_label,
+                opacity: +display_labels,
                 noHide: true,
                 direction: 'auto'
             }).addTo(map);
@@ -162,7 +163,7 @@
 
             circle = new L.circle(latlng, 161, {
                 color: '#ff0000',
-                opacity: display_circle === true ? 0.8 : 0,
+                opacity: display_perimeters === true ? 0.8 : 0,
                 strokeWeight: 1,
                 weight: 1,
                 fill: false,
@@ -195,9 +196,12 @@
                     path.push(latlng);
                     bounds.extend(latlng);
                 }
-                new L.Polyline(path, {
+                var polyline = new L.Polyline(path, {
                     color: 'red'
-                }).addTo(map);
+                });
+                console.log('added++', polyline);
+                polyline.addTo(map);
+                polylineList.push(polyline);
             }
             bounds.extend(latlng);
         }
@@ -229,13 +233,13 @@
             updated_circle = false,
             i;
 
-        if (display_label !== document.getElementById('display_label').checked) {
-            display_label = document.getElementById('display_label').checked;
+        if (display_labels !== document.getElementById('display_labels').checked) {
+            display_labels = document.getElementById('display_labels').checked;
             updated_label = true;
         }
 
-        if (display_circle !== document.getElementById('display_circle').checked) {
-            display_circle = document.getElementById('display_circle').checked;
+        if (display_perimeters !== document.getElementById('display_perimeters').checked) {
+            display_perimeters = document.getElementById('display_perimeters').checked;
             updated_circle = true;
         }
 
@@ -244,11 +248,11 @@
 
                 if (updated_label) {
                     markers[i].setOpacity(1, true);
-                    display_label ? markers[i].showLabel() : markers[i].hideLabel();
+                    display_labels ? markers[i].showLabel() : markers[i].hideLabel();
                 }
                 if (updated_circle) {
                     circleList[i].setStyle({
-                        opacity: display_circle ? 0.8 : 0
+                        opacity: display_perimeters ? 0.8 : 0
                     });
                 }
             }
@@ -263,8 +267,12 @@
         for (i in markers) {
             map.removeLayer(markers[i]);
         }
+        for (i in polylineList) {
+            map.removeLayer(polylineList[i]);
+        }
         circleList.length = 0;
         markers.length = 0;
+        polylineList.length = 0;
 
         while (element.firstChild) {
             element.removeChild(element.firstChild);
@@ -272,10 +280,16 @@
     };
 
     var savePosition = function() {
-        sessionStorage.setItem('zoom', map.getZoom());
-        sessionStorage.setItem('latitude', map.getCenter().lat.toFixed(5));
-        sessionStorage.setItem('longitude', map.getCenter().lng.toFixed(5));
+        localStorage.setItem('zoom', map.getZoom());
+        localStorage.setItem('latitude', map.getCenter().lat.toFixed(5));
+        localStorage.setItem('longitude', map.getCenter().lng.toFixed(5));
     };
+
+    var saveSidebar = function() {
+        localStorage.setItem('sidebar', +sidebar.isVisible());
+        localStorage.setItem('option_label', +document.getElementById('display_labels').checked);
+        localStorage.setItem('option_perimeter', +document.getElementById('display_perimeters').checked);
+    }
 
     var bounds = new L.LatLngBounds();
 
@@ -306,12 +320,24 @@
 
         var currentLatitude = 46,
             currentLongitude = 2.9,
-            currentZoom = 6;
+            currentZoom = 6,
+            currentSidebar = 1,
+            option_label = 1,
+            option_perimeter = 1;
 
-        if (window.sessionStorage) {
-            currentLatitude = sessionStorage.getItem('latitude') || currentLatitude;
-            currentLongitude = sessionStorage.getItem('longitude') || currentLongitude;
-            currentZoom = sessionStorage.getItem('zoom') || currentZoom;
+        if (window.localStorage) {
+            currentLatitude = localStorage.getItem('latitude') || currentLatitude;
+            currentLongitude = localStorage.getItem('longitude') || currentLongitude;
+            currentZoom = localStorage.getItem('zoom') || currentZoom;
+            if (localStorage.getItem('sidebar') !== null) {
+                currentSidebar = +localStorage.getItem('sidebar');
+            }
+            if (localStorage.getItem('option_label') !== null) {
+                option_label = +localStorage.getItem('option_label');
+            }
+            if (localStorage.getItem('option_perimeter') !== null) {
+                option_perimeter = +localStorage.getItem('option_perimeter');
+            }
         }
 
         map = L.map('map', {
@@ -334,14 +360,22 @@
 
         // Sidebar
         sidebar = L.control.sidebar('sidebar', {
-            position: 'left'
+            position: 'left',
+            pan: false
         });
         map.addControl(sidebar);
-        document.getElementById('sidebar').style.display = 'block';
-        setTimeout(function() {
-            sidebar.show();
-        }, 250);
 
+        if (currentSidebar) {
+            setTimeout(function() {
+                sidebar.show();
+            }, 250);
+        }
+        if (option_label) {
+            document.getElementById('display_labels').checked = 'checked';
+        }
+        if (option_perimeter) {
+            document.getElementById('display_perimeters').checked = 'checked';
+        }
         // Fullscreen
         map.addControl(new L.Control.FullScreen());
 
@@ -353,19 +387,25 @@
         // Options
         map.addControl(new L.Control.Options());
 
-        L.DomEvent.addListener(document.getElementById('display_label'), 'change', refreshMap);
-        L.DomEvent.addListener(document.getElementById('display_circle'), 'change', refreshMap);
+        // EventListeners
+        document.getElementById('clear').addEventListener('click', clear);
+        document.getElementById('display_labels').addEventListener('change', refreshMap);
+        document.getElementById('display_labels').addEventListener('change', saveSidebar);
+        document.getElementById('display_perimeters').addEventListener('change', refreshMap);
+        document.getElementById('display_perimeters').addEventListener('change', saveSidebar);
         L.DomEvent.addListener(map, 'zoomend', savePosition);
         L.DomEvent.addListener(map, 'moveend', savePosition);
-
-        document.getElementById('clear').addEventListener('click', clear);
+        sidebar.on('hide', saveSidebar);
+        sidebar.on('show', saveSidebar);
     };
 
     // App Cache
     var onUpdateReady = function() {
-        if (confirm('Geocaching GPX Viewer has been updated!\n\nReload the page to use the new version.')) {
-            window.location.reload(true);
-        }
+        setTimeout(function() {
+            if (confirm('Geocaching GPX Viewer has been updated!\n\nReload the page to use the new version.')) {
+                window.location.reload(true);
+            }
+        }, 1000);
         return false;
     };
     window.applicationCache.addEventListener('updateready', onUpdateReady);
