@@ -199,7 +199,6 @@
                 var polyline = new L.Polyline(path, {
                     color: 'red'
                 });
-                console.log('added++', polyline);
                 polyline.addTo(map);
                 polylineList.push(polyline);
             }
