@@ -1,7 +1,7 @@
 (function() {
-    'use strict';
+    //'use strict';
     var typeCaches, sizeCaches, display_label, display_circle, circleList, markers,
-        map, parser, doc, circle, sidebar;
+        map, parser, doc, circle;
     typeCaches = [{
         'id': 2,
         'type': 'Traditional Cache'
