@@ -19,12 +19,14 @@ gulp.task('lint', function() {
 
 // Concat & Minify JS
 gulp.task('minify-js', function() {
-    gulp.src(['js/leaflet/leaflet-src.js',
+    gulp.src(['js/underscore-min.js',
+              'js/leaflet/leaflet-src.js',
               'js/Control.FullScreen.js',
               'js/L.Control.Locate.js',
               'js/Control.Options.js',
               'js/L.Control.Sidebar.js',
               'js/leaflet.label.js',
+              'js/ActiveLayers.js',
               'js/date.format.js',
               'js/gcgpxviewer.js'
     ])

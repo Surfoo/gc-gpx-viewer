@@ -1,6 +1,6 @@
-(function() {
+(function(_) {
     //'use strict';
-    var typeCaches, sizeCaches, display_labels, display_perimeters, circleList, markers,
+    var typeCaches, sizeCaches, objOptionLabel, objOptionPerimeter, circleList, markers,
         map, parser, doc, circle;
     typeCaches = [{
         'id': 2,
@@ -68,15 +68,14 @@
         'id': 'virtual',
         'label': 'Virtual'
     }];
-    display_labels = document.getElementById('display_labels').checked;
-    display_perimeters = document.getElementById('display_perimeters').checked;
+    objOptionLabel = document.getElementById('display_labels');
+    objOptionPerimeter = document.getElementById('display_perimeters');
     circleList = [];
     polylineList = [];
     markers = [];
 
     var displayCaches = function(wpts) {
         var icon, wpt, sym, latlng, oMarker, infoContent, i, nbWpts, j, nbTypeCaches, nbSizeCaches,
-            //oInfo = new google.maps.InfoWindow(),
             regexType = /[a-z]*?\|([a-z-\s]*)\|?/i,
             grdspk, oName, oDifficulty, oTerrain, oOwner, oContainer, oDate, date, size, match;
 
@@ -127,7 +126,7 @@
             oMarker = L.marker(latlng, {
                 icon: icon
             }).bindLabel(wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue, {
-                opacity: +display_labels,
+                opacity: objOptionLabel.checked ? 1 : 0,
                 noHide: true,
                 direction: 'auto'
             }).addTo(map);
@@ -163,7 +162,7 @@
 
             circle = new L.circle(latlng, 161, {
                 color: '#ff0000',
-                opacity: display_perimeters === true ? 0.8 : 0,
+                opacity: objOptionPerimeter.checked ? 0.8 : 0,
                 strokeWeight: 1,
                 weight: 1,
                 fill: false,
@@ -227,35 +226,29 @@
         }
     };
 
-    var refreshMap = function() {
-        var updated_label = false,
-            updated_circle = false,
-            i;
-
-        if (display_labels !== document.getElementById('display_labels').checked) {
-            display_labels = document.getElementById('display_labels').checked;
-            updated_label = true;
-        }
-
-        if (display_perimeters !== document.getElementById('display_perimeters').checked) {
-            display_perimeters = document.getElementById('display_perimeters').checked;
-            updated_circle = true;
-        }
-
-        if (markers) {
-            for (i in markers) {
-
-                if (updated_label) {
-                    markers[i].setOpacity(1, true);
-                    display_labels ? markers[i].showLabel() : markers[i].hideLabel();
-                }
-                if (updated_circle) {
-                    circleList[i].setStyle({
-                        opacity: display_perimeters ? 0.8 : 0
-                    });
-                }
+    var toggleLabels = function() {
+        var i;
+        for (i in markers) {
+            if (objOptionLabel.checked) {
+                markers[i].setOpacity(1, true);
+                markers[i].showLabel();
+            } else {
+                markers[i].hideLabel();
             }
         }
+
+        localStorage.setItem('option_label', +objOptionLabel.checked);
+    };
+
+    var togglePerimeters = function() {
+        var i, _opacity = objOptionPerimeter.checked ? 0.8 : 0;
+        for (i in markers) {
+            circleList[i].setStyle({
+                opacity: _opacity
+            });
+        }
+
+        localStorage.setItem('option_perimeter', +objOptionPerimeter.checked);
     };
 
     var clear = function() {
@@ -286,9 +279,11 @@
 
     var saveSidebar = function() {
         localStorage.setItem('sidebar', +sidebar.isVisible());
-        localStorage.setItem('option_label', +document.getElementById('display_labels').checked);
-        localStorage.setItem('option_perimeter', +document.getElementById('display_perimeters').checked);
-    }
+    };
+
+    var saveBaseLayer = function() {
+        localStorage.setItem('baselayer', control.getActiveBaseLayer().name);
+    };
 
     var bounds = new L.LatLngBounds();
 
@@ -317,36 +312,14 @@
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
         });
 
+        // Default values
         var currentLatitude = 46,
             currentLongitude = 2.9,
             currentZoom = 6,
             currentSidebar = 1,
+            currentBaseLayer = 'OSM Legacy',
             option_label = 1,
             option_perimeter = 1;
-
-        if (window.localStorage) {
-            currentLatitude = localStorage.getItem('latitude') || currentLatitude;
-            currentLongitude = localStorage.getItem('longitude') || currentLongitude;
-            currentZoom = localStorage.getItem('zoom') || currentZoom;
-            if (localStorage.getItem('sidebar') !== null) {
-                currentSidebar = +localStorage.getItem('sidebar');
-            }
-            if (localStorage.getItem('option_label') !== null) {
-                option_label = +localStorage.getItem('option_label');
-            }
-            if (localStorage.getItem('option_perimeter') !== null) {
-                option_perimeter = +localStorage.getItem('option_perimeter');
-            }
-        }
-
-        map = L.map('map', {
-            center: new L.LatLng(currentLatitude, currentLongitude),
-            zoom: currentZoom,
-            layers: [osmLegacyLayer],
-            attributionControl: false,
-            zoomControl: true,
-            inertia: false
-        });
 
         var baseLayers = {
             "Mapquest": mapquestLayer,
@@ -354,27 +327,52 @@
             "Transport": transportLayer,
             "OSM Legacy": osmLegacyLayer
         };
+
         var overlays = {};
-        L.control.layers(baseLayers, overlays).addTo(map);
+
+        if (window.localStorage) {
+            currentLatitude = _.isNull(localStorage.getItem('latitude')) ? currentLatitude : parseFloat(localStorage.getItem('latitude'));
+            currentLongitude = _.isNull(localStorage.getItem('longitude')) ? currentLongitude : parseFloat(localStorage.getItem('longitude'));
+            currentZoom = _.isNull(localStorage.getItem('zoom')) ? currentZoom : +localStorage.getItem('zoom');
+            if (localStorage.getItem('baselayer') !== null && _.has(baseLayers, localStorage.getItem('baselayer'))) {
+                currentBaseLayer = localStorage.getItem('baselayer');
+            }
+            currentSidebar = localStorage.getItem('sidebar') === null ? currentSidebar : +localStorage.getItem('sidebar');
+            option_label = localStorage.getItem('option_label') === null ? option_label : +localStorage.getItem('option_label');
+            option_perimeter = localStorage.getItem('option_perimeter') === null ? option_perimeter : +localStorage.getItem('option_perimeter');
+        }
+
+        map = L.map('map', {
+            center: new L.LatLng(currentLatitude, currentLongitude),
+            zoom: currentZoom,
+            layers: _.values(_.pick(baseLayers, currentBaseLayer)),
+            attributionControl: false,
+            zoomControl: true,
+            inertia: false
+        });
+
+        // Active Layers
+        control = L.control.activeLayers(baseLayers, overlays);
+        control.addTo(map);
 
         // Sidebar
         sidebar = L.control.sidebar('sidebar', {
             position: 'left',
-            pan: false
+            autoPan: false
         });
         map.addControl(sidebar);
-
         if (currentSidebar) {
-            setTimeout(function() {
+            _.delay(function() {
                 sidebar.show();
             }, 250);
         }
         if (option_label) {
-            document.getElementById('display_labels').checked = 'checked';
+            objOptionLabel.checked = 'checked';
         }
         if (option_perimeter) {
-            document.getElementById('display_perimeters').checked = 'checked';
+            objOptionPerimeter.checked = 'checked';
         }
+
         // Fullscreen
         map.addControl(new L.Control.FullScreen());
 
@@ -388,23 +386,22 @@
 
         // EventListeners
         document.getElementById('clear').addEventListener('click', clear);
-        document.getElementById('display_labels').addEventListener('change', refreshMap);
-        document.getElementById('display_labels').addEventListener('change', saveSidebar);
-        document.getElementById('display_perimeters').addEventListener('change', refreshMap);
-        document.getElementById('display_perimeters').addEventListener('change', saveSidebar);
+        objOptionLabel.addEventListener('change', toggleLabels);
+        objOptionPerimeter.addEventListener('change', togglePerimeters);
         L.DomEvent.addListener(map, 'zoomend', savePosition);
         L.DomEvent.addListener(map, 'moveend', savePosition);
+        L.DomEvent.addListener(map, 'baselayerchange', saveBaseLayer);
         sidebar.on('hide', saveSidebar);
         sidebar.on('show', saveSidebar);
     };
 
     // App Cache
     var onUpdateReady = function() {
-        setTimeout(function() {
-            if (confirm('Geocaching GPX Viewer has been updated!\n\nReload the page to use the new version.')) {
+        _.delay(function() {
+            if (confirm('Geocaching GPX Viewer has been updated!\n\nDo you want to reload the page to use the new version?')) {
                 window.location.reload(true);
             }
-        }, 1000);
+        }, 0);
         return false;
     };
     window.applicationCache.addEventListener('updateready', onUpdateReady);
@@ -416,7 +413,7 @@
     var flattr = function() {
         var f, s = document.getElementById('flattr');
         f = document.createElement('iframe');
-        f.src = '//api.flattr.com/button/view/?uid=Surfoo&button=compact&url=http%3A%2F%2Fgc-gpx-viewer.vaguelibre.net';
+        f.src = '//api.flattr.com/button/view/?uid=Surfoo&button=compact&url=' + encodeURIComponent(document.URL);
         f.title = 'Flattr';
         f.height = 20;
         f.width = 110;
@@ -498,4 +495,4 @@
     }
 
     window.onload = load();
-})();
+})(_);
