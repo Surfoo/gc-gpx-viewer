@@ -216,7 +216,7 @@
         }
 
         if (waypoints.length === 0 && trks.length === 0) {
-            alert('No track found.');
+            alert('No tracks found.');
         } else if (trks.length > 0) {
             displayTracks(trks);
         }
@@ -312,6 +312,18 @@
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
         });
 
+        var bingLayerAerial = new L.BingLayer("AlBwVzyGYtseSIzUAiDWBVI6k8OLGHVnEYuSfWSzNtQJ7eltNWiL1wCkdbD6T_JJ", {
+            type: 'Aerial'
+        });
+
+        var bingLayerAerialWithLabels = new L.BingLayer("AlBwVzyGYtseSIzUAiDWBVI6k8OLGHVnEYuSfWSzNtQJ7eltNWiL1wCkdbD6T_JJ", {
+            type: 'AerialWithLabels'
+        });
+
+        var bingLayerRoad = new L.BingLayer("AlBwVzyGYtseSIzUAiDWBVI6k8OLGHVnEYuSfWSzNtQJ7eltNWiL1wCkdbD6T_JJ", {
+            type: 'Road'
+        });
+
         // Default values
         var currentLatitude = 46,
             currentLongitude = 2.9,
@@ -322,10 +334,13 @@
             option_perimeter = 1;
 
         var baseLayers = {
+            "OSM Legacy": osmLegacyLayer,
+            "Bing Aerial": bingLayerAerial,
+            "Bing Road": bingLayerRoad,
+            "Bing Hybrid": bingLayerAerialWithLabels,
             "Mapquest": mapquestLayer,
             "CloudMade": cloudmadeLayer,
-            "Transport": transportLayer,
-            "OSM Legacy": osmLegacyLayer
+            "Transport": transportLayer
         };
 
         var overlays = {};
@@ -410,7 +425,7 @@
     }
 
     // Flattr
-    var flattr = function() {
+    (function() {
         var f, s = document.getElementById('flattr');
         f = document.createElement('iframe');
         f.src = '//api.flattr.com/button/view/?uid=Surfoo&button=compact&url=' + encodeURIComponent(document.URL);
@@ -420,7 +435,7 @@
         f.style.borderWidth = 0;
         f.style.verticalAlign = 'middle';
         s.parentNode.insertBefore(f, s);
-    }();
+    }());
 
     // output information
     var Output = function(msg) {

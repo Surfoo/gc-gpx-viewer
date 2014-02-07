@@ -27,6 +27,7 @@ gulp.task('minify-js', function() {
               'js/L.Control.Sidebar.js',
               'js/leaflet.label.js',
               'js/ActiveLayers.js',
+              'js/Bing.js',
               'js/date.format.js',
               'js/gcgpxviewer.js'
     ])
