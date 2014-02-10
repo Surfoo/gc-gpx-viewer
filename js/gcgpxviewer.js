@@ -262,9 +262,11 @@
         for (i in polylineList) {
             map.removeLayer(polylineList[i]);
         }
+
         circleList.length = 0;
         markers.length = 0;
         polylineList.length = 0;
+        bounds = new L.LatLngBounds();
 
         while (element.firstChild) {
             element.removeChild(element.firstChild);
@@ -376,6 +378,7 @@
             autoPan: false
         });
         map.addControl(sidebar);
+        document.getElementById('sidebar').style.display = 'block';
         if (currentSidebar) {
             _.delay(function() {
                 sidebar.show();

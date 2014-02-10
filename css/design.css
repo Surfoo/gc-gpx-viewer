@@ -23,6 +23,7 @@ a {
 
 #sidebar {
   font-size: 1.2em;
+  display: none;
 }
 #sidebar h1 {
   margin: 0 0 0.2em 0;
