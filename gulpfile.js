@@ -21,6 +21,7 @@ gulp.task('lint', function() {
 gulp.task('minify-js', function() {
     gulp.src(['js/underscore-min.js',
               'js/leaflet/leaflet-src.js',
+              'js/tile.stamen.js',
               'js/Control.FullScreen.js',
               'js/L.Control.Locate.js',
               'js/Control.Options.js',

@@ -326,6 +326,10 @@
             type: 'Road'
         });
 
+        var stamenToner = new L.StamenTileLayer("toner");
+
+        var stamenWaterColor = new L.StamenTileLayer("watercolor");
+
         // Default values
         var currentLatitude = 46,
             currentLongitude = 2.9,
@@ -342,7 +346,9 @@
             "Bing Hybrid": bingLayerAerialWithLabels,
             "Mapquest": mapquestLayer,
             "CloudMade": cloudmadeLayer,
-            "Transport": transportLayer
+            "Transport": transportLayer,
+            "Stamen Toner": stamenToner,
+            "Stamen WaterColor": stamenWaterColor
         };
 
         var overlays = {};
