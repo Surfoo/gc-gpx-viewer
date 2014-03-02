@@ -161,11 +161,11 @@
             markers.push(oMarker);
 
             circle = new L.circle(latlng, 161, {
-                color: '#ff0000',
+                weight: 2,
+                color: '#c11414',
                 opacity: objOptionPerimeter.checked ? 0.8 : 0,
-                strokeWeight: 1,
-                weight: 1,
-                fill: false,
+                fillColor: objOptionPerimeter.checked ? "#c11414" : 'transparent',
+                fillOpacity: objOptionPerimeter.checked ? 0.25 : 0,
                 clickable: false
             });
             circle.addTo(map);
@@ -241,10 +241,12 @@
     };
 
     var togglePerimeters = function() {
-        var i, _opacity = objOptionPerimeter.checked ? 0.8 : 0;
+        var i, _opacity = objOptionPerimeter.checked ? 0.8 : 0,
+            _fillopacity = objOptionPerimeter.checked ? 0.25 : 0;
         for (i in markers) {
             circleList[i].setStyle({
-                opacity: _opacity
+                opacity: _opacity,
+                fillOpacity: _fillopacity
             });
         }
 
