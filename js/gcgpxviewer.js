@@ -380,6 +380,11 @@
         control = L.control.activeLayers(baseLayers, overlays);
         control.addTo(map);
 
+        // Scale
+        L.control.scale({
+            'maxWidth': 200
+        }).addTo(map);
+
         // Sidebar
         sidebar = L.control.sidebar('sidebar', {
             position: 'left',
