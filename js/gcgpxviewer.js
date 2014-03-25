@@ -2,6 +2,7 @@
     //'use strict';
     var typeCaches, sizeCaches, objOptionLabel, objOptionPerimeter, circleList, markers,
         map, parser, doc, circle;
+    var unitType = ['o', 'Ko', 'Mo', 'Go'];
     typeCaches = [{
         'id': 2,
         'type': 'Traditional Cache'
@@ -489,11 +490,15 @@
                 alert(fileinfo[0].name + ' in an invalid file.');
                 return false;
             }
-            var size_ko = (fileinfo[0].size / 1024 * 100) / 100;
-            var size_mo = (fileinfo[0].size / 1024 / 1024 * 100) / 100;
-            var size = (size_ko >= 1024) ? size_mo.toFixed(2) + 'Mo' : size_ko.toFixed(2) + 'Ko';
-            var outputFileInfo = fileinfo[0].name + ' (' + size + ')';
-            Output(outputFileInfo);
+
+            var size = fileinfo[0].size,
+                unitCount = 0;
+            while (size >= 1024) {
+                size = size / 1024;
+                ++unitCount;
+            }
+
+            Output(fileinfo[0].name + ' (' + size.toFixed(2) + unitType[unitCount] + ')');
             display(doc);
         };
 
