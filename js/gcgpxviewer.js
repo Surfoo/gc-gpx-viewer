@@ -1,8 +1,10 @@
 (function(_) {
-    //'use strict';
-    var typeCaches, sizeCaches, objOptionLabel, objOptionPerimeter, circleList, markers,
-        map, parser, doc, circle;
+    /*'use strict';*/
+    var typeCaches, sizeCaches, objOptionLabel, objOptionPerimeter, circleList, polylineList, markers,
+        map, parser, doc, circle, control;
     var unitType = ['o', 'Ko', 'Mo', 'Go'];
+
+    // Id and types of geocaches from geocaching.com
     typeCaches = [{
         'id': 2,
         'type': 'Traditional Cache'
@@ -41,6 +43,7 @@
         'type': 'Wherigo Cache'
     }];
 
+    // Size list geocaches
     sizeCaches = [{
         'id': 'micro',
         'label': 'Micro'
@@ -75,11 +78,13 @@
     polylineList = [];
     markers = [];
 
+    // Display geocaches on the map
     var displayCaches = function(wpts) {
         var icon, wpt, sym, latlng, oMarker, infoContent, i, nbWpts, j, nbTypeCaches, nbSizeCaches,
             regexType = /[a-z]*?\|([a-z-\s]*)\|?/i,
             grdspk, oName, oDifficulty, oTerrain, oOwner, oContainer, oDate, date, size, match;
 
+        // for each geocaches
         for (i = 0, nbWpts = wpts.length; i < nbWpts; ++i) {
             wpt = wpts[i];
             sym = wpt.getElementsByTagName('sym')[0].childNodes[0] || false;
@@ -88,8 +93,9 @@
                 sym.nodeValue !== '')) {
                 continue;
             }
+            // Retrieve all informations in the waypoint
             grdspk = wpt.getElementsByTagNameNS('*', 'cache');
-            //console.log(grdspk[0].getAttribute('id'));
+            /*console.log(grdspk[0].getAttribute('id'));*/
             oName = grdspk[0].getElementsByTagNameNS('*', 'name');
             oDifficulty = grdspk[0].getElementsByTagNameNS('*', 'difficulty');
             oTerrain = grdspk[0].getElementsByTagNameNS('*', 'terrain');
@@ -124,6 +130,7 @@
 
             latlng = new L.latLng(parseFloat(wpt.getAttribute('lat')), parseFloat(wpt.getAttribute('lon')));
 
+            // Create the marker
             oMarker = L.marker(latlng, {
                 icon: icon
             }).bindLabel(wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue, {
@@ -132,6 +139,7 @@
                 direction: 'auto'
             }).addTo(map);
 
+            // Content for the popup
             infoContent = '<div class="infowindow">';
             infoContent += '<div class="code">' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</div>';
             infoContent += '    <h4>';
@@ -161,6 +169,7 @@
             }).setLatLng(latlng).setContent(infoContent));
             markers.push(oMarker);
 
+            // Set perimeter
             circle = new L.circle(latlng, 161, {
                 weight: 2,
                 color: '#c11414',
@@ -172,10 +181,12 @@
             circle.addTo(map);
             circleList.push(circle);
 
+            // Extends the bounds to contain the given point
             bounds.extend(latlng);
         }
     };
 
+    // Display tracks on the map 
     var displayTracks = function(wpts) {
         var wpt, latlng, i = 0,
             j, k,
@@ -207,6 +218,7 @@
 
     };
 
+    // function to display informations on the maps, waypoints or tracks
     var display = function(data) {
         var waypoints = data.documentElement.getElementsByTagName('wpt'),
             trks = data.documentElement.getElementsByTagName('trk');
@@ -227,71 +239,75 @@
         }
     };
 
+    // Toggle labels according to the old value
     var toggleLabels = function() {
-        var i;
-        for (i in markers) {
+        _.each(markers, function(value, key) {
             if (objOptionLabel.checked) {
-                markers[i].setOpacity(1, true);
-                markers[i].showLabel();
+                markers[key].setOpacity(1, true);
+                markers[key].showLabel();
             } else {
-                markers[i].hideLabel();
+                markers[key].hideLabel();
             }
-        }
+        });
 
         localStorage.setItem('option_label', +objOptionLabel.checked);
     };
 
+    // Toggle perimeters acccording to the old value
     var togglePerimeters = function() {
-        var i, _opacity = objOptionPerimeter.checked ? 0.8 : 0,
-            _fillopacity = objOptionPerimeter.checked ? 0.25 : 0;
-        for (i in markers) {
-            circleList[i].setStyle({
-                opacity: _opacity,
-                fillOpacity: _fillopacity
+        _.each(markers, function(value, key) {
+            circleList[key].setStyle({
+                opacity: objOptionPerimeter.checked ? 0.8 : 0,
+                fillOpacity: objOptionPerimeter.checked ? 0.25 : 0
             });
-        }
+        });
 
         localStorage.setItem('option_perimeter', +objOptionPerimeter.checked);
     };
 
+    // Clear the map by removing all layers
     var clear = function() {
-        var i, element = document.getElementById('list');
-        for (i in circleList) {
-            map.removeLayer(circleList[i]);
-        }
-        for (i in markers) {
-            map.removeLayer(markers[i]);
-        }
-        for (i in polylineList) {
-            map.removeLayer(polylineList[i]);
-        }
+        _.each(circleList, function(value, key) {
+            map.removeLayer(circleList[key]);
+        });
+        _.each(markers, function(value, key) {
+            map.removeLayer(markers[key]);
+        });
+        _.each(polylineList, function(value, key) {
+            map.removeLayer(polylineList[key]);
+        });
 
         circleList.length = 0;
         markers.length = 0;
         polylineList.length = 0;
         bounds = new L.LatLngBounds();
 
+        var element = document.getElementById('list');
         while (element.firstChild) {
             element.removeChild(element.firstChild);
         }
     };
 
+    // Save the position and the zoom in localstorage
     var savePosition = function() {
         localStorage.setItem('zoom', map.getZoom());
         localStorage.setItem('latitude', map.getCenter().lat.toFixed(5));
         localStorage.setItem('longitude', map.getCenter().lng.toFixed(5));
     };
 
+    // Save the position of the sidebard (hidden or not)  in localstorage
     var saveSidebar = function() {
         localStorage.setItem('sidebar', +sidebar.isVisible());
     };
 
+    // Save the current baselayer  in localstorage
     var saveBaseLayer = function() {
         localStorage.setItem('baselayer', control.getActiveBaseLayer().name);
     };
 
     var bounds = new L.LatLngBounds();
 
+    // Init function to create the user interface
     var load = function() {
         var cloudmadeLayer = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
             maxZoom: 18,
@@ -342,6 +358,7 @@
             option_label = 1,
             option_perimeter = 1;
 
+        // List of base layers
         var baseLayers = {
             "OSM Legacy": osmLegacyLayer,
             "Bing Aerial": bingLayerAerial,
@@ -356,6 +373,7 @@
 
         var overlays = {};
 
+        // Set some of default values for the map
         if (window.localStorage) {
             currentLatitude = _.isNull(localStorage.getItem('latitude')) ? currentLatitude : parseFloat(localStorage.getItem('latitude'));
             currentLongitude = _.isNull(localStorage.getItem('longitude')) ? currentLongitude : parseFloat(localStorage.getItem('longitude'));
@@ -368,6 +386,7 @@
             option_perimeter = localStorage.getItem('option_perimeter') === null ? option_perimeter : +localStorage.getItem('option_perimeter');
         }
 
+        // Create the map
         map = L.map('map', {
             center: new L.LatLng(currentLatitude, currentLongitude),
             zoom: currentZoom,
@@ -381,12 +400,12 @@
         control = L.control.activeLayers(baseLayers, overlays);
         control.addTo(map);
 
-        // Scale
+        // Scale options
         L.control.scale({
             'maxWidth': 200
         }).addTo(map);
 
-        // Sidebar
+        // Sidebar options
         sidebar = L.control.sidebar('sidebar', {
             position: 'left',
             autoPan: false
@@ -405,10 +424,10 @@
             objOptionPerimeter.checked = 'checked';
         }
 
-        // Fullscreen
+        // Fullscreen options
         map.addControl(new L.Control.FullScreen());
 
-        // Geolocation
+        // Geolocation options
         L.control.locate({
             drawCircle: false
         }).addTo(map);
@@ -427,7 +446,7 @@
         sidebar.on('show', saveSidebar);
     };
 
-    // App Cache
+    // App Cache, reload the web app by user request to get the latest version
     var onUpdateReady = function() {
         _.delay(function() {
             if (confirm('Geocaching GPX Viewer has been updated!\n\nDo you want to reload the page to use the new version?')) {
@@ -436,12 +455,13 @@
         }, 0);
         return false;
     };
+    // Listener for App Cache
     window.applicationCache.addEventListener('updateready', onUpdateReady);
     if (window.applicationCache.status === window.applicationCache.UPDATEREADY) {
         onUpdateReady();
     }
 
-    // Flattr
+    // Flattr Button
     (function() {
         var f, s = document.getElementById('flattr');
         f = document.createElement('iframe');
@@ -454,7 +474,7 @@
         s.parentNode.insertBefore(f, s);
     }());
 
-    // output information
+    // Output information
     var Output = function(msg) {
         var li = document.createElement('li'),
             list = document.getElementById('list');
@@ -462,7 +482,7 @@
         list.appendChild(li);
     };
 
-    // output file information
+    // Output file information
     var ParseFile = function(file) {
         var reader = new FileReader(),
             el = document.getElementById('loader'),
@@ -510,17 +530,14 @@
     };
 
     var FileSelectHandler = function(e) {
-        // cancel event and hover styling
-        //FileDragHover(e);
-
         // fetch FileList object
-        var files = e.target.files || e.dataTransfer.files,
-            i, f;
+        var files = e.target.files || e.dataTransfer.files;
 
         // process all File objects
-        for (i = 0; f = files[i]; ++i) {
-            ParseFile(f);
-        }
+        _.each(files, function(value) {
+            ParseFile(value);
+        });
+
     };
 
     // call initialization file
