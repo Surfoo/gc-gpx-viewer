@@ -1,6 +1,7 @@
 CACHE MANIFEST
 
-# 2014-04-17
+# date: 2014-04-24
+# version: 2.0.1
 
 CACHE:
 gcgpxviewer.min.css
@@ -29,9 +30,14 @@ img/11.gif
 img/12.gif
 img/13.gif
 img/137.gif
+img/453.gif
 img/1304.gif
 img/1858.gif
-img/453.gif
+img/3653.gif
+img/3773.gif
+img/3774.gif
+img/4738.gif
+img/7005.gif
 js/gcgpxviewer.min.js
 
 NETWORK:

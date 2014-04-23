@@ -94,7 +94,9 @@ input {
 .infowindow dl dd,.infowindow h4 {
   margin-bottom: 0.25em;
 }
-
+.infowindow dl dd {
+    overflow: hidden;
+}
 h1, h2, h3, h4, h5, h6, p, a, img, dl, dt, dd {
     border: 0 none;
     font-family: inherit;

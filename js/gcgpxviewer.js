@@ -2,6 +2,7 @@
     /*'use strict';*/
     var typeCaches, sizeCaches, objOptionLabel, objOptionPerimeter, circleList, polylineList, markers,
         map, parser, doc, circle, control;
+    var circleOpacity = 0.8, circleColor = '#c11414', circleFillOpacity = 0.25;
     var unitType = ['o', 'Ko', 'Mo', 'Go'];
 
     // Id and types of geocaches from geocaching.com
@@ -24,8 +25,14 @@
         'id': 8,
         'type': 'Unknown Cache'
     }, {
+        'id': 9,
+        'type': 'Project APE Cache'
+    }, {
         'id': 11,
         'type': 'Webcam Cache'
+    }, {
+        'id': 12,
+        'type': 'Locationless (Reverse) Cache'
     }, {
         'id': 13,
         'type': 'Cache In Trash Out Event'
@@ -41,6 +48,21 @@
     }, {
         'id': 1858,
         'type': 'Wherigo Cache'
+    }, {
+        'id': 3653,
+        'type': 'Lost and Found Event Caches'
+    }, {
+        'id': 3773,
+        'type': 'Groundspeak HQ'
+    }, {
+        'id': 3774,
+        'type': 'Groundspeak Lost and Found Celebration'
+    }, {
+        'id': 4738,
+        'type': 'Groundspeak Block Party'
+    }, {
+        'id': 7005,
+        'type': 'Giga-Event Cache'
     }];
 
     // Size list geocaches
@@ -81,8 +103,8 @@
     // Display geocaches on the map
     var displayCaches = function(wpts) {
         var icon, wpt, sym, latlng, oMarker, infoContent, i, nbWpts, j, nbTypeCaches, nbSizeCaches,
-            regexType = /[a-z]*?\|([a-z-\s]*)\|?/i,
-            grdspk, oName, oDifficulty, oTerrain, oOwner, oContainer, oDate, date, size, match;
+            regexType = /[a-z]*?\|([^<]*)\|?/i,
+            grdspk, elmName, elmDifficulty, elmTerrain, elmOwner, elmContainer, elmDate, elmSize, match;
 
         // for each geocaches
         for (i = 0, nbWpts = wpts.length; i < nbWpts; ++i) {
@@ -96,14 +118,14 @@
             // Retrieve all informations in the waypoint
             grdspk = wpt.getElementsByTagNameNS('*', 'cache');
             /*console.log(grdspk[0].getAttribute('id'));*/
-            oName = grdspk[0].getElementsByTagNameNS('*', 'name');
-            oDifficulty = grdspk[0].getElementsByTagNameNS('*', 'difficulty');
-            oTerrain = grdspk[0].getElementsByTagNameNS('*', 'terrain');
-            oOwner = grdspk[0].getElementsByTagNameNS('*', 'owner');
-            oContainer = grdspk[0].getElementsByTagNameNS('*', 'container');
-            oDate = new Date(wpt.getElementsByTagName('time')[0].childNodes[0].nodeValue);
-            date = oDate.format('yyyy/mm/dd');
-            size = null;
+            elmName = grdspk[0].getElementsByTagNameNS('*', 'name');
+            elmDifficulty = grdspk[0].getElementsByTagNameNS('*', 'difficulty');
+            elmTerrain = grdspk[0].getElementsByTagNameNS('*', 'terrain');
+            elmOwner = grdspk[0].getElementsByTagNameNS('*', 'owner');
+            elmContainer = grdspk[0].getElementsByTagNameNS('*', 'container');
+            elmDate = new Date(wpt.getElementsByTagName('time')[0].childNodes[0].nodeValue);
+            elmDate = elmDate.format('yyyy/mm/dd');
+            elmSize = null;
             match = wpt.getElementsByTagName('type')[0].childNodes[0].nodeValue.match(regexType);
 
             if (match) {
@@ -111,7 +133,8 @@
                     if (typeCaches[j].type === match[1]) {
                         icon = L.icon({
                             iconSize: [16, 16],
-                            iconUrl: 'img/' + typeCaches[j].id + '.gif'
+                            iconUrl: 'img/ct' + typeCaches[j].id + '.png',
+                            iconPopin: 'img/' + typeCaches[j].id + '.gif'
                         });
                         break;
                     }
@@ -122,8 +145,8 @@
             }
 
             for (j = 0, nbSizeCaches = sizeCaches.length; j < nbSizeCaches; ++j) {
-                if (sizeCaches[j].id === oContainer[0].childNodes[0].nodeValue.toLowerCase()) {
-                    size = sizeCaches[j].label;
+                if (sizeCaches[j].id === elmContainer[0].childNodes[0].nodeValue.toLowerCase()) {
+                    elmSize = sizeCaches[j].label;
                     break;
                 }
             }
@@ -143,24 +166,24 @@
             infoContent = '<div class="infowindow">';
             infoContent += '<div class="code">' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</div>';
             infoContent += '    <h4>';
-            infoContent += '        <img src="' + icon.options.iconUrl + '">';
-            infoContent += '        <a href="http://coord.info/' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + oName[0].childNodes[0].nodeValue + '</a>';
+            infoContent += '        <img src="' + icon.options.iconPopin + '" width="16" alt="" />';
+            infoContent += '        <a href="http://coord.info/' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + elmName[0].childNodes[0].nodeValue + '</a>';
             infoContent += '    </h4>';
             infoContent += '    <dl style="float:left;margin-right:2em;width:50%;">';
-            if (oOwner[0].childNodes[0]) {
+            if (elmOwner[0].childNodes[0]) {
                 infoContent += '        <dt>Created by:</dt>';
-                infoContent += '        <dd>' + oOwner[0].childNodes[0].nodeValue + '</dd>';
+                infoContent += '        <dd title="' + elmOwner[0].childNodes[0].nodeValue + '">' + elmOwner[0].childNodes[0].nodeValue + '</dd>';
             }
             infoContent += '        <dt>Difficulty:</dt>';
-            infoContent += '        <dd>' + oDifficulty[0].childNodes[0].nodeValue + '</dd>';
+            infoContent += '        <dd>' + elmDifficulty[0].childNodes[0].nodeValue + '</dd>';
             infoContent += '        <dt>Cache size:</dt>';
-            infoContent += '        <dd>' + size + '</dd>';
+            infoContent += '        <dd>' + elmSize + '</dd>';
             infoContent += '    </dl>';
             infoContent += '    <dl style="margin-left:50%">';
             infoContent += '        <dt>Date Hidden:</dt>';
-            infoContent += '        <dd>' + date + '</dd>';
+            infoContent += '        <dd>' + elmDate + '</dd>';
             infoContent += '        <dt>Terrain:</dt>';
-            infoContent += '        <dd>' + oTerrain[0].childNodes[0].nodeValue + '</dd>';
+            infoContent += '        <dd>' + elmTerrain[0].childNodes[0].nodeValue + '</dd>';
             infoContent += '    </dl>';
             infoContent += '</div>';
 
@@ -172,10 +195,10 @@
             // Set perimeter
             circle = new L.circle(latlng, 161, {
                 weight: 2,
-                color: '#c11414',
-                opacity: objOptionPerimeter.checked ? 0.8 : 0,
-                fillColor: objOptionPerimeter.checked ? "#c11414" : 'transparent',
-                fillOpacity: objOptionPerimeter.checked ? 0.25 : 0,
+                color: circleColor,
+                opacity: objOptionPerimeter.checked ? circleOpacity : 0,
+                fillColor: objOptionPerimeter.checked ? circleColor : 'transparent',
+                fillOpacity: objOptionPerimeter.checked ? circleFillOpacity : 0,
                 clickable: false
             });
             circle.addTo(map);
@@ -186,7 +209,7 @@
         }
     };
 
-    // Display tracks on the map 
+    // Display tracks on the map
     var displayTracks = function(wpts) {
         var wpt, latlng, i = 0,
             j, k,
@@ -213,7 +236,6 @@
                 polyline.addTo(map);
                 polylineList.push(polyline);
             }
-            bounds.extend(latlng);
         }
 
     };
@@ -257,8 +279,9 @@
     var togglePerimeters = function() {
         _.each(markers, function(value, key) {
             circleList[key].setStyle({
-                opacity: objOptionPerimeter.checked ? 0.8 : 0,
-                fillOpacity: objOptionPerimeter.checked ? 0.25 : 0
+                opacity: objOptionPerimeter.checked ? circleOpacity : 0,
+                fillColor: objOptionPerimeter.checked ? circleColor : 'transparent',
+                fillOpacity: objOptionPerimeter.checked ? circleFillOpacity : 0
             });
         });
 

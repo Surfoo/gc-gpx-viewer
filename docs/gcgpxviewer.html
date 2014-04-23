@@ -34,6 +34,7 @@
     <span class="hljs-comment">/*'use strict';*/</span>
     <span class="hljs-keyword">var</span> typeCaches, sizeCaches, objOptionLabel, objOptionPerimeter, circleList, polylineList, markers,
         map, parser, doc, circle, control;
+    <span class="hljs-keyword">var</span> circleOpacity = <span class="hljs-number">0.8</span>, circleColor = <span class="hljs-string">'#c11414'</span>, circleFillOpacity = <span class="hljs-number">0.25</span>;
     <span class="hljs-keyword">var</span> unitType = [<span class="hljs-string">'o'</span>, <span class="hljs-string">'Ko'</span>, <span class="hljs-string">'Mo'</span>, <span class="hljs-string">'Go'</span>];</pre></div></div>
             
         </li>
@@ -68,8 +69,14 @@
         <span class="hljs-string">'id'</span>: <span class="hljs-number">8</span>,
         <span class="hljs-string">'type'</span>: <span class="hljs-string">'Unknown Cache'</span>
     }, {
+        <span class="hljs-string">'id'</span>: <span class="hljs-number">9</span>,
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Project APE Cache'</span>
+    }, {
         <span class="hljs-string">'id'</span>: <span class="hljs-number">11</span>,
         <span class="hljs-string">'type'</span>: <span class="hljs-string">'Webcam Cache'</span>
+    }, {
+        <span class="hljs-string">'id'</span>: <span class="hljs-number">12</span>,
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Locationless (Reverse) Cache'</span>
     }, {
         <span class="hljs-string">'id'</span>: <span class="hljs-number">13</span>,
         <span class="hljs-string">'type'</span>: <span class="hljs-string">'Cache In Trash Out Event'</span>
@@ -85,6 +92,21 @@
     }, {
         <span class="hljs-string">'id'</span>: <span class="hljs-number">1858</span>,
         <span class="hljs-string">'type'</span>: <span class="hljs-string">'Wherigo Cache'</span>
+    }, {
+        <span class="hljs-string">'id'</span>: <span class="hljs-number">3653</span>,
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Lost and Found Event Caches'</span>
+    }, {
+        <span class="hljs-string">'id'</span>: <span class="hljs-number">3773</span>,
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Groundspeak HQ'</span>
+    }, {
+        <span class="hljs-string">'id'</span>: <span class="hljs-number">3774</span>,
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Groundspeak Lost and Found Celebration'</span>
+    }, {
+        <span class="hljs-string">'id'</span>: <span class="hljs-number">4738</span>,
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Groundspeak Block Party'</span>
+    }, {
+        <span class="hljs-string">'id'</span>: <span class="hljs-number">7005</span>,
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Giga-Event Cache'</span>
     }];</pre></div></div>
             
         </li>
@@ -149,8 +171,8 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> displayCaches = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(wpts)</span> {</span>
         <span class="hljs-keyword">var</span> icon, wpt, sym, latlng, oMarker, infoContent, i, nbWpts, j, nbTypeCaches, nbSizeCaches,
-            regexType = <span class="hljs-regexp">/[a-z]*?\|([a-z-\s]*)\|?/i</span>,
-            grdspk, oName, oDifficulty, oTerrain, oOwner, oContainer, oDate, date, size, match;</pre></div></div>
+            regexType = <span class="hljs-regexp">/[a-z]*?\|([^&lt;]*)\|?/i</span>,
+            grdspk, elmName, elmDifficulty, elmTerrain, elmOwner, elmContainer, elmDate, elmSize, match;</pre></div></div>
             
         </li>
         
@@ -189,14 +211,14 @@
             
             <div class="content"><div class='highlight'><pre>            grdspk = wpt.getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'cache'</span>);
             <span class="hljs-comment">/*console.log(grdspk[0].getAttribute('id'));*/</span>
-            oName = grdspk[<span class="hljs-number">0</span>].getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'name'</span>);
-            oDifficulty = grdspk[<span class="hljs-number">0</span>].getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'difficulty'</span>);
-            oTerrain = grdspk[<span class="hljs-number">0</span>].getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'terrain'</span>);
-            oOwner = grdspk[<span class="hljs-number">0</span>].getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'owner'</span>);
-            oContainer = grdspk[<span class="hljs-number">0</span>].getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'container'</span>);
-            oDate = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(wpt.getElementsByTagName(<span class="hljs-string">'time'</span>)[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue);
-            date = oDate.format(<span class="hljs-string">'yyyy/mm/dd'</span>);
-            size = <span class="hljs-literal">null</span>;
+            elmName = grdspk[<span class="hljs-number">0</span>].getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'name'</span>);
+            elmDifficulty = grdspk[<span class="hljs-number">0</span>].getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'difficulty'</span>);
+            elmTerrain = grdspk[<span class="hljs-number">0</span>].getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'terrain'</span>);
+            elmOwner = grdspk[<span class="hljs-number">0</span>].getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'owner'</span>);
+            elmContainer = grdspk[<span class="hljs-number">0</span>].getElementsByTagNameNS(<span class="hljs-string">'*'</span>, <span class="hljs-string">'container'</span>);
+            elmDate = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(wpt.getElementsByTagName(<span class="hljs-string">'time'</span>)[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue);
+            elmDate = elmDate.format(<span class="hljs-string">'yyyy/mm/dd'</span>);
+            elmSize = <span class="hljs-literal">null</span>;
             match = wpt.getElementsByTagName(<span class="hljs-string">'type'</span>)[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue.match(regexType);
 
             <span class="hljs-keyword">if</span> (match) {
@@ -204,7 +226,8 @@
                     <span class="hljs-keyword">if</span> (typeCaches[j].type === match[<span class="hljs-number">1</span>]) {
                         icon = L.icon({
                             iconSize: [<span class="hljs-number">16</span>, <span class="hljs-number">16</span>],
-                            iconUrl: <span class="hljs-string">'img/'</span> + typeCaches[j].id + <span class="hljs-string">'.gif'</span>
+                            iconUrl: <span class="hljs-string">'img/ct'</span> + typeCaches[j].id + <span class="hljs-string">'.png'</span>,
+                            iconPopin: <span class="hljs-string">'img/'</span> + typeCaches[j].id + <span class="hljs-string">'.gif'</span>
                         });
                         <span class="hljs-keyword">break</span>;
                     }
@@ -215,8 +238,8 @@
             }
 
             <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, nbSizeCaches = sizeCaches.length; j &lt; nbSizeCaches; ++j) {
-                <span class="hljs-keyword">if</span> (sizeCaches[j].id === oContainer[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue.toLowerCase()) {
-                    size = sizeCaches[j].label;
+                <span class="hljs-keyword">if</span> (sizeCaches[j].id === elmContainer[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue.toLowerCase()) {
+                    elmSize = sizeCaches[j].label;
                     <span class="hljs-keyword">break</span>;
                 }
             }
@@ -260,24 +283,24 @@
             <div class="content"><div class='highlight'><pre>            infoContent = <span class="hljs-string">'&lt;div class="infowindow"&gt;'</span>;
             infoContent += <span class="hljs-string">'&lt;div class="code"&gt;'</span> + wpt.getElementsByTagName(<span class="hljs-string">'name'</span>)[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/div&gt;'</span>;
             infoContent += <span class="hljs-string">'    &lt;h4&gt;'</span>;
-            infoContent += <span class="hljs-string">'        &lt;img src="'</span> + icon.options.iconUrl + <span class="hljs-string">'"&gt;'</span>;
-            infoContent += <span class="hljs-string">'        &lt;a href="http://coord.info/'</span> + wpt.getElementsByTagName(<span class="hljs-string">'name'</span>)[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'" onclick="window.open(this.href);return false;"&gt;'</span> + oName[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/a&gt;'</span>;
+            infoContent += <span class="hljs-string">'        &lt;img src="'</span> + icon.options.iconPopin + <span class="hljs-string">'" width="16" alt="" /&gt;'</span>;
+            infoContent += <span class="hljs-string">'        &lt;a href="http://coord.info/'</span> + wpt.getElementsByTagName(<span class="hljs-string">'name'</span>)[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'" onclick="window.open(this.href);return false;"&gt;'</span> + elmName[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/a&gt;'</span>;
             infoContent += <span class="hljs-string">'    &lt;/h4&gt;'</span>;
             infoContent += <span class="hljs-string">'    &lt;dl style="float:left;margin-right:2em;width:50%;"&gt;'</span>;
-            <span class="hljs-keyword">if</span> (oOwner[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>]) {
+            <span class="hljs-keyword">if</span> (elmOwner[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>]) {
                 infoContent += <span class="hljs-string">'        &lt;dt&gt;Created by:&lt;/dt&gt;'</span>;
-                infoContent += <span class="hljs-string">'        &lt;dd&gt;'</span> + oOwner[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/dd&gt;'</span>;
+                infoContent += <span class="hljs-string">'        &lt;dd title="'</span> + elmOwner[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'"&gt;'</span> + elmOwner[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/dd&gt;'</span>;
             }
             infoContent += <span class="hljs-string">'        &lt;dt&gt;Difficulty:&lt;/dt&gt;'</span>;
-            infoContent += <span class="hljs-string">'        &lt;dd&gt;'</span> + oDifficulty[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/dd&gt;'</span>;
+            infoContent += <span class="hljs-string">'        &lt;dd&gt;'</span> + elmDifficulty[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/dd&gt;'</span>;
             infoContent += <span class="hljs-string">'        &lt;dt&gt;Cache size:&lt;/dt&gt;'</span>;
-            infoContent += <span class="hljs-string">'        &lt;dd&gt;'</span> + size + <span class="hljs-string">'&lt;/dd&gt;'</span>;
+            infoContent += <span class="hljs-string">'        &lt;dd&gt;'</span> + elmSize + <span class="hljs-string">'&lt;/dd&gt;'</span>;
             infoContent += <span class="hljs-string">'    &lt;/dl&gt;'</span>;
             infoContent += <span class="hljs-string">'    &lt;dl style="margin-left:50%"&gt;'</span>;
             infoContent += <span class="hljs-string">'        &lt;dt&gt;Date Hidden:&lt;/dt&gt;'</span>;
-            infoContent += <span class="hljs-string">'        &lt;dd&gt;'</span> + date + <span class="hljs-string">'&lt;/dd&gt;'</span>;
+            infoContent += <span class="hljs-string">'        &lt;dd&gt;'</span> + elmDate + <span class="hljs-string">'&lt;/dd&gt;'</span>;
             infoContent += <span class="hljs-string">'        &lt;dt&gt;Terrain:&lt;/dt&gt;'</span>;
-            infoContent += <span class="hljs-string">'        &lt;dd&gt;'</span> + oTerrain[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/dd&gt;'</span>;
+            infoContent += <span class="hljs-string">'        &lt;dd&gt;'</span> + elmTerrain[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/dd&gt;'</span>;
             infoContent += <span class="hljs-string">'    &lt;/dl&gt;'</span>;
             infoContent += <span class="hljs-string">'&lt;/div&gt;'</span>;
 
@@ -301,10 +324,10 @@
             
             <div class="content"><div class='highlight'><pre>            circle = <span class="hljs-keyword">new</span> L.circle(latlng, <span class="hljs-number">161</span>, {
                 weight: <span class="hljs-number">2</span>,
-                color: <span class="hljs-string">'#c11414'</span>,
-                opacity: objOptionPerimeter.checked ? <span class="hljs-number">0.8</span> : <span class="hljs-number">0</span>,
-                fillColor: objOptionPerimeter.checked ? <span class="hljs-string">"#c11414"</span> : <span class="hljs-string">'transparent'</span>,
-                fillOpacity: objOptionPerimeter.checked ? <span class="hljs-number">0.25</span> : <span class="hljs-number">0</span>,
+                color: circleColor,
+                opacity: objOptionPerimeter.checked ? circleOpacity : <span class="hljs-number">0</span>,
+                fillColor: objOptionPerimeter.checked ? circleColor : <span class="hljs-string">'transparent'</span>,
+                fillOpacity: objOptionPerimeter.checked ? circleFillOpacity : <span class="hljs-number">0</span>,
                 clickable: <span class="hljs-literal">false</span>
             });
             circle.addTo(map);
@@ -336,7 +359,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Display tracks on the map </p>
+              <p>Display tracks on the map</p>
 
             </div>
             
@@ -366,7 +389,6 @@
                 polyline.addTo(map);
                 polylineList.push(polyline);
             }
-            bounds.extend(latlng);
         }
 
     };</pre></div></div>
@@ -446,8 +468,9 @@
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> togglePerimeters = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
         _.each(markers, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value, key)</span> {</span>
             circleList[key].setStyle({
-                opacity: objOptionPerimeter.checked ? <span class="hljs-number">0.8</span> : <span class="hljs-number">0</span>,
-                fillOpacity: objOptionPerimeter.checked ? <span class="hljs-number">0.25</span> : <span class="hljs-number">0</span>
+                opacity: objOptionPerimeter.checked ? circleOpacity : <span class="hljs-number">0</span>,
+                fillColor: objOptionPerimeter.checked ? circleColor : <span class="hljs-string">'transparent'</span>,
+                fillOpacity: objOptionPerimeter.checked ? circleFillOpacity : <span class="hljs-number">0</span>
             });
         });
 
