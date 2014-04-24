@@ -1,7 +1,7 @@
 CACHE MANIFEST
 
 # date: 2014-04-24
-# version: 2.0.1
+# version: 2.0.2
 
 CACHE:
 gcgpxviewer.min.css
@@ -19,25 +19,36 @@ images/locate_alt.svg
 images/locate.svg
 images/locate_touch.png
 img/ajax-loader.gif
-img/2.gif
-img/3.gif
-img/4.gif
-img/5.gif
-img/6.gif
-img/8.gif
-img/9.gif
-img/11.gif
-img/12.gif
-img/13.gif
-img/137.gif
-img/453.gif
-img/1304.gif
-img/1858.gif
-img/3653.gif
-img/3773.gif
-img/3774.gif
-img/4738.gif
-img/7005.gif
+img/type_ape.map.png
+img/type_ape.png
+img/type_cito.map.png
+img/type_cito.png
+img/type_earth.map.png
+img/type_earth.png
+img/type_event.map.png
+img/type_event.png
+img/type_giga.map.png
+img/type_giga.png
+img/type_hq.map.png
+img/type_hq.png
+img/type_letterbox.map.png
+img/type_letterbox.png
+img/type_mega.map.png
+img/type_mega.png
+img/type_multi.map.png
+img/type_multi.png
+img/type_mystery.map.png
+img/type_mystery.png
+img/type_traditional.map.png
+img/type_traditional.png
+img/type_unknown.map.png
+img/type_unknown.png
+img/type_virtual.map.png
+img/type_virtual.png
+img/type_webcam.map.png
+img/type_webcam.png
+img/type_wherigo.map.png
+img/type_wherigo.png
 js/gcgpxviewer.min.js
 
 NETWORK:

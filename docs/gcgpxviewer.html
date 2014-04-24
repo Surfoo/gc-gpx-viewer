@@ -33,9 +33,11 @@
             <div class="content"><div class='highlight'><pre>(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> {</span>
     <span class="hljs-comment">/*'use strict';*/</span>
     <span class="hljs-keyword">var</span> typeCaches, sizeCaches, objOptionLabel, objOptionPerimeter, circleList, polylineList, markers,
-        map, parser, doc, circle, control;
-    <span class="hljs-keyword">var</span> circleOpacity = <span class="hljs-number">0.8</span>, circleColor = <span class="hljs-string">'#c11414'</span>, circleFillOpacity = <span class="hljs-number">0.25</span>;
-    <span class="hljs-keyword">var</span> unitType = [<span class="hljs-string">'o'</span>, <span class="hljs-string">'Ko'</span>, <span class="hljs-string">'Mo'</span>, <span class="hljs-string">'Go'</span>];</pre></div></div>
+        map, parser, doc, circle, control,
+        circleOpacity = <span class="hljs-number">0.8</span>,
+        circleColor = <span class="hljs-string">'#c11414'</span>,
+        circleFillOpacity = <span class="hljs-number">0.25</span>,
+        unitType = [<span class="hljs-string">'o'</span>, <span class="hljs-string">'Ko'</span>, <span class="hljs-string">'Mo'</span>, <span class="hljs-string">'Go'</span>];</pre></div></div>
             
         </li>
         
@@ -46,67 +48,64 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Id and types of geocaches from geocaching.com</p>
+              <p>Types of geocaches from geocaching.com</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    typeCaches = [{
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">2</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Traditional Cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Traditional Cache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_traditional'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">3</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Multi-cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Multi-cache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_multi'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">4</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Virtual Cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Virtual Cache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_virtual'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">5</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Letterbox Hybrid'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Letterbox Hybrid'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_letterbox'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">6</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Event Cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Event Cache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_event'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">8</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Unknown Cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Unknown Cache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_mystery'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">9</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Project APE Cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Project APE Cache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_ape'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">11</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Webcam Cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Webcam Cache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_webcam'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">12</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Locationless (Reverse) Cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Cache In Trash Out Event'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_cito'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">13</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Cache In Trash Out Event'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Earthcache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_earth'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">137</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Earthcache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Mega-Event Cache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_mega'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">453</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Mega-Event Cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'GPS Adventures Exhibit'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_event'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">1304</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'GPS Adventures Exhibit'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Wherigo Cache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_wherigo'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">1858</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Wherigo Cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Lost and Found Event Caches'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_event'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">3653</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Lost and Found Event Caches'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Groundspeak HQ'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_hq'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">3773</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Groundspeak HQ'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Groundspeak Lost and Found Celebration'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_event'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">3774</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Groundspeak Lost and Found Celebration'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Groundspeak Block Party'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_event'</span>
     }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">4738</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Groundspeak Block Party'</span>
-    }, {
-        <span class="hljs-string">'id'</span>: <span class="hljs-number">7005</span>,
-        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Giga-Event Cache'</span>
+        <span class="hljs-string">'type'</span>: <span class="hljs-string">'Giga-Event Cache'</span>,
+        <span class="hljs-string">'filename'</span>: <span class="hljs-string">'type_giga'</span>
     }];</pre></div></div>
             
         </li>
@@ -225,9 +224,9 @@
                 <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, nbTypeCaches = typeCaches.length; j &lt; nbTypeCaches; ++j) {
                     <span class="hljs-keyword">if</span> (typeCaches[j].type === match[<span class="hljs-number">1</span>]) {
                         icon = L.icon({
-                            iconSize: [<span class="hljs-number">16</span>, <span class="hljs-number">16</span>],
-                            iconUrl: <span class="hljs-string">'img/ct'</span> + typeCaches[j].id + <span class="hljs-string">'.png'</span>,
-                            iconPopin: <span class="hljs-string">'img/'</span> + typeCaches[j].id + <span class="hljs-string">'.gif'</span>
+                            iconSize: [<span class="hljs-number">22</span>, <span class="hljs-number">22</span>],
+                            iconUrl: <span class="hljs-string">'img/'</span> + typeCaches[j].filename + <span class="hljs-string">'.map.png'</span>,
+                            iconPopin: <span class="hljs-string">'img/'</span> + typeCaches[j].filename + <span class="hljs-string">'.png'</span>
                         });
                         <span class="hljs-keyword">break</span>;
                     }
@@ -283,7 +282,7 @@
             <div class="content"><div class='highlight'><pre>            infoContent = <span class="hljs-string">'&lt;div class="infowindow"&gt;'</span>;
             infoContent += <span class="hljs-string">'&lt;div class="code"&gt;'</span> + wpt.getElementsByTagName(<span class="hljs-string">'name'</span>)[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/div&gt;'</span>;
             infoContent += <span class="hljs-string">'    &lt;h4&gt;'</span>;
-            infoContent += <span class="hljs-string">'        &lt;img src="'</span> + icon.options.iconPopin + <span class="hljs-string">'" width="16" alt="" /&gt;'</span>;
+            infoContent += <span class="hljs-string">'        &lt;img src="'</span> + icon.options.iconPopin + <span class="hljs-string">'" width="20" alt="" /&gt;'</span>;
             infoContent += <span class="hljs-string">'        &lt;a href="http://coord.info/'</span> + wpt.getElementsByTagName(<span class="hljs-string">'name'</span>)[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'" onclick="window.open(this.href);return false;"&gt;'</span> + elmName[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>].nodeValue + <span class="hljs-string">'&lt;/a&gt;'</span>;
             infoContent += <span class="hljs-string">'    &lt;/h4&gt;'</span>;
             infoContent += <span class="hljs-string">'    &lt;dl style="float:left;margin-right:2em;width:50%;"&gt;'</span>;

@@ -1,7 +1,9 @@
-gc-gpx-viewer is a web app to display your caches from a gpx file on google maps. 
+Geocaching GPX Viewer is a web app to display your caches from a gpx file on a map.
 It can be very useful for a roadbook. Take multiple screenshots, and use gimp/photoshop/whatever to create a big map.
 
 gc-gpx-viewer use HTML5, FileReader, FullScreen API, App cache but you should use a browser wich support these features (Firefox, Chrome, Safari)
+
+Icons come from [c:geo](https://github.com/cgeo/cgeo)
 
 Get the source
 --------------

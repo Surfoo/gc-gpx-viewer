@@ -1,68 +1,67 @@
 (function(_) {
     /*'use strict';*/
     var typeCaches, sizeCaches, objOptionLabel, objOptionPerimeter, circleList, polylineList, markers,
-        map, parser, doc, circle, control;
-    var circleOpacity = 0.8, circleColor = '#c11414', circleFillOpacity = 0.25;
-    var unitType = ['o', 'Ko', 'Mo', 'Go'];
+        map, parser, doc, circle, control,
+        circleOpacity = 0.8,
+        circleColor = '#c11414',
+        circleFillOpacity = 0.25,
+        unitType = ['o', 'Ko', 'Mo', 'Go'];
 
-    // Id and types of geocaches from geocaching.com
+    // Types of geocaches from geocaching.com
     typeCaches = [{
-        'id': 2,
-        'type': 'Traditional Cache'
+        'type': 'Traditional Cache',
+        'filename': 'type_traditional'
     }, {
-        'id': 3,
-        'type': 'Multi-cache'
+        'type': 'Multi-cache',
+        'filename': 'type_multi'
     }, {
-        'id': 4,
-        'type': 'Virtual Cache'
+        'type': 'Virtual Cache',
+        'filename': 'type_virtual'
     }, {
-        'id': 5,
-        'type': 'Letterbox Hybrid'
+        'type': 'Letterbox Hybrid',
+        'filename': 'type_letterbox'
     }, {
-        'id': 6,
-        'type': 'Event Cache'
+        'type': 'Event Cache',
+        'filename': 'type_event'
     }, {
-        'id': 8,
-        'type': 'Unknown Cache'
+        'type': 'Unknown Cache',
+        'filename': 'type_mystery'
     }, {
-        'id': 9,
-        'type': 'Project APE Cache'
+        'type': 'Project APE Cache',
+        'filename': 'type_ape'
     }, {
-        'id': 11,
-        'type': 'Webcam Cache'
+        'type': 'Webcam Cache',
+        'filename': 'type_webcam'
     }, {
-        'id': 12,
-        'type': 'Locationless (Reverse) Cache'
+        'type': 'Cache In Trash Out Event',
+        'filename': 'type_cito'
     }, {
-        'id': 13,
-        'type': 'Cache In Trash Out Event'
+        'type': 'Earthcache',
+        'filename': 'type_earth'
     }, {
-        'id': 137,
-        'type': 'Earthcache'
+        'type': 'Mega-Event Cache',
+        'filename': 'type_mega'
     }, {
-        'id': 453,
-        'type': 'Mega-Event Cache'
+        'type': 'GPS Adventures Exhibit',
+        'filename': 'type_event'
     }, {
-        'id': 1304,
-        'type': 'GPS Adventures Exhibit'
+        'type': 'Wherigo Cache',
+        'filename': 'type_wherigo'
     }, {
-        'id': 1858,
-        'type': 'Wherigo Cache'
+        'type': 'Lost and Found Event Caches',
+        'filename': 'type_event'
     }, {
-        'id': 3653,
-        'type': 'Lost and Found Event Caches'
+        'type': 'Groundspeak HQ',
+        'filename': 'type_hq'
     }, {
-        'id': 3773,
-        'type': 'Groundspeak HQ'
+        'type': 'Groundspeak Lost and Found Celebration',
+        'filename': 'type_event'
     }, {
-        'id': 3774,
-        'type': 'Groundspeak Lost and Found Celebration'
+        'type': 'Groundspeak Block Party',
+        'filename': 'type_event'
     }, {
-        'id': 4738,
-        'type': 'Groundspeak Block Party'
-    }, {
-        'id': 7005,
-        'type': 'Giga-Event Cache'
+        'type': 'Giga-Event Cache',
+        'filename': 'type_giga'
     }];
 
     // Size list geocaches
@@ -132,9 +131,9 @@
                 for (j = 0, nbTypeCaches = typeCaches.length; j < nbTypeCaches; ++j) {
                     if (typeCaches[j].type === match[1]) {
                         icon = L.icon({
-                            iconSize: [16, 16],
-                            iconUrl: 'img/ct' + typeCaches[j].id + '.png',
-                            iconPopin: 'img/' + typeCaches[j].id + '.gif'
+                            iconSize: [22, 22],
+                            iconUrl: 'img/' + typeCaches[j].filename + '.map.png',
+                            iconPopin: 'img/' + typeCaches[j].filename + '.png'
                         });
                         break;
                     }
@@ -166,7 +165,7 @@
             infoContent = '<div class="infowindow">';
             infoContent += '<div class="code">' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</div>';
             infoContent += '    <h4>';
-            infoContent += '        <img src="' + icon.options.iconPopin + '" width="16" alt="" />';
+            infoContent += '        <img src="' + icon.options.iconPopin + '" width="20" alt="" />';
             infoContent += '        <a href="http://coord.info/' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + elmName[0].childNodes[0].nodeValue + '</a>';
             infoContent += '    </h4>';
             infoContent += '    <dl style="float:left;margin-right:2em;width:50%;">';
