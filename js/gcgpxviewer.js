@@ -1,109 +1,61 @@
+//     gcgpxviewer.js 2.0.3
+//     http://gc-gpx-viewer.vaguelibre.net/
+//     (c) 2014 - Surfoo
+//     email: surfooo at gmail dot com 
+
 (function(_) {
     /*'use strict';*/
-    var typeCaches, sizeCaches, objOptionLabel, objOptionPerimeter, circleList, polylineList, markers,
-        map, parser, doc, circle, control,
+    var typeCaches, sizeCaches, circle, control, map, parser, doc,
+        objOptionLabel = document.getElementById('display_labels'),
+        objOptionPerimeter = document.getElementById('display_perimeters'),
+        circleList = [],
+        polylineList = [],
+        markers = [],
         circleOpacity = 0.8,
         circleColor = '#c11414',
         circleFillOpacity = 0.25,
         unitType = ['o', 'Ko', 'Mo', 'Go'];
 
     // Types of geocaches from geocaching.com
-    typeCaches = [{
-        'type': 'Traditional Cache',
-        'filename': 'type_traditional'
-    }, {
-        'type': 'Multi-cache',
-        'filename': 'type_multi'
-    }, {
-        'type': 'Virtual Cache',
-        'filename': 'type_virtual'
-    }, {
-        'type': 'Letterbox Hybrid',
-        'filename': 'type_letterbox'
-    }, {
-        'type': 'Event Cache',
-        'filename': 'type_event'
-    }, {
-        'type': 'Unknown Cache',
-        'filename': 'type_mystery'
-    }, {
-        'type': 'Project APE Cache',
-        'filename': 'type_ape'
-    }, {
-        'type': 'Webcam Cache',
-        'filename': 'type_webcam'
-    }, {
-        'type': 'Cache In Trash Out Event',
-        'filename': 'type_cito'
-    }, {
-        'type': 'Earthcache',
-        'filename': 'type_earth'
-    }, {
-        'type': 'Mega-Event Cache',
-        'filename': 'type_mega'
-    }, {
-        'type': 'GPS Adventures Exhibit',
-        'filename': 'type_event'
-    }, {
-        'type': 'Wherigo Cache',
-        'filename': 'type_wherigo'
-    }, {
-        'type': 'Lost and Found Event Caches',
-        'filename': 'type_event'
-    }, {
-        'type': 'Groundspeak HQ',
-        'filename': 'type_hq'
-    }, {
-        'type': 'Groundspeak Lost and Found Celebration',
-        'filename': 'type_event'
-    }, {
-        'type': 'Groundspeak Block Party',
-        'filename': 'type_event'
-    }, {
-        'type': 'Giga-Event Cache',
-        'filename': 'type_giga'
-    }];
+    // The key is the term used in the GPX file and the value is used for the filename below
+    typeCaches = {
+        'Traditional Cache': 'type_traditional',
+        'Multi-cache': 'type_multi',
+        'Virtual Cache': 'type_virtual',
+        'Letterbox Hybrid': 'type_letterbox',
+        'Event Cache': 'type_event',
+        'Unknown Cache': 'type_mystery',
+        'Project APE Cache': 'type_ape',
+        'Webcam Cache': 'type_webcam',
+        'Cache In Trash Out Event': 'type_cito',
+        'Earthcache': 'type_earth',
+        'Mega-Event Cache': 'type_mega',
+        'GPS Adventures Exhibit': 'type_event',
+        'Wherigo Cache': 'type_wherigo',
+        'Lost and Found Event Caches': 'type_event',
+        'Groundspeak HQ': 'type_hq',
+        'Groundspeak Lost and Found Celebration': 'type_event',
+        'Groundspeak Block Party': 'type_event',
+        'Giga-Event Cache': 'type_giga'
+    };
 
     // Size list geocaches
-    sizeCaches = [{
-        'id': 'micro',
-        'label': 'Micro'
-    }, {
-        'id': 'small',
-        'label': 'Small'
-    }, {
-        'id': 'regular',
-        'label': 'Regular'
-    }, {
-        'id': 'large',
-        'label': 'Large'
-    }, {
-        'id': 'not_chosen',
-        'label': 'Not chosen'
-    }, {
-        'id': 'not chosen',
-        'label': 'Not chosen'
-    }, {
-        'id': 'unknown',
-        'label': 'Unknown'
-    }, {
-        'id': 'other',
-        'label': 'Other'
-    }, {
-        'id': 'virtual',
-        'label': 'Virtual'
-    }];
-    objOptionLabel = document.getElementById('display_labels');
-    objOptionPerimeter = document.getElementById('display_perimeters');
-    circleList = [];
-    polylineList = [];
-    markers = [];
+    sizeCaches = {
+        'micro': 'Micro',
+        'small': 'Small',
+        'regular': 'Regular',
+        'large': 'Large',
+        'not_chosen': 'Not chosen',
+        'not chosen': 'Not chosen',
+        'unknown': 'Unknown',
+        'other': 'Other',
+        'virtual': 'Virtual'
+    };
 
     // Display geocaches on the map
     var displayCaches = function(wpts) {
-        var icon, wpt, sym, latlng, oMarker, infoContent, i, nbWpts, j, nbTypeCaches, nbSizeCaches,
-            regexType = /[a-z]*?\|([^<]*)\|?/i,
-            grdspk, elmName, elmDifficulty, elmTerrain, elmOwner, elmContainer, elmDate, elmSize, match;
+        var icon, wpt, sym, latlng, oMarker, infoContent, i, nbWpts, grdspk, elmGccode, elmName, elmDifficulty,
+            elmTerrain, elmOwner, elmContainer, elmType, elmDate, elmSize, iconFile;
 
         // for each geocaches
         for (i = 0, nbWpts = wpts.length; i < nbWpts; ++i) {
@@ -117,37 +69,35 @@
             // Retrieve all informations in the waypoint
             grdspk = wpt.getElementsByTagNameNS('*', 'cache');
             /*console.log(grdspk[0].getAttribute('id'));*/
+            elmGccode = wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue;
             elmName = grdspk[0].getElementsByTagNameNS('*', 'name');
             elmDifficulty = grdspk[0].getElementsByTagNameNS('*', 'difficulty');
+            elmDifficulty = elmDifficulty[0].childNodes[0].nodeValue;
             elmTerrain = grdspk[0].getElementsByTagNameNS('*', 'terrain');
+            elmTerrain = elmTerrain[0].childNodes[0].nodeValue;
             elmOwner = grdspk[0].getElementsByTagNameNS('*', 'owner');
             elmContainer = grdspk[0].getElementsByTagNameNS('*', 'container');
+            elmContainer = elmContainer[0].childNodes[0].nodeValue.toLowerCase();
+            elmType = grdspk[0].getElementsByTagNameNS('*', 'type');
+            elmType = elmType[0].childNodes[0].nodeValue;
             elmDate = new Date(wpt.getElementsByTagName('time')[0].childNodes[0].nodeValue);
             elmDate = elmDate.format('yyyy/mm/dd');
-            elmSize = null;
-            match = wpt.getElementsByTagName('type')[0].childNodes[0].nodeValue.match(regexType);
+            elmSize = sizeCaches.unknown;
+            iconFile = 'type_unknown';
 
-            if (match) {
-                for (j = 0, nbTypeCaches = typeCaches.length; j < nbTypeCaches; ++j) {
-                    if (typeCaches[j].type === match[1]) {
-                        icon = L.icon({
-                            iconSize: [22, 22],
-                            iconUrl: 'img/' + typeCaches[j].filename + '.map.png',
-                            iconPopin: 'img/' + typeCaches[j].filename + '.png'
-                        });
-                        break;
-                    }
-                }
+            // Search for the cache icon
+            if (_.has(typeCaches, elmType)) {
+                iconFile = typeCaches[elmType];
             }
-            if (!icon) {
-                continue;
-            }
+            icon = L.icon({
+                iconSize: [22, 22],
+                iconUrl: 'img/' + iconFile + '.map.png',
+                iconPopin: 'img/' + iconFile + '.png'
+            });
 
-            for (j = 0, nbSizeCaches = sizeCaches.length; j < nbSizeCaches; ++j) {
-                if (sizeCaches[j].id === elmContainer[0].childNodes[0].nodeValue.toLowerCase()) {
-                    elmSize = sizeCaches[j].label;
-                    break;
-                }
+            // Search for the cache size
+            if (_.has(sizeCaches, elmContainer)) {
+                elmSize = sizeCaches[elmContainer];
             }
 
             latlng = new L.latLng(parseFloat(wpt.getAttribute('lat')), parseFloat(wpt.getAttribute('lon')));
@@ -155,7 +105,7 @@
             // Create the marker
             oMarker = L.marker(latlng, {
                 icon: icon
-            }).bindLabel(wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue, {
+            }).bindLabel(elmGccode, {
                 opacity: objOptionLabel.checked ? 1 : 0,
                 noHide: true,
                 direction: 'auto'
@@ -163,18 +113,19 @@
 
             // Content for the popup
             infoContent = '<div class="infowindow">';
-            infoContent += '<div class="code">' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '</div>';
+            infoContent += '<div class="code">' + elmGccode + '</div>';
             infoContent += '    <h4>';
             infoContent += '        <img src="' + icon.options.iconPopin + '" width="20" alt="" />';
-            infoContent += '        <a href="http://coord.info/' + wpt.getElementsByTagName('name')[0].childNodes[0].nodeValue + '" onclick="window.open(this.href);return false;">' + elmName[0].childNodes[0].nodeValue + '</a>';
+            infoContent += '        <a href="http://coord.info/' + encodeURIComponent(elmGccode) + '" onclick="window.open(this.href);return false;">' + elmName[0].childNodes[0].nodeValue + '</a>';
             infoContent += '    </h4>';
             infoContent += '    <dl style="float:left;margin-right:2em;width:50%;">';
             if (elmOwner[0].childNodes[0]) {
                 infoContent += '        <dt>Created by:</dt>';
-                infoContent += '        <dd title="' + elmOwner[0].childNodes[0].nodeValue + '">' + elmOwner[0].childNodes[0].nodeValue + '</dd>';
+                infoContent += '        <dd title="' + elmOwner[0].childNodes[0].nodeValue + '">';
+                infoContent += '<a href="http://www.geocaching.com/profile/?u=' + encodeURIComponent(elmOwner[0].childNodes[0].nodeValue) + '" onclick="window.open(this.href);return false;">' + elmOwner[0].childNodes[0].nodeValue + '</a></dd>';
             }
             infoContent += '        <dt>Difficulty:</dt>';
-            infoContent += '        <dd>' + elmDifficulty[0].childNodes[0].nodeValue + '</dd>';
+            infoContent += '        <dd>' + elmDifficulty + '</dd>';
             infoContent += '        <dt>Cache size:</dt>';
             infoContent += '        <dd>' + elmSize + '</dd>';
             infoContent += '    </dl>';
@@ -182,7 +133,7 @@
             infoContent += '        <dt>Date Hidden:</dt>';
             infoContent += '        <dd>' + elmDate + '</dd>';
             infoContent += '        <dt>Terrain:</dt>';
-            infoContent += '        <dd>' + elmTerrain[0].childNodes[0].nodeValue + '</dd>';
+            infoContent += '        <dd>' + elmTerrain + '</dd>';
             infoContent += '    </dl>';
             infoContent += '</div>';
 
