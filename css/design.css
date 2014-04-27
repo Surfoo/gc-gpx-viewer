@@ -79,6 +79,13 @@ input {
   float:right;
   padding: 0 2px;
 }
+.infowindow h4 {
+  margin-bottom: 1em;
+  width: 350px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .infowindow h4, .infowindow .code {
   font-weight: bold;
   font-size: 1em;
@@ -86,27 +93,33 @@ input {
 .infowindow h4 img {
   vertical-align: middle;
 }
+.infowindow dl {
+  margin: 0;
+}
 .infowindow dl dt {
   float:left;
   font-weight:bold;
   margin-right:.5em;
 }
-.infowindow dl dd,.infowindow h4 {
+.infowindow dl dd {
   margin-bottom: 0.25em;
 }
 .infowindow dl dd {
-    overflow: hidden;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 h1, h2, h3, h4, h5, h6, p, a, img, dl, dt, dd {
-    border: 0 none;
-    font-family: inherit;
-    font-style: inherit;
-    font-weight: inherit;
-    vertical-align: baseline;
+  border: 0 none;
+  font-family: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  vertical-align: baseline;
 }
 .infowindow a {
-    color: #594A42;
-    text-shadow: 0 1px 0 #FFFFFF;
+  color: #594A42;
+  text-shadow: 0 1px 0 #FFFFFF;
 }
 
 .leaflet-control-options {

@@ -116,7 +116,7 @@
             infoContent += '<div class="code">' + elmGccode + '</div>';
             infoContent += '    <h4>';
             infoContent += '        <img src="' + icon.options.iconPopin + '" width="20" alt="" />';
-            infoContent += '        <a href="http://coord.info/' + encodeURIComponent(elmGccode) + '" onclick="window.open(this.href);return false;">' + elmName[0].childNodes[0].nodeValue + '</a>';
+            infoContent += '        <a href="http://coord.info/' + encodeURIComponent(elmGccode) + '" onclick="window.open(this.href);return false;" title="' + elmName[0].childNodes[0].nodeValue + '">' + elmName[0].childNodes[0].nodeValue + '</a>';
             infoContent += '    </h4>';
             infoContent += '    <dl style="float:left;margin-right:2em;width:50%;">';
             if (elmOwner[0].childNodes[0]) {

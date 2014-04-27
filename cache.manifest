@@ -1,10 +1,11 @@
 CACHE MANIFEST
 
-# date: 2014-04-27
+# date: 2014-04-28
 # version: 2.0.3
 
 CACHE:
 gcgpxviewer.min.css
+js/gcgpxviewer.min.js
 icon-fullscreen.png
 icon-location.png
 icon-options.png
@@ -49,7 +50,6 @@ img/type_webcam.map.png
 img/type_webcam.png
 img/type_wherigo.map.png
 img/type_wherigo.png
-js/gcgpxviewer.min.js
 
 NETWORK:
 *
