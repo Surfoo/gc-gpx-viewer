@@ -25,6 +25,7 @@
         'Letterbox Hybrid': 'type_letterbox',
         'Event Cache': 'type_event',
         'Unknown Cache': 'type_mystery',
+        'Mystery Cache': 'type_mystery',
         'Project APE Cache': 'type_ape',
         'Webcam Cache': 'type_webcam',
         'Cache In Trash Out Event': 'type_cito',
