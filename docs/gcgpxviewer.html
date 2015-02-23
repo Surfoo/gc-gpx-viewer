@@ -27,7 +27,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <pre><code>gcgpxviewer.js <span class="hljs-number">2.0</span><span class="hljs-number">.3</span>
+              <pre><code>gcgpxviewer.js <span class="hljs-number">2.0</span><span class="hljs-number">.5</span>
 http:<span class="hljs-comment">//gc-gpx-viewer.vaguelibre.net/</span>
 (c) <span class="hljs-number">2014</span> - Surfoo
 email: surfooo at gmail dot com 
@@ -143,8 +143,8 @@ The key is the term used in the GPX file and the value is used for the filename 
             wpt = wpts[i];
             sym = wpt.getElementsByTagName(<span class="hljs-string">'sym'</span>)[<span class="hljs-number">0</span>].childNodes[<span class="hljs-number">0</span>] || <span class="hljs-literal">false</span>;
             <span class="hljs-keyword">if</span> (sym &amp;&amp; (sym.nodeValue !== <span class="hljs-string">'Geocache'</span> &amp;&amp;
-                sym.nodeValue !== <span class="hljs-string">'Geocache Found'</span> &amp;&amp;
-                sym.nodeValue !== <span class="hljs-string">''</span>)) {
+                    sym.nodeValue !== <span class="hljs-string">'Geocache Found'</span> &amp;&amp;
+                    sym.nodeValue !== <span class="hljs-string">''</span>)) {
                 <span class="hljs-keyword">continue</span>;
             }</pre></div></div>
             
@@ -556,11 +556,9 @@ The key is the term used in the GPX file and the value is used for the filename 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> load = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-        <span class="hljs-keyword">var</span> cloudmadeLayer = L.tileLayer(<span class="hljs-string">'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png'</span>, {
-            maxZoom: <span class="hljs-number">18</span>,
-            minZoom: <span class="hljs-number">3</span>,
-            attribution: <span class="hljs-string">'Map data &amp;copy; &lt;a href="http://openstreetmap.org"&gt;OpenStreetMap&lt;/a&gt; contributors, &lt;a href="http://creativecommons.org/licenses/by-sa/2.0/"&gt;CC-BY-SA&lt;/a&gt;, Imagery © &lt;a href="http://cloudmade.com"&gt;CloudMade&lt;/a&gt;'</span>
-        });
+        <span class="hljs-keyword">var</span> mapboxAccessToken = <span class="hljs-string">'pk.eyJ1Ijoic3VyZm9vIiwiYSI6InpDWEQxRFkifQ.fclPYEBfTQBOmMGeUHJkKw'</span>;
+
+        <span class="hljs-keyword">var</span> mapboxLayer = L.tileLayer(<span class="hljs-string">'https://{s}.tiles.mapbox.com/v4/surfoo.la14jo4j/{z}/{x}/{y}.png?access_token='</span> + mapboxAccessToken);
 
         <span class="hljs-keyword">var</span> transportLayer = L.tileLayer(<span class="hljs-string">'http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png'</span>, {
             maxZoom: <span class="hljs-number">18</span>,
@@ -636,7 +634,7 @@ The key is the term used in the GPX file and the value is used for the filename 
             <span class="hljs-string">"Bing Road"</span>: bingLayerRoad,
             <span class="hljs-string">"Bing Hybrid"</span>: bingLayerAerialWithLabels,
             <span class="hljs-string">"Mapquest"</span>: mapquestLayer,
-            <span class="hljs-string">"CloudMade"</span>: cloudmadeLayer,
+            <span class="hljs-string">"mapBox Light"</span>: mapboxLayer,
             <span class="hljs-string">"Transport"</span>: transportLayer,
             <span class="hljs-string">"Stamen Toner"</span>: stamenToner,
             <span class="hljs-string">"Stamen WaterColor"</span>: stamenWaterColor
