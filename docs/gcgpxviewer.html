@@ -36,7 +36,8 @@ email: surfooo at gmail dot com
             
             <div class="content"><div class='highlight'><pre>
 (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_)</span> {</span>
-    <span class="hljs-comment">/*'use strict';*/</span>
+<span class="hljs-pi">    'use strict'</span>;
+
     <span class="hljs-keyword">var</span> typeCaches, sizeCaches, circle, control, map, parser, doc,
         objOptionLabel = document.getElementById(<span class="hljs-string">'display_labels'</span>),
         objOptionPerimeter = document.getElementById(<span class="hljs-string">'display_perimeters'</span>),
@@ -634,7 +635,7 @@ The key is the term used in the GPX file and the value is used for the filename 
             <span class="hljs-string">"Bing Road"</span>: bingLayerRoad,
             <span class="hljs-string">"Bing Hybrid"</span>: bingLayerAerialWithLabels,
             <span class="hljs-string">"Mapquest"</span>: mapquestLayer,
-            <span class="hljs-string">"mapBox Light"</span>: mapboxLayer,
+            <span class="hljs-string">"MapBox Light"</span>: mapboxLayer,
             <span class="hljs-string">"Transport"</span>: transportLayer,
             <span class="hljs-string">"Stamen Toner"</span>: stamenToner,
             <span class="hljs-string">"Stamen WaterColor"</span>: stamenWaterColor
@@ -956,7 +957,7 @@ The key is the term used in the GPX file and the value is used for the filename 
                 ++unitCount;
             }
 
-            Output(fileinfo[<span class="hljs-number">0</span>].name + <span class="hljs-string">' ('</span> + size.toFixed(<span class="hljs-number">2</span>) + unitType[unitCount] + <span class="hljs-string">')'</span>);
+            <span class="hljs-keyword">new</span> Output(fileinfo[<span class="hljs-number">0</span>].name + <span class="hljs-string">' ('</span> + size.toFixed(<span class="hljs-number">2</span>) + unitType[unitCount] + <span class="hljs-string">')'</span>);
             display(doc);
         };
 
@@ -998,7 +999,7 @@ The key is the term used in the GPX file and the value is used for the filename 
             </div>
             
             <div class="content"><div class='highlight'><pre>        _.each(files, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
-            ParseFile(value);
+            <span class="hljs-keyword">new</span> ParseFile(value);
         });
 
     };</pre></div></div>

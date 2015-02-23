@@ -4,7 +4,8 @@
 //     email: surfooo at gmail dot com 
 
 (function(_) {
-    /*'use strict';*/
+    'use strict';
+
     var typeCaches, sizeCaches, circle, control, map, parser, doc,
         objOptionLabel = document.getElementById('display_labels'),
         objOptionPerimeter = document.getElementById('display_perimeters'),
@@ -337,7 +338,7 @@
             "Bing Road": bingLayerRoad,
             "Bing Hybrid": bingLayerAerialWithLabels,
             "Mapquest": mapquestLayer,
-            "mapBox Light": mapboxLayer,
+            "MapBox Light": mapboxLayer,
             "Transport": transportLayer,
             "Stamen Toner": stamenToner,
             "Stamen WaterColor": stamenWaterColor
@@ -490,7 +491,7 @@
                 ++unitCount;
             }
 
-            Output(fileinfo[0].name + ' (' + size.toFixed(2) + unitType[unitCount] + ')');
+            new Output(fileinfo[0].name + ' (' + size.toFixed(2) + unitType[unitCount] + ')');
             display(doc);
         };
 
@@ -507,7 +508,7 @@
 
         // process all File objects
         _.each(files, function(value) {
-            ParseFile(value);
+            new ParseFile(value);
         });
 
     };
