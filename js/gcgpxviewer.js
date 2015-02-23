@@ -4,7 +4,7 @@
 //     email: surfooo at gmail dot com 
 
 (function(_) {
-    'use strict';
+    //'use strict';
 
     var typeCaches, sizeCaches, circle, control, map, parser, doc,
         objOptionLabel = document.getElementById('display_labels'),
@@ -491,7 +491,7 @@
                 ++unitCount;
             }
 
-            new Output(fileinfo[0].name + ' (' + size.toFixed(2) + unitType[unitCount] + ')');
+            Output(fileinfo[0].name + ' (' + size.toFixed(2) + unitType[unitCount] + ')');
             display(doc);
         };
 
@@ -508,7 +508,7 @@
 
         // process all File objects
         _.each(files, function(value) {
-            new ParseFile(value);
+            ParseFile(value);
         });
 
     };
