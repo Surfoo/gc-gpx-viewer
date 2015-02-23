@@ -1,4 +1,4 @@
-//     gcgpxviewer.js 2.0.3
+//     gcgpxviewer.js 2.0.5
 //     http://gc-gpx-viewer.vaguelibre.net/
 //     (c) 2014 - Surfoo
 //     email: surfooo at gmail dot com 
@@ -63,8 +63,8 @@
             wpt = wpts[i];
             sym = wpt.getElementsByTagName('sym')[0].childNodes[0] || false;
             if (sym && (sym.nodeValue !== 'Geocache' &&
-                sym.nodeValue !== 'Geocache Found' &&
-                sym.nodeValue !== '')) {
+                    sym.nodeValue !== 'Geocache Found' &&
+                    sym.nodeValue !== '')) {
                 continue;
             }
             // Retrieve all informations in the waypoint
@@ -283,11 +283,9 @@
 
     // Init function to create the user interface
     var load = function() {
-        var cloudmadeLayer = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            minZoom: 3,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
-        });
+        var mapboxAccessToken = 'pk.eyJ1Ijoic3VyZm9vIiwiYSI6InpDWEQxRFkifQ.fclPYEBfTQBOmMGeUHJkKw';
+
+        var mapboxLayer = L.tileLayer('https://{s}.tiles.mapbox.com/v4/surfoo.la14jo4j/{z}/{x}/{y}.png?access_token=' + mapboxAccessToken);
 
         var transportLayer = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
             maxZoom: 18,
@@ -339,7 +337,7 @@
             "Bing Road": bingLayerRoad,
             "Bing Hybrid": bingLayerAerialWithLabels,
             "Mapquest": mapquestLayer,
-            "CloudMade": cloudmadeLayer,
+            "mapBox Light": mapboxLayer,
             "Transport": transportLayer,
             "Stamen Toner": stamenToner,
             "Stamen WaterColor": stamenWaterColor
