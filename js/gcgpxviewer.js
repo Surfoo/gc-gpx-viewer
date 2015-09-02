@@ -1,4 +1,4 @@
-//     gcgpxviewer.js 2.0.5
+//     gcgpxviewer.js 2.0.6
 //     http://gc-gpx-viewer.vaguelibre.net/
 //     (c) 2014 - Surfoo
 //     email: surfooo at gmail dot com 

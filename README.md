@@ -12,6 +12,11 @@ Fork the project source code on [github](https://github.com/Surfoo/gc-gpx-viewer
 
     git clone git://github.com/Surfoo/gc-gpx-viewer.git
 
+
+Create the js file minified
+---------------------------
+    uglifyjs gcgpxviewer.js -c -o gcgpxviewer.min.js
+
 Demo
 ----
 
