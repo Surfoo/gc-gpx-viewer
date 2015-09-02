@@ -57,12 +57,10 @@ email: surfooo at gmail dot com
         circleList = [],
         polylineList = [],
         markers = [],
-        newspotList = [],
         circleOpacity = <span class="hljs-number">0.8</span>,
         circleColor = <span class="hljs-string">'#c11414'</span>,
         circleFillOpacity = <span class="hljs-number">0.25</span>,
-        unitType = [<span class="hljs-string">'o'</span>, <span class="hljs-string">'Ko'</span>, <span class="hljs-string">'Mo'</span>, <span class="hljs-string">'Go'</span>],
-        perimeter = <span class="hljs-number">161</span>;</pre></div></div>
+        unitType = [<span class="hljs-string">'o'</span>, <span class="hljs-string">'Ko'</span>, <span class="hljs-string">'Mo'</span>, <span class="hljs-string">'Go'</span>];</pre></div></div>
             
         </li>
         
@@ -313,7 +311,7 @@ The key is the term used in the GPX file and the value is used for the filename 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            circle = <span class="hljs-keyword">new</span> L.circle(latlng, perimeter, {
+            <div class="content"><div class='highlight'><pre>            circle = <span class="hljs-keyword">new</span> L.circle(latlng, <span class="hljs-number">161</span>, {
                 weight: <span class="hljs-number">2</span>,
                 color: circleColor,
                 opacity: objOptionPerimeter.checked ? circleOpacity : <span class="hljs-number">0</span>,
@@ -825,79 +823,6 @@ The key is the term used in the GPX file and the value is used for the filename 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>map.on(‘click’, function(point) {
-    console.log(point.latlng);
-    // Set perimeter
-    var newspot = new L.circle(point.latlng, perimeter, {
-        weight: 2,
-        color: ‘#49c114’,
-        opacity: objOptionPerimeter.checked ? circleOpacity : 0,
-        fillColor: objOptionPerimeter.checked ? ‘#49c114’ : ‘transparent’,
-        fillOpacity: objOptionPerimeter.checked ? circleFillOpacity : 0,
-        clickable: true,
-        className: ‘newspot’
-    });</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <pre><code>newspot.on({
-    click: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-        map.on(<span class="hljs-string">'mousemove'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span> {</span>
-            newspot.setLatLng(e.latlng);
-        });
-    }
-});
-</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <pre><code>newspot.addTo(map);
-newspotList.push(newspot);
-</code></pre><p>});</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <p>map.on(‘mouseup’, function(e) {
-    map.removeEventListener(‘mousemove’);
-});</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
               <p>EventListeners</p>
 
             </div>
@@ -910,18 +835,16 @@ newspotList.push(newspot);
         L.DomEvent.addListener(map, <span class="hljs-string">'baselayerchange'</span>, saveBaseLayer);
         sidebar.on(<span class="hljs-string">'hide'</span>, saveSidebar);
         sidebar.on(<span class="hljs-string">'show'</span>, saveSidebar);
-
-
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-38">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>App Cache, reload the web app by user request to get the latest version</p>
 
@@ -939,11 +862,11 @@ newspotList.push(newspot);
         </li>
         
         
-        <li id="section-39">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Listener for App Cache</p>
 
@@ -957,11 +880,11 @@ newspotList.push(newspot);
         </li>
         
         
-        <li id="section-40">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Flattr Button</p>
 
@@ -982,11 +905,11 @@ newspotList.push(newspot);
         </li>
         
         
-        <li id="section-41">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Output information</p>
 
@@ -1002,11 +925,11 @@ newspotList.push(newspot);
         </li>
         
         
-        <li id="section-42">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Output file information</p>
 
@@ -1063,11 +986,11 @@ newspotList.push(newspot);
         </li>
         
         
-        <li id="section-43">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>fetch FileList object</p>
 
@@ -1078,11 +1001,11 @@ newspotList.push(newspot);
         </li>
         
         
-        <li id="section-44">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>process all File objects</p>
 
@@ -1097,11 +1020,11 @@ newspotList.push(newspot);
         </li>
         
         
-        <li id="section-45">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>call initialization file</p>
 
