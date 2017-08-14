@@ -1,5 +1,5 @@
 //     gcgpxviewer.js 2.0.6
-//     http://gc-gpx-viewer.vaguelibre.net/
+//     https://gc-gpx-viewer.vaguelibre.net/
 //     (c) 2014 - Surfoo
 //     email: surfooo at gmail dot com 
 
@@ -118,13 +118,13 @@
             infoContent += '<div class="code">' + elmGccode + '</div>';
             infoContent += '    <h4>';
             infoContent += '        <img src="' + icon.options.iconPopin + '" width="20" alt="" />';
-            infoContent += '        <a href="http://coord.info/' + encodeURIComponent(elmGccode) + '" onclick="window.open(this.href);return false;" title="' + elmName[0].childNodes[0].nodeValue + '">' + elmName[0].childNodes[0].nodeValue + '</a>';
+            infoContent += '        <a href="https://coord.info/' + encodeURIComponent(elmGccode) + '" onclick="window.open(this.href);return false;" title="' + elmName[0].childNodes[0].nodeValue + '">' + elmName[0].childNodes[0].nodeValue + '</a>';
             infoContent += '    </h4>';
             infoContent += '    <dl style="float:left;margin-right:2em;width:50%;">';
             if (elmOwner[0].childNodes[0]) {
                 infoContent += '        <dt>Created by:</dt>';
                 infoContent += '        <dd title="' + elmOwner[0].childNodes[0].nodeValue + '">';
-                infoContent += '<a href="http://www.geocaching.com/profile/?u=' + encodeURIComponent(elmOwner[0].childNodes[0].nodeValue) + '" onclick="window.open(this.href);return false;">' + elmOwner[0].childNodes[0].nodeValue + '</a></dd>';
+                infoContent += '<a href="https://www.geocaching.com/profile/?u=' + encodeURIComponent(elmOwner[0].childNodes[0].nodeValue) + '" onclick="window.open(this.href);return false;">' + elmOwner[0].childNodes[0].nodeValue + '</a></dd>';
             }
             infoContent += '        <dt>Difficulty:</dt>';
             infoContent += '        <dd>' + elmDifficulty + '</dd>';
@@ -288,19 +288,7 @@
 
         var mapboxLayer = L.tileLayer('https://{s}.tiles.mapbox.com/v4/surfoo.la14jo4j/{z}/{x}/{y}.png?access_token=' + mapboxAccessToken);
 
-        var transportLayer = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            minZoom: 3,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.thunderforest.com/">Thunderforest</a>'
-        });
-
-        var mapquestLayer = L.tileLayer('http://otile2.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            minZoom: 3,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.mapquest.com/">Mapquest</a>'
-        });
-
-        var osmLegacyLayer = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        var osmLegacyLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18,
             minZoom: 3,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
@@ -337,9 +325,7 @@
             "Bing Aerial": bingLayerAerial,
             "Bing Road": bingLayerRoad,
             "Bing Hybrid": bingLayerAerialWithLabels,
-            "Mapquest": mapquestLayer,
             "MapBox Light": mapboxLayer,
-            "Transport": transportLayer,
             "Stamen Toner": stamenToner,
             "Stamen WaterColor": stamenWaterColor
         };
