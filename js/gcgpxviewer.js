@@ -21,12 +21,15 @@
     // The key is the term used in the GPX file and the value is used for the filename below
     typeCaches = {
         'Traditional Cache': 'type_traditional',
+        'Traditional': 'type_traditional',
         'Multi-cache': 'type_multi',
+        'Multi-Cache': 'type_multi',
         'Virtual Cache': 'type_virtual',
         'Letterbox Hybrid': 'type_letterbox',
         'Event Cache': 'type_event',
         'Unknown Cache': 'type_mystery',
         'Mystery Cache': 'type_mystery',
+        'Mystery': 'type_mystery',
         'Project APE Cache': 'type_ape',
         'Webcam Cache': 'type_webcam',
         'Cache In Trash Out Event': 'type_cito',
@@ -34,9 +37,11 @@
         'Mega-Event Cache': 'type_mega',
         'GPS Adventures Exhibit': 'type_event',
         'Wherigo Cache': 'type_wherigo',
+        'Wherigo': 'type_wherigo',
         'Lost and Found Event Caches': 'type_event',
         'Groundspeak HQ': 'type_hq',
         'Groundspeak Lost and Found Celebration': 'type_event',
+        'Community Celebration Event': 'type_event',
         'Groundspeak Block Party': 'type_event',
         'Giga-Event Cache': 'type_giga'
     };
