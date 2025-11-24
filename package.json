@@ -1,5 +1,5 @@
 {
-  "name": "gc-gpx-viewer",
+  "name": "gpx-viewer",
   "version": "3.0.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -20,7 +20,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "biome check --apply ."
+    "lint": "biome check --write ."
   },
   "dependencies": {
     "ol": "^10.7.0",
@@ -28,7 +28,7 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.3.7",
+    "@biomejs/biome": "2.3.7",
     "@types/node": "^24.10.1",
     "typescript": "^5.9.3",
     "vite": "^7.2.4"
