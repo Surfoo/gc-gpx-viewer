@@ -1,19 +1,18 @@
 import "ol/ol.css";
 import "./style.css";
 
-import type Feature from "ol/Feature";
 import type { Coordinate } from "ol/coordinate";
-import Point from "ol/geom/Point";
-
-import { t } from "./i18n";
+import type Feature from "ol/Feature";
+import type Point from "ol/geom/Point";
 import { gpxToFeatures } from "@/gpx/parser";
 import { baseLayers, createMap, vectorSource } from "@/map";
 import { setupGeolocation } from "@/map/geolocation";
 import { createInfoOverlay } from "@/map/overlays";
+import type { CacheFeature } from "@/types";
+import { initI18nDom } from "@/ui/i18nDom";
 import { initPanelToggle } from "@/ui/panel";
 import { initState } from "@/ui/state";
-import { initI18nDom } from "@/ui/i18nDom";
-import type { CacheFeature } from "@/types";
+import { t } from "./i18n";
 
 const statusBar = document.querySelector<HTMLDivElement>("#status");
 const statsCount = document.querySelector<HTMLSpanElement>("#cache-count");
@@ -27,7 +26,8 @@ const focusButton = document.querySelector<HTMLButtonElement>("#fit-data");
 const geolocateButton = document.querySelector<HTMLButtonElement>("#locate-me");
 const geolocateMapButton = document.querySelector<HTMLButtonElement>("#locate-map-btn");
 const togglePanelButton = document.querySelector<HTMLButtonElement>("#toggle-panel");
-const togglePanelFloatingButton = document.querySelector<HTMLButtonElement>("#toggle-panel-floating");
+const togglePanelFloatingButton =
+  document.querySelector<HTMLButtonElement>("#toggle-panel-floating");
 const importBody = document.querySelector<HTMLElement>("#import-body");
 const languageSelect = document.querySelector<HTMLSelectElement>("#language");
 const themeToggle = document.querySelector<HTMLButtonElement>("#theme-toggle");
@@ -74,7 +74,7 @@ initI18nDom({
   onLocaleChange: () => {
     setStatus(t("status.ready"));
     applyTheme((document.body.dataset.theme as Theme) ?? "light");
-  }
+  },
 });
 
 initPanelToggle({
@@ -82,7 +82,7 @@ initPanelToggle({
   body: importBody,
   toggle: togglePanelButton,
   floatingToggle: togglePanelFloatingButton,
-  onChange: syncMapSize
+  onChange: syncMapSize,
 });
 
 const addFeaturesToMap = (features: Feature<Point>[], sourceLabel: string): void => {
@@ -115,7 +115,10 @@ fileInput?.addEventListener("change", async (event) => {
     try {
       loadGpxText(text, file.name);
     } catch (error) {
-      setStatus(t("status.parseError", { source: file.name, error: (error as Error).message }), true);
+      setStatus(
+        t("status.parseError", { source: file.name, error: (error as Error).message }),
+        true,
+      );
     }
   }
 });
@@ -195,7 +198,7 @@ map.on("singleclick", (event) => {
 const layerOptions = baseLayers
   .map(
     (layer) =>
-      `<option value="${layer.id}" ${layer.layer.getVisible() ? "selected" : ""}>${layer.title}</option>`
+      `<option value="${layer.id}" ${layer.layer.getVisible() ? "selected" : ""}>${layer.title}</option>`,
   )
   .join("");
 if (baseLayerSelect) {

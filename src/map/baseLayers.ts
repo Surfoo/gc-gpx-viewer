@@ -9,8 +9,8 @@ export const createBaseLayers = (): BaseLayer[] => [
     title: "OSM Standard",
     layer: new TileLayer({
       source: new OSM(),
-      visible: true
-    })
+      visible: true,
+    }),
   },
   {
     id: "osm-hot",
@@ -18,10 +18,10 @@ export const createBaseLayers = (): BaseLayer[] => [
     layer: new TileLayer({
       source: new XYZ({
         url: "https://{a-c}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
-        attributions: "© OpenStreetMap contributors, Humanitarian style"
+        attributions: "© OpenStreetMap contributors, Humanitarian style",
       }),
-      visible: false
-    })
+      visible: false,
+    }),
   },
   {
     id: "carto-voyager",
@@ -29,10 +29,10 @@ export const createBaseLayers = (): BaseLayer[] => [
     layer: new TileLayer({
       source: new XYZ({
         url: "https://cartodb-basemaps-{a-d}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png",
-        attributions: "© OpenStreetMap contributors, © CARTO"
+        attributions: "© OpenStreetMap contributors, © CARTO",
       }),
-      visible: false
-    })
+      visible: false,
+    }),
   },
   {
     id: "cyc-losm",
@@ -41,10 +41,10 @@ export const createBaseLayers = (): BaseLayer[] => [
       source: new XYZ({
         url: "https://{a-c}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
         attributions:
-          '© OpenStreetMap contributors, CyclOSM (data reuse under ODbL), style CC-BY-SA'
+          "© OpenStreetMap contributors, CyclOSM (data reuse under ODbL), style CC-BY-SA",
       }),
-      visible: false
-    })
+      visible: false,
+    }),
   },
   {
     id: "stamen-terrain",
@@ -53,9 +53,9 @@ export const createBaseLayers = (): BaseLayer[] => [
       source: new XYZ({
         url: "https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg",
         attributions:
-          'Map tiles by Stamen Design (CC BY 4.0), Data © OpenStreetMap contributors (ODbL)'
+          "Map tiles by Stamen Design (CC BY 4.0), Data © OpenStreetMap contributors (ODbL)",
       }),
-      visible: false
-    })
-  }
+      visible: false,
+    }),
+  },
 ];

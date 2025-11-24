@@ -18,7 +18,7 @@ export const initI18nDom = ({ languageSelect, onLocaleChange }: I18nDomOptions) 
     languageSelect.innerHTML = locales
       .map(
         (locale) =>
-          `<option value="${locale.code}" ${locale.code === getLocale() ? "selected" : ""}>${locale.label}</option>`
+          `<option value="${locale.code}" ${locale.code === getLocale() ? "selected" : ""}>${locale.label}</option>`,
       )
       .join("");
   };
@@ -27,7 +27,7 @@ export const initI18nDom = ({ languageSelect, onLocaleChange }: I18nDomOptions) 
   applyText();
 
   languageSelect?.addEventListener("change", (event) => {
-    const value = (event.target as HTMLSelectElement).value as typeof locales[number]["code"];
+    const value = (event.target as HTMLSelectElement).value as (typeof locales)[number]["code"];
     setLocale(value);
     applyText();
     onLocaleChange?.();

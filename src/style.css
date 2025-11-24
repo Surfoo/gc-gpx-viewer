@@ -39,8 +39,7 @@ body {
   font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
   background:
     radial-gradient(circle at 30% 20%, rgba(33, 150, 83, 0.12), transparent 32%),
-    radial-gradient(circle at 80% 0%, rgba(255, 193, 7, 0.12), transparent 28%),
-    var(--bg);
+    radial-gradient(circle at 80% 0%, rgba(255, 193, 7, 0.12), transparent 28%), var(--bg);
   color: var(--text);
 }
 
@@ -98,7 +97,9 @@ h1 {
   gap: 14px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
   min-height: 0;
-  transition: transform 500ms ease, opacity 500ms ease;
+  transition:
+    transform 500ms ease,
+    opacity 500ms ease;
   pointer-events: auto;
   z-index: 6;
   max-height: calc(100vh - 16px);
@@ -186,7 +187,9 @@ input::placeholder {
   cursor: pointer;
   color: #ffffff;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
-  transition: transform 150ms ease, box-shadow 150ms ease;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
 }
 
 button:active {
@@ -329,6 +332,11 @@ body[data-panel="collapsed"] .panel-toggle-floating {
   border-width: 11px;
   left: 50%;
   margin-left: -11px;
+}
+
+.popup-title {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
 }
 
 .ol-popup-closer {

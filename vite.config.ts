@@ -6,16 +6,16 @@ export default defineConfig({
   publicDir: false,
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src")
-    }
+      "@": path.resolve(__dirname, "src"),
+    },
   },
   server: {
     fs: {
-      allow: [path.resolve(__dirname)]
-    }
+      allow: [path.resolve(__dirname)],
+    },
   },
   build: {
     outDir: "../dist",
-    emptyOutDir: true
-  }
+    emptyOutDir: true,
+  },
 });

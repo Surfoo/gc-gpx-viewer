@@ -11,7 +11,7 @@ export const initPanelToggle = ({
   body,
   toggle,
   floatingToggle,
-  onChange
+  onChange,
 }: PanelOptions) => {
   const setPanelState = (collapsed: boolean): void => {
     if (!layout || !toggle) return;

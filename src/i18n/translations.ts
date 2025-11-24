@@ -7,7 +7,7 @@ export const locales: { code: Locale; label: string }[] = [
   { code: "fr", label: "Français" },
   { code: "de", label: "Deutsch" },
   { code: "es", label: "Español" },
-  { code: "it", label: "Italiano" }
+  { code: "it", label: "Italiano" },
 ];
 
 export const translations: TranslationMap = {
@@ -37,6 +37,7 @@ export const translations: TranslationMap = {
     "status.centered": "Centered on your position.",
     "info.found": "Found",
     "info.notFound": "Not found",
+    "info.name": "Name",
     "info.code": "Code",
     "info.owner": "Owner",
     "info.dt": "D / T",
@@ -47,10 +48,11 @@ export const translations: TranslationMap = {
     "panel.show": "Show import panel",
     "btn.reload": "Reload",
     "theme.dark": "Switch to dark mode",
-    "theme.light": "Switch to light mode"
+    "theme.light": "Switch to light mode",
   },
   fr: {
-    "header.tagline": "Chargez un GPX local ou par URL, explorez les caches, préparez votre roadbook.",
+    "header.tagline":
+      "Chargez un GPX local ou par URL, explorez les caches, préparez votre roadbook.",
     "badge.caches": "caches chargées",
     "panel.title": "Importer un GPX",
     "label.fromFile": "Depuis votre appareil",
@@ -75,6 +77,7 @@ export const translations: TranslationMap = {
     "status.centered": "Centré sur ta position.",
     "info.found": "Trouvée",
     "info.notFound": "Non trouvée",
+    "info.name": "Nom",
     "info.code": "Code",
     "info.owner": "Owner",
     "info.dt": "D / T",
@@ -85,7 +88,7 @@ export const translations: TranslationMap = {
     "panel.show": "Afficher le panneau d'import",
     "btn.reload": "Recharger",
     "theme.dark": "Passer en mode sombre",
-    "theme.light": "Passer en mode clair"
+    "theme.light": "Passer en mode clair",
   },
   de: {
     "header.tagline": "Lade ein GPX von der Festplatte oder URL, erkunde Caches, plane deine Tour.",
@@ -113,6 +116,7 @@ export const translations: TranslationMap = {
     "status.centered": "Auf deine Position zentriert.",
     "info.found": "Gefunden",
     "info.notFound": "Nicht gefunden",
+    "info.name": "Name",
     "info.code": "Code",
     "info.owner": "Owner",
     "info.dt": "D / T",
@@ -123,7 +127,7 @@ export const translations: TranslationMap = {
     "panel.show": "Import-Paneel anzeigen",
     "btn.reload": "Neu laden",
     "theme.dark": "Zum Dark Mode wechseln",
-    "theme.light": "Zum Light Mode wechseln"
+    "theme.light": "Zum Light Mode wechseln",
   },
   es: {
     "header.tagline": "Carga un GPX local o por URL, explora cachés y planifica tu ruta.",
@@ -151,6 +155,7 @@ export const translations: TranslationMap = {
     "status.centered": "Centrado en tu posición.",
     "info.found": "Encontrada",
     "info.notFound": "No encontrada",
+    "info.name": "Nombre",
     "info.code": "Código",
     "info.owner": "Owner",
     "info.dt": "D / T",
@@ -161,7 +166,7 @@ export const translations: TranslationMap = {
     "panel.show": "Mostrar panel de importación",
     "btn.reload": "Recargar",
     "theme.dark": "Cambiar a modo oscuro",
-    "theme.light": "Cambiar a modo claro"
+    "theme.light": "Cambiar a modo claro",
   },
   it: {
     "header.tagline": "Carica un GPX locale o via URL, esplora le cache, pianifica il percorso.",
@@ -189,6 +194,7 @@ export const translations: TranslationMap = {
     "status.centered": "Centrato sulla tua posizione.",
     "info.found": "Trovata",
     "info.notFound": "Non trovata",
+    "info.name": "Nome",
     "info.code": "Codice",
     "info.owner": "Owner",
     "info.dt": "D / T",
@@ -199,8 +205,8 @@ export const translations: TranslationMap = {
     "panel.show": "Mostra pannello import",
     "btn.reload": "Ricarica",
     "theme.dark": "Passa alla modalità scura",
-    "theme.light": "Passa alla modalità chiara"
-  }
+    "theme.light": "Passa alla modalità chiara",
+  },
 };
 
 export type { Locale };

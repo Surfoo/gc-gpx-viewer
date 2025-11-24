@@ -6,7 +6,7 @@ import type { SetStatusFn } from "@/types";
 export const setupGeolocation = (map: Map, setStatus: SetStatusFn) => {
   const geolocation = new Geolocation({
     projection: map.getView().getProjection(),
-    trackingOptions: { enableHighAccuracy: true }
+    trackingOptions: { enableHighAccuracy: true },
   });
 
   geolocation.on("error", (error) => {

@@ -1,4 +1,4 @@
-import { locales, translations, type Locale } from "./translations";
+import { type Locale, locales, translations } from "./translations";
 
 const STORAGE_KEY = "gpxviewer.locale";
 
@@ -27,7 +27,7 @@ export const t = (key: string, params: Params = {}): string => {
   const template = dict[key] ?? key;
   return Object.keys(params).reduce(
     (acc, k) => acc.replaceAll(`{${k}}`, String(params[k])),
-    template
+    template,
   );
 };
 

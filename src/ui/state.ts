@@ -4,7 +4,7 @@ import type { SetStatusFn } from "@/types";
 export const initState = (
   statusElement: HTMLElement | null,
   countElement: HTMLElement | null,
-  vectorSource: VectorSource
+  vectorSource: VectorSource,
 ): { setStatus: SetStatusFn; updateStats: () => void } => {
   const setStatus: SetStatusFn = (message, isError = false) => {
     if (!statusElement) return;

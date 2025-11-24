@@ -1,5 +1,5 @@
-import Overlay from "ol/Overlay";
 import type { Coordinate } from "ol/coordinate";
+import Overlay from "ol/Overlay";
 import { t } from "@/i18n";
 import type { CacheFeature } from "@/types";
 
@@ -25,7 +25,7 @@ export const createInfoOverlay = (): {
     element: overlayElement,
     positioning: "bottom-center",
     offset: [0, -12],
-    autoPan: { animation: { duration: 200 } }
+    autoPan: { animation: { duration: 200 } },
   });
 
   const hide = (): void => {
@@ -42,12 +42,11 @@ export const createInfoOverlay = (): {
     const difficulty = feature.get<string>("difficulty");
     const terrain = feature.get<string>("terrain");
     const container = feature.get<string>("container");
-    const found = feature.get<boolean>("found");
-    const description = feature.get<string>("description");
     const sourceLabel = feature.get<string>("sourceLabel");
     const date = feature.get<string | undefined>("date");
 
     infoContent.innerHTML = `
+      <h3 class="popup-title">${escapeHtml(name ?? t("info.name"))}</h3>
       <div class="pill-row">
         <span class="pill">${escapeHtml(type ?? "Geocache")}</span>
         <span class="pill">${escapeHtml(container ?? "Unknown")}</span>

@@ -35,7 +35,7 @@ const typeToIconId: Record<string, string> = {
   "geocaching hq block party": "4738",
   "groundspeak block party": "4738",
   "giga-event cache": "7005",
-  "giga-event": "7005"
+  "giga-event": "7005",
 };
 
 const defaultIconId = "8"; // mystery/unknown
@@ -59,8 +59,8 @@ export const getFeatureStyle = (feature: CacheFeature): Style | Style[] => {
     image: new Icon({
       src: iconSrc,
       anchor: [0.5, 1],
-      scale: 1
-    })
+      scale: 1,
+    }),
   });
 
   if (!found) {
@@ -72,8 +72,8 @@ export const getFeatureStyle = (feature: CacheFeature): Style | Style[] => {
     image: new CircleStyle({
       radius: 14,
       stroke: new Stroke({ color: "rgba(16, 185, 129, 0.9)", width: 3 }),
-      fill: new Fill({ color: "rgba(16, 185, 129, 0.12)" })
-    })
+      fill: new Fill({ color: "rgba(16, 185, 129, 0.12)" }),
+    }),
   });
 
   const styleArray: Style[] = [ringStyle, iconStyle];
