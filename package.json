@@ -1,0 +1,40 @@
+{
+  "name": "gc-gpx-viewer",
+  "version": "3.0.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "author": "Surfoo",
+  "description": "Modernized GPX Viewer built with Vite, TypeScript, OpenLayers, and Biome.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Surfoo/gc-gpx-viewer.git"
+  },
+  "keywords": [
+    "geocaching",
+    "gpx",
+    "openlayers",
+    "vite",
+    "typescript"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "biome check --apply ."
+  },
+  "dependencies": {
+    "ol": "^10.7.0",
+    "remixicon": "^4.7.0",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.7",
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.4"
+  },
+  "bugs": {
+    "url": "https://github.com/Surfoo/gc-gpx-viewer/issues"
+  },
+  "homepage": "https://github.com/Surfoo/gc-gpx-viewer#readme"
+}

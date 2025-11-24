@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GPX Viewer</title>
+    <meta
+      name="description"
+      content="Visualisez rapidement vos fichiers GPX de géocaching sur une carte."
+    />
+    <meta name="theme-color" content="#219653" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/icons/favicon-64x64.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <script type="module" src="/main.ts"></script>
+  </head>
+  <body>
+    <div class="page">
+      <main class="layout">
+        <section class="panel" id="import-panel" data-state="expanded">
+          <div class="brand">
+            <h1>GPX Viewer</h1>
+            <p class="tagline" data-i18n="header.tagline">
+              Chargez un GPX local ou par URL, explorez les caches, préparez votre roadbook.
+            </p>
+          </div>
+          <div class="panel-header">
+            <div>
+              <h2 data-i18n="panel.title">Importer un GPX</h2>
+            </div>
+            <div class="panel-actions">
+              <button
+                id="theme-toggle"
+                type="button"
+                class="secondary icon-button"
+                aria-label="Basculer le thème"
+              >
+                <i class="ri-contrast-2-line" aria-hidden="true"></i>
+              </button>
+              <button
+                id="toggle-panel"
+                type="button"
+                class="secondary icon-button"
+                aria-expanded="true"
+                aria-label="Masquer le panneau d'import"
+              >
+                <i class="ri-sidebar-fold-line" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+          <div class="panel-body" id="import-body">
+            <div class="input-group">
+              <label for="gpx-file" data-i18n="label.fromFile">Depuis votre appareil</label>
+              <input id="gpx-file" type="file" accept=".gpx,application/gpx+xml" multiple />
+            </div>
+            <div class="input-group">
+              <label for="gpx-url" data-i18n="label.fromUrl">Depuis une URL</label>
+              <input
+                id="gpx-url"
+                type="url"
+                placeholder="https://example.com/trace.gpx"
+                spellcheck="false"
+                inputmode="url"
+              />
+              <button id="load-url" type="button" data-i18n="btn.loadUrl">Charger l'URL</button>
+            </div>
+            <div class="input-group">
+              <label for="base-layer" data-i18n="label.baseLayer">Fond de carte</label>
+              <select id="base-layer"></select>
+            </div>
+            <div class="button-row">
+              <button id="fit-data" type="button" class="secondary" data-i18n="btn.refit">Recentrer sur les caches</button>
+              <button id="clear-map" type="button" class="secondary" data-i18n="btn.clear">Vider la carte</button>
+            </div>
+            <div class="input-group">
+              <label for="language" data-i18n="label.language">Langue</label>
+              <select id="language"></select>
+            </div>
+          </div>
+        </section>
+
+        <section class="map-shell">
+          <div id="map"></div>
+          <div class="ol-control ol-custom-control">
+            <button id="locate-map-btn" type="button" title="Me localiser" aria-label="Me localiser">⌖</button>
+          </div>
+          <div id="status" class="status" data-i18n="status.ready">Prêt à charger un GPX.</div>
+
+          <div id="popup" class="ol-popup">
+            <a href="#" id="popup-closer" class="ol-popup-closer" aria-label="Fermer"></a>
+            <div id="info-content"></div>
+          </div>
+        </section>
+      </main>
+      <button
+        id="toggle-panel-floating"
+        type="button"
+        class="secondary icon-button panel-toggle-floating"
+        aria-expanded="true"
+        aria-label="Afficher le panneau d'import"
+      >
+        <i class="ri-sidebar-unfold-line" aria-hidden="true"></i>
+      </button>
+    </div>
+  </body>
+</html>

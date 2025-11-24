@@ -1,4 +1,5 @@
-*.gpx
 node_modules
-js/all.js
-gpx/
+gpx
+.cache
+.vscode
+dist
