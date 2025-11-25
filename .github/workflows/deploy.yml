@@ -2,7 +2,7 @@ name: Deploy on production
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
