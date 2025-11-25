@@ -3,7 +3,7 @@
 # Simple deploy script for static/front-end projects (Vite build)
 # - Clones or updates the repo in the target dir
 # - Runs npm ci and npm run build
-# - Leaves the built assets in the repo's dist/ (serve that dir on the server)
+# - Leaves the built assets in the repo's public/ directory (serve that dir on the server)
 
 set -Eeuo pipefail
 

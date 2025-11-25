@@ -2,8 +2,9 @@ import path from "node:path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: "public",
-  publicDir: false,
+  root: "app",
+  base: "/gpxviewer/",
+  publicDir: path.resolve(__dirname, "static"),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
@@ -15,7 +16,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../dist",
+    outDir: "../public",
     emptyOutDir: true,
   },
 });

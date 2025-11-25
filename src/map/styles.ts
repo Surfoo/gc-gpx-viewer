@@ -44,7 +44,8 @@ const styleCache = new Map<string, Style | Style[]>();
 const iconSrcForType = (cacheType: string): string => {
   const normalized = cacheType.trim().toLowerCase();
   const matched = typeToIconId[normalized] ?? defaultIconId;
-  return `/icons/mapicons/${matched}.png`;
+  const base = import.meta.env.BASE_URL ?? "/";
+  return `${base}icons/mapicons/${matched}.png`;
 };
 
 export const getFeatureStyle = (feature: CacheFeature): Style | Style[] => {
