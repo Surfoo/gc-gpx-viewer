@@ -23,14 +23,11 @@ const loadUrlButton = document.querySelector<HTMLButtonElement>("#load-url");
 const fileInput = document.querySelector<HTMLInputElement>("#gpx-file");
 const clearButton = document.querySelector<HTMLButtonElement>("#clear-map");
 const focusButton = document.querySelector<HTMLButtonElement>("#fit-data");
-const geolocateButton = document.querySelector<HTMLButtonElement>("#locate-me");
 const geolocateMapButton = document.querySelector<HTMLButtonElement>("#locate-map-btn");
 const togglePanelButton = document.querySelector<HTMLButtonElement>("#toggle-panel");
 const togglePanelFloatingButton =
   document.querySelector<HTMLButtonElement>("#toggle-panel-floating");
-const importBody = document.querySelector<HTMLElement>("#import-body");
 const languageSelect = document.querySelector<HTMLSelectElement>("#language");
-const themeToggle = document.querySelector<HTMLButtonElement>("#theme-toggle");
 const customLocateControl = document.querySelector<HTMLElement>(".ol-custom-control");
 
 const { setStatus, updateStats } = initState(statusBar, statsCount, vectorSource);
@@ -48,38 +45,15 @@ const syncMapSize = (): void => {
   setTimeout(() => map.updateSize(), 100);
 };
 
-type Theme = "light" | "dark";
-const THEME_KEY = "gpxviewer.theme";
-
-const getPreferredTheme = (): Theme => {
-  const stored = localStorage.getItem(THEME_KEY) as Theme | null;
-  if (stored === "light" || stored === "dark") return stored;
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  return prefersDark ? "dark" : "light";
-};
-
-const applyTheme = (theme: Theme): void => {
-  document.body.dataset.theme = theme;
-  localStorage.setItem(THEME_KEY, theme);
-  if (themeToggle) {
-    themeToggle.innerHTML = `<i class="ri-contrast-2-${theme === "dark" ? "fill" : "line"}" aria-hidden="true"></i>`;
-    themeToggle.setAttribute("aria-label", t(theme === "dark" ? "theme.light" : "theme.dark"));
-  }
-};
-
-applyTheme(getPreferredTheme());
-
 initI18nDom({
   languageSelect,
   onLocaleChange: () => {
     setStatus(t("status.ready"));
-    applyTheme((document.body.dataset.theme as Theme) ?? "light");
   },
 });
 
 initPanelToggle({
   layout,
-  body: importBody,
   toggle: togglePanelButton,
   floatingToggle: togglePanelFloatingButton,
   onChange: syncMapSize,
@@ -166,20 +140,9 @@ baseLayerSelect?.addEventListener("change", (event) => {
   });
 });
 
-geolocateButton?.addEventListener("click", () => {
-  infoOverlay.hide();
-  geolocation.locate();
-});
-
 geolocateMapButton?.addEventListener("click", () => {
   infoOverlay.hide();
   geolocation.locate();
-});
-
-themeToggle?.addEventListener("click", () => {
-  const current = (document.body.dataset.theme as Theme) ?? "light";
-  const next: Theme = current === "light" ? "dark" : "light";
-  applyTheme(next);
 });
 
 map.on("singleclick", (event) => {

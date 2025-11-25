@@ -15,20 +15,6 @@
   --error: #d14343;
 }
 
-body[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #0f172a;
-  --surface: #0b1222;
-  --panel: #101827;
-  --border: rgba(255, 255, 255, 0.08);
-  --accent: #22d3ee;
-  --accent-strong: #0ea5e9;
-  --text: #e2e8f0;
-  --muted: #9ca3af;
-  --success: #10b981;
-  --error: #f87171;
-}
-
 * {
   box-sizing: border-box;
 }

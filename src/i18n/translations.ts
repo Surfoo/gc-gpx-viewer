@@ -47,8 +47,6 @@ export const translations: TranslationMap = {
     "panel.hide": "Hide import panel",
     "panel.show": "Show import panel",
     "btn.reload": "Reload",
-    "theme.dark": "Switch to dark mode",
-    "theme.light": "Switch to light mode",
   },
   fr: {
     "header.tagline":
@@ -87,8 +85,6 @@ export const translations: TranslationMap = {
     "panel.hide": "Masquer le panneau d'import",
     "panel.show": "Afficher le panneau d'import",
     "btn.reload": "Recharger",
-    "theme.dark": "Passer en mode sombre",
-    "theme.light": "Passer en mode clair",
   },
   de: {
     "header.tagline": "Lade ein GPX von der Festplatte oder URL, erkunde Caches, plane deine Tour.",
@@ -126,8 +122,6 @@ export const translations: TranslationMap = {
     "panel.hide": "Import-Paneel ausblenden",
     "panel.show": "Import-Paneel anzeigen",
     "btn.reload": "Neu laden",
-    "theme.dark": "Zum Dark Mode wechseln",
-    "theme.light": "Zum Light Mode wechseln",
   },
   es: {
     "header.tagline": "Carga un GPX local o por URL, explora cachés y planifica tu ruta.",
@@ -165,8 +159,6 @@ export const translations: TranslationMap = {
     "panel.hide": "Ocultar panel de importación",
     "panel.show": "Mostrar panel de importación",
     "btn.reload": "Recargar",
-    "theme.dark": "Cambiar a modo oscuro",
-    "theme.light": "Cambiar a modo claro",
   },
   it: {
     "header.tagline": "Carica un GPX locale o via URL, esplora le cache, pianifica il percorso.",
@@ -204,8 +196,6 @@ export const translations: TranslationMap = {
     "panel.hide": "Nascondi pannello import",
     "panel.show": "Mostra pannello import",
     "btn.reload": "Ricarica",
-    "theme.dark": "Passa alla modalità scura",
-    "theme.light": "Passa alla modalità chiara",
   },
 };
 
