@@ -1,9 +1,9 @@
 import Geolocation from "ol/Geolocation";
-import type Map from "ol/Map";
+import type { default as OlMap } from "ol/Map";
 import { t } from "@/i18n";
 import type { SetStatusFn } from "@/types";
 
-export const setupGeolocation = (map: Map, setStatus: SetStatusFn) => {
+export const setupGeolocation = (map: OlMap, setStatus: SetStatusFn) => {
   const geolocation = new Geolocation({
     projection: map.getView().getProjection(),
     trackingOptions: { enableHighAccuracy: true },

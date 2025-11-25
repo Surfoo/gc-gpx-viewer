@@ -1,6 +1,6 @@
 import { defaults as defaultControls, FullScreen } from "ol/control";
 import VectorLayer from "ol/layer/Vector";
-import Map from "ol/Map";
+import OlMap from "ol/Map";
 import type Overlay from "ol/Overlay";
 import { fromLonLat } from "ol/proj";
 import VectorSource from "ol/source/Vector";
@@ -16,8 +16,8 @@ export const vectorLayer = new VectorLayer({
   style: getFeatureStyle,
 });
 
-export const createMap = (targetId: string, overlay?: Overlay): Map => {
-  const map = new Map({
+export const createMap = (targetId: string, overlay?: Overlay): OlMap => {
+  const map = new OlMap({
     target: targetId,
     layers: [...baseLayers.map((entry) => entry.layer), vectorLayer],
     controls: defaultControls({

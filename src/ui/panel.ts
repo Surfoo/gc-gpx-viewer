@@ -1,18 +1,11 @@
 type PanelOptions = {
   layout: HTMLElement | null;
-  body: HTMLElement | null;
   toggle: HTMLButtonElement | null;
   floatingToggle: HTMLButtonElement | null;
   onChange?: () => void;
 };
 
-export const initPanelToggle = ({
-  layout,
-  body,
-  toggle,
-  floatingToggle,
-  onChange,
-}: PanelOptions) => {
+export const initPanelToggle = ({ layout, toggle, floatingToggle, onChange }: PanelOptions) => {
   const setPanelState = (collapsed: boolean): void => {
     if (!layout || !toggle) return;
     layout.dataset.panel = collapsed ? "collapsed" : "expanded";
