@@ -6,7 +6,7 @@ import type Feature from "ol/Feature";
 import type Point from "ol/geom/Point";
 import { gpxToFeatures } from "@/gpx/parser";
 import { baseLayers, createMap, vectorSource } from "@/map";
-import { setupGeolocation } from "@/map/geolocation";
+import { createLocateControl, setupGeolocation } from "@/map/geolocation";
 import { createInfoOverlay } from "@/map/overlays";
 import type { CacheFeature } from "@/types";
 import { initI18nDom } from "@/ui/i18nDom";
@@ -23,23 +23,21 @@ const loadUrlButton = document.querySelector<HTMLButtonElement>("#load-url");
 const fileInput = document.querySelector<HTMLInputElement>("#gpx-file");
 const clearButton = document.querySelector<HTMLButtonElement>("#clear-map");
 const focusButton = document.querySelector<HTMLButtonElement>("#fit-data");
-const geolocateMapButton = document.querySelector<HTMLButtonElement>("#locate-map-btn");
 const togglePanelButton = document.querySelector<HTMLButtonElement>("#toggle-panel");
 const togglePanelFloatingButton =
   document.querySelector<HTMLButtonElement>("#toggle-panel-floating");
 const languageSelect = document.querySelector<HTMLSelectElement>("#language");
-const customLocateControl = document.querySelector<HTMLElement>(".ol-custom-control");
 
 const { setStatus, updateStats } = initState(statusBar, statsCount, vectorSource);
 
 const infoOverlay = createInfoOverlay();
 const map = createMap("map", infoOverlay.overlay);
 const geolocation = setupGeolocation(map, (message, isError) => setStatus(message, isError));
-
-const mapTarget = map.getTargetElement();
-if (mapTarget && customLocateControl && !mapTarget.contains(customLocateControl)) {
-  mapTarget.appendChild(customLocateControl);
-}
+const locateControl = createLocateControl(() => {
+  infoOverlay.hide();
+  geolocation.locate();
+}, t("btn.locate"));
+map.addControl(locateControl);
 
 const syncMapSize = (): void => {
   setTimeout(() => map.updateSize(), 100);
@@ -49,6 +47,7 @@ initI18nDom({
   languageSelect,
   onLocaleChange: () => {
     setStatus(t("status.ready"));
+    locateControl.updateLabel(t("btn.locate"));
   },
 });
 
@@ -138,11 +137,6 @@ baseLayerSelect?.addEventListener("change", (event) => {
   baseLayers.forEach(({ id, layer }) => {
     layer.setVisible(id === value);
   });
-});
-
-geolocateMapButton?.addEventListener("click", () => {
-  infoOverlay.hide();
-  geolocation.locate();
 });
 
 map.on("singleclick", (event) => {
