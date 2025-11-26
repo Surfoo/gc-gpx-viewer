@@ -4,6 +4,7 @@ import "./style.css";
 import type { Coordinate } from "ol/coordinate";
 import type Feature from "ol/Feature";
 import type Point from "ol/geom/Point";
+import { FullScreen } from "ol/control";
 import { gpxToFeatures } from "@/gpx/parser";
 import { baseLayers, createMap, vectorSource } from "@/map";
 import { createLocateControl, setupGeolocation } from "@/map/geolocation";
@@ -12,7 +13,7 @@ import type { CacheFeature } from "@/types";
 import { initI18nDom } from "@/ui/i18nDom";
 import { initPanelToggle } from "@/ui/panel";
 import { initState } from "@/ui/state";
-import { t } from "./i18n";
+import { applyDocumentLanguage, t } from "./i18n";
 
 const statusBar = document.querySelector<HTMLDivElement>("#status");
 const statsCount = document.querySelector<HTMLSpanElement>("#cache-count");
@@ -39,6 +40,26 @@ const locateControl = createLocateControl(() => {
 }, t("btn.locate"));
 map.addControl(locateControl);
 
+const updateControlLabels = (): void => {
+  locateControl.updateLabel(t("btn.locate"));
+  map
+    .getControls()
+    .getArray()
+    .forEach((control) => {
+      if (control instanceof FullScreen) {
+        const label = t("btn.fullscreen");
+        control.setProperties({ tipLabel: label }, false);
+        const button = control.element?.querySelector("button");
+        if (button) {
+          button.setAttribute("title", label);
+          button.setAttribute("aria-label", label);
+        }
+      }
+    });
+};
+
+updateControlLabels();
+
 const syncMapSize = (): void => {
   setTimeout(() => map.updateSize(), 100);
 };
@@ -47,7 +68,8 @@ initI18nDom({
   languageSelect,
   onLocaleChange: () => {
     setStatus(t("status.ready"));
-    locateControl.updateLabel(t("btn.locate"));
+    updateControlLabels();
+    applyDocumentLanguage();
   },
 });
 

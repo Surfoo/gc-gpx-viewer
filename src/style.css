@@ -29,6 +29,10 @@ body {
   color: var(--text);
 }
 
+.is-loading {
+  visibility: hidden;
+}
+
 .page {
   display: flex;
   flex-direction: column;
@@ -427,13 +431,6 @@ body[data-panel="collapsed"] .panel-toggle-floating {
   #map {
     min-height: 380px;
   }
-
-  /* .ol-custom-control button {
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
-    font-size: 20px;
-  } */
 
   .status {
     left: 50%;

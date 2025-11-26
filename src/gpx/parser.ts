@@ -4,7 +4,7 @@ import { fromLonLat } from "ol/proj";
 
 import type { CacheDetails } from "@/types";
 
-const parseCacheDetails = (wpt: Element, sourceLabel: string): CacheDetails | null => {
+const parseCacheDetails = (wpt: Element): CacheDetails | null => {
   const lat = parseFloat(wpt.getAttribute("lat") ?? "");
   const lon = parseFloat(wpt.getAttribute("lon") ?? "");
   if (Number.isNaN(lat) || Number.isNaN(lon)) return null;
@@ -27,6 +27,7 @@ const parseCacheDetails = (wpt: Element, sourceLabel: string): CacheDetails | nu
   const terrain = cacheText("terrain") || "?";
   const owner = cacheText("owner") || "—";
   const date = textContent("time");
+  const url = textContent("url") || cacheText("url");
 
   return {
     code,
@@ -39,7 +40,7 @@ const parseCacheDetails = (wpt: Element, sourceLabel: string): CacheDetails | nu
     owner,
     found,
     date,
-    sourceLabel,
+    url,
     lon,
     lat,
   };
@@ -55,7 +56,7 @@ export const gpxToFeatures = (gpxText: string, sourceLabel: string): Feature<Poi
 
   const waypoints = Array.from(xml.getElementsByTagName("wpt"));
   return waypoints
-    .map((wpt) => parseCacheDetails(wpt, sourceLabel))
+    .map((wpt) => parseCacheDetails(wpt))
     .filter((details): details is CacheDetails => Boolean(details))
     .map((details, index) => {
       const geometry = new Point(fromLonLat([details.lon, details.lat]));

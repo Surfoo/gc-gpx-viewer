@@ -17,7 +17,7 @@ export type CacheDetails = {
   owner: string;
   found: boolean;
   date?: string;
-  sourceLabel: string;
+  url?: string;
   lon: number;
   lat: number;
 };

@@ -1,4 +1,4 @@
-import { getLocale, locales, setLocale, t } from "@/i18n";
+import { applyDocumentLanguage, getLocale, locales, setLocale, t } from "@/i18n";
 
 type I18nDomOptions = {
   languageSelect: HTMLSelectElement | null;
@@ -11,6 +11,28 @@ export const initI18nDom = ({ languageSelect, onLocaleChange }: I18nDomOptions) 
       const key = node.dataset.i18n ?? "";
       node.textContent = t(key);
     });
+
+    document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-i18n-placeholder]").forEach((input) => {
+      const key = input.dataset.i18nPlaceholder ?? "";
+      input.placeholder = t(key);
+    });
+
+    document
+      .querySelectorAll<HTMLElement>("[data-i18n-aria-label]")
+      .forEach((node) => {
+        const key = node.dataset.i18nAriaLabel ?? "";
+        node.setAttribute("aria-label", t(key));
+        node.setAttribute("title", t(key));
+      });
+
+    document
+      .querySelectorAll<HTMLMetaElement>("[data-i18n-meta]")
+      .forEach((meta) => {
+        const key = meta.dataset.i18nMeta ?? "";
+        meta.content = t(key);
+      });
+
+    applyDocumentLanguage();
   };
 
   const populateLanguages = (): void => {
@@ -25,6 +47,7 @@ export const initI18nDom = ({ languageSelect, onLocaleChange }: I18nDomOptions) 
 
   populateLanguages();
   applyText();
+  document.body.classList.remove("is-loading");
 
   languageSelect?.addEventListener("change", (event) => {
     const value = (event.target as HTMLSelectElement).value as (typeof locales)[number]["code"];

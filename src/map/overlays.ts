@@ -11,6 +11,8 @@ const escapeHtml = (value: string): string =>
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 
+const escapeAttribute = (value: string): string => escapeHtml(value).replaceAll('"', "&quot;");
+
 export const createInfoOverlay = (): {
   overlay: Overlay;
   hide: () => void;
@@ -36,13 +38,13 @@ export const createInfoOverlay = (): {
   const render = (feature: CacheFeature, coordinate: Coordinate): void => {
     if (!popup || !infoContent) return;
     const code = feature.get<string>("code");
+    const url = feature.get<string>("url");
     const name = feature.get<string>("name");
     const type = feature.get<string>("type");
     const owner = feature.get<string>("owner");
     const difficulty = feature.get<string>("difficulty");
     const terrain = feature.get<string>("terrain");
     const container = feature.get<string>("container");
-    const sourceLabel = feature.get<string>("sourceLabel");
     const date = feature.get<string | undefined>("date");
 
     infoContent.innerHTML = `
@@ -52,10 +54,13 @@ export const createInfoOverlay = (): {
         <span class="pill">${escapeHtml(container ?? "Unknown")}</span>
       </div>
       <dl class="meta">
-        <div><dt>${t("info.code")}</dt><dd>${escapeHtml(code ?? "—")}</dd></div>
+        <div><dt>${t("info.geocode")}</dt><dd>${
+          url && code
+            ? `<a href="${escapeAttribute(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(code)}</a>`
+            : escapeHtml(code ?? "—")
+        }</dd></div>
         <div><dt>${t("info.owner")}</dt><dd>${escapeHtml(owner ?? "—")}</dd></div>
         <div><dt>${t("info.dt")}</dt><dd>${escapeHtml(difficulty ?? "?")} / ${escapeHtml(terrain ?? "?")}</dd></div>
-        <div><dt>${t("info.loadedFrom")}</dt><dd>${escapeHtml(sourceLabel ?? "—")}</dd></div>
         <div><dt>${t("info.date")}</dt><dd>${escapeHtml(date ?? "—")}</dd></div>
       </dl>
     `;

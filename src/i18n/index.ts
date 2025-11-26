@@ -20,6 +20,13 @@ export const setLocale = (locale: Locale): void => {
   localStorage.setItem(STORAGE_KEY, locale);
 };
 
+export const applyDocumentLanguage = (): void => {
+  const html = document.querySelector("html");
+  if (html) {
+    html.setAttribute("lang", currentLocale);
+  }
+};
+
 type Params = Record<string, string | number>;
 
 export const t = (key: string, params: Params = {}): string => {
