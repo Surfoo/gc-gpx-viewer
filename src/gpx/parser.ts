@@ -25,7 +25,14 @@ const parseCacheDetails = (wpt: Element): CacheDetails | null => {
   const container = cacheText("container") || "Unknown";
   const difficulty = cacheText("difficulty") || "?";
   const terrain = cacheText("terrain") || "?";
-  const owner = cacheText("owner") || "—";
+  const ownerNode = cacheNode?.getElementsByTagNameNS("*", "owner")?.[0];
+  const owner = ownerNode?.textContent?.trim() || "—";
+  const ownerIdRaw = ownerNode?.getAttribute("id");
+  const parsedOwnerId = ownerIdRaw ? Number.parseInt(ownerIdRaw, 10) : Number.NaN;
+  const ownerId =
+    Number.isFinite(parsedOwnerId) && parsedOwnerId >= 0 && Number.isSafeInteger(parsedOwnerId)
+      ? parsedOwnerId
+      : undefined;
   const date = textContent("time");
   const url = textContent("url") || cacheText("url");
 
@@ -38,6 +45,7 @@ const parseCacheDetails = (wpt: Element): CacheDetails | null => {
     difficulty,
     terrain,
     owner,
+    ownerId,
     found,
     date,
     url,

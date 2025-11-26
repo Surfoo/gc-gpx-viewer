@@ -15,6 +15,7 @@ export type CacheDetails = {
   difficulty: string;
   terrain: string;
   owner: string;
+  ownerId?: number;
   found: boolean;
   date?: string;
   url?: string;

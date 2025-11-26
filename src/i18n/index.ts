@@ -27,6 +27,17 @@ export const applyDocumentLanguage = (): void => {
   }
 };
 
+export const formatDate = (iso: string | undefined): string => {
+  if (!iso) return "—";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "—";
+  return new Intl.DateTimeFormat(currentLocale, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(date);
+};
+
 type Params = Record<string, string | number>;
 
 export const t = (key: string, params: Params = {}): string => {

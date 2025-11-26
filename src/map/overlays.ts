@@ -1,6 +1,7 @@
 import type { Coordinate } from "ol/coordinate";
 import Overlay from "ol/Overlay";
-import { t } from "@/i18n";
+import { encode } from "geocaching-base-converter";
+import { formatDate, t } from "@/i18n";
 import type { CacheFeature } from "@/types";
 
 const escapeHtml = (value: string): string =>
@@ -42,10 +43,21 @@ export const createInfoOverlay = (): {
     const name = feature.get<string>("name");
     const type = feature.get<string>("type");
     const owner = feature.get<string>("owner");
+    const ownerId = feature.get<number | undefined>("ownerId");
     const difficulty = feature.get<string>("difficulty");
     const terrain = feature.get<string>("terrain");
     const container = feature.get<string>("container");
     const date = feature.get<string | undefined>("date");
+    let ownerProfileUrl: string | null = null;
+
+    if (typeof ownerId === "number" && Number.isSafeInteger(ownerId) && ownerId > 0) {
+      try {
+        const profileCode = encode(ownerId, "PR");
+        ownerProfileUrl = `https://coord.info/${profileCode}`;
+      } catch {
+        ownerProfileUrl = null;
+      }
+    }
 
     infoContent.innerHTML = `
       <h3 class="popup-title">${escapeHtml(name ?? t("info.name"))}</h3>
@@ -59,9 +71,13 @@ export const createInfoOverlay = (): {
             ? `<a href="${escapeAttribute(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(code)}</a>`
             : escapeHtml(code ?? "—")
         }</dd></div>
-        <div><dt>${t("info.owner")}</dt><dd>${escapeHtml(owner ?? "—")}</dd></div>
+        <div><dt>${t("info.owner")}</dt><dd>${
+          ownerProfileUrl
+            ? `<a href="${escapeAttribute(ownerProfileUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(owner ?? "—")}</a>`
+            : escapeHtml(owner ?? "—")
+        }</dd></div>
         <div><dt>${t("info.dt")}</dt><dd>${escapeHtml(difficulty ?? "?")} / ${escapeHtml(terrain ?? "?")}</dd></div>
-        <div><dt>${t("info.date")}</dt><dd>${escapeHtml(date ?? "—")}</dd></div>
+        <div><dt>${t("info.date")}</dt><dd>${formatDate(date)}</dd></div>
       </dl>
     `;
     popup.classList.remove("hidden");
