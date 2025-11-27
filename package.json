@@ -7,7 +7,7 @@
   "description": "Modernized GPX Viewer built with Vite, TypeScript, OpenLayers, and Biome.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Surfoo/gc-gpx-viewer.git"
+    "url": "git+https://github.com/Surfoo/gpxviewer.git"
   },
   "keywords": [
     "geocaching",
@@ -35,7 +35,7 @@
     "vite": "^7.2.4"
   },
   "bugs": {
-    "url": "https://github.com/Surfoo/gc-gpx-viewer/issues"
+    "url": "https://github.com/Surfoo/gpxviewer/issues"
   },
-  "homepage": "https://github.com/Surfoo/gc-gpx-viewer#readme"
+  "homepage": "https://github.com/Surfoo/gpxviewer#readme"
 }
