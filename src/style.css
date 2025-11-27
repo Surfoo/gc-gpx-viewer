@@ -392,6 +392,24 @@ body[data-panel="collapsed"] .panel-toggle-floating {
   content: "✕";
 }
 
+.ol-tooltip {
+  position: absolute;
+  background: rgba(31, 43, 33, 0.9);
+  color: #ffffff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  z-index: 30;
+}
+
+.ol-tooltip.hidden {
+  display: none;
+}
+
 .pill-row {
   display: flex;
   flex-wrap: wrap;

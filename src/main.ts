@@ -5,6 +5,7 @@ import type { Coordinate } from "ol/coordinate";
 import type Feature from "ol/Feature";
 import type Point from "ol/geom/Point";
 import { FullScreen, Zoom } from "ol/control";
+import Overlay from "ol/Overlay";
 import { gpxToFeatures } from "@/gpx/parser";
 import { baseLayers, createMap, vectorSource } from "@/map";
 import { createLocateControl, setupGeolocation } from "@/map/geolocation";
@@ -47,6 +48,14 @@ const labelLayer = createLabelLayer();
 const perimeterLayer = createPerimeterLayer();
 map.addLayer(perimeterLayer);
 map.addLayer(labelLayer);
+const tooltipElement = document.createElement("div");
+tooltipElement.className = "ol-tooltip hidden";
+const tooltipOverlay = new Overlay({
+  element: tooltipElement,
+  offset: [0, -12],
+  positioning: "bottom-center",
+});
+map.addOverlay(tooltipOverlay);
 
 const refreshOverlayLayers = (): void => {
   const features = vectorSource.getFeatures() as CacheFeature[];
@@ -227,6 +236,33 @@ map.on("singleclick", (event) => {
     infoOverlay.render(foundFeature, event.coordinate as Coordinate);
   } else {
     infoOverlay.hide();
+  }
+});
+
+map.on("pointermove", (event) => {
+  const mapTarget = map.getTargetElement();
+  let hovered: CacheFeature | null = null;
+  map.forEachFeatureAtPixel(
+    event.pixel,
+    (feature) => {
+      if (feature.getGeometry()?.getType() === "Circle" || feature.get("label")) {
+        return false;
+      }
+      hovered = feature as CacheFeature;
+      return true;
+    },
+    { hitTolerance: 5 },
+  );
+  if (hovered) {
+    const name = hovered.get<string>("name") ?? "";
+    tooltipElement.textContent = name;
+    tooltipElement.classList.remove("hidden");
+    tooltipOverlay.setPosition(event.coordinate);
+    if (mapTarget) mapTarget.style.cursor = "pointer";
+  } else {
+    tooltipOverlay.setPosition(undefined);
+    tooltipElement.classList.add("hidden");
+    if (mapTarget) mapTarget.style.cursor = "";
   }
 });
 

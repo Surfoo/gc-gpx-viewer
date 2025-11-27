@@ -1,7 +1,7 @@
 {
   "name": "GPX Viewer",
-  "description": "View quickly your geocaching GPX files on a map.",
-  "start_url": "https://geocaching.vaguelibre.net/gpxviewer/",
+  "description": "Visualisez rapidement vos fichiers GPX de géocaching sur une carte.",
+  "start_url": "/gpxviewer/",
   "display": "standalone",
   "background_color": "#f4f7f2",
   "theme_color": "#219653",
