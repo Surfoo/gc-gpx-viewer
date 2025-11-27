@@ -4,7 +4,7 @@ import "./style.css";
 import type { Coordinate } from "ol/coordinate";
 import type Feature from "ol/Feature";
 import type Point from "ol/geom/Point";
-import { FullScreen } from "ol/control";
+import { FullScreen, Zoom } from "ol/control";
 import { gpxToFeatures } from "@/gpx/parser";
 import { baseLayers, createMap, vectorSource } from "@/map";
 import { createLocateControl, setupGeolocation } from "@/map/geolocation";
@@ -76,6 +76,26 @@ const updateControlLabels = (): void => {
         if (button) {
           button.setAttribute("title", label);
           button.setAttribute("aria-label", label);
+        }
+      }
+      if (control instanceof Zoom) {
+        const zoomInLabel = t("btn.zoomIn");
+        const zoomOutLabel = t("btn.zoomOut");
+        control.setProperties(
+          {
+            zoomInTipLabel: zoomInLabel,
+            zoomOutTipLabel: zoomOutLabel,
+          },
+          false,
+        );
+        const zoomButtons = control.element?.querySelectorAll("button");
+        if (zoomButtons?.[0]) {
+          zoomButtons[0].setAttribute("title", zoomInLabel);
+          zoomButtons[0].setAttribute("aria-label", zoomInLabel);
+        }
+        if (zoomButtons?.[1]) {
+          zoomButtons[1].setAttribute("title", zoomOutLabel);
+          zoomButtons[1].setAttribute("aria-label", zoomOutLabel);
         }
       }
     });

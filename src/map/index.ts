@@ -1,4 +1,4 @@
-import { defaults as defaultControls, FullScreen } from "ol/control";
+import { defaults as defaultControls, FullScreen, Zoom } from "ol/control";
 import VectorLayer from "ol/layer/Vector";
 import OlMap from "ol/Map";
 import type Overlay from "ol/Overlay";
@@ -22,10 +22,14 @@ export const createMap = (targetId: string, overlay?: Overlay): OlMap => {
     target: targetId,
     layers: [...baseLayers.map((entry) => entry.layer), vectorLayer],
     controls: defaultControls({
-      zoom: true,
+      zoom: false,
       rotate: false,
       attribution: true,
     }).extend([
+      new Zoom({
+        zoomInTipLabel: "Zoom in",
+        zoomOutTipLabel: "Zoom out",
+      }),
       new FullScreen({
         tipLabel: "Fullscreen",
         label: "⛶",
