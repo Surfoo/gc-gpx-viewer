@@ -3,6 +3,7 @@ import Point from "ol/geom/Point";
 import { fromLonLat } from "ol/proj";
 
 import type { CacheDetails } from "@/types";
+import { isSupportedCacheType } from "@/map/styles";
 
 const parseCacheDetails = (wpt: Element): CacheDetails | null => {
   const lat = parseFloat(wpt.getAttribute("lat") ?? "");
@@ -21,7 +22,8 @@ const parseCacheDetails = (wpt: Element): CacheDetails | null => {
   const code = textContent("name");
   const name = cacheText("name") || textContent("desc") || code;
   const description = cacheText("short_description") || textContent("cmt");
-  const type = cacheText("type") || sym || "Geocache";
+  const type = cacheText("type") || sym;
+  if (!isSupportedCacheType(type)) return null;
   const container = cacheText("container") || "Unknown";
   const difficulty = cacheText("difficulty") || "?";
   const terrain = cacheText("terrain") || "?";

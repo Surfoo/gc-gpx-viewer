@@ -41,6 +41,12 @@ const typeToIconId: Record<string, string> = {
 const defaultIconId = "8"; // mystery/unknown
 const styleCache = new Map<string, Style | Style[]>();
 
+export const isSupportedCacheType = (cacheType: string | undefined): boolean => {
+  if (!cacheType) return false;
+  const normalized = cacheType.trim().toLowerCase();
+  return Boolean(typeToIconId[normalized]);
+};
+
 const iconSrcForType = (cacheType: string): string => {
   const normalized = cacheType.trim().toLowerCase();
   const matched = typeToIconId[normalized] ?? defaultIconId;
