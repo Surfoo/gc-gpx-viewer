@@ -1,6 +1,11 @@
 import Geolocation from "ol/Geolocation";
 import type { default as OlMap } from "ol/Map";
 import Control from "ol/control/Control";
+import Feature from "ol/Feature";
+import { Circle as CircleStyle, Fill, Stroke, Style } from "ol/style";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import { Point } from "ol/geom";
 import { t } from "@/i18n";
 import type { SetStatusFn } from "@/types";
 
@@ -40,6 +45,35 @@ export const createLocateControl = (onLocate: () => void, label: string): Locate
   new LocateControl({ onLocate, label });
 
 export const setupGeolocation = (map: OlMap, setStatus: SetStatusFn) => {
+  const geolocSource = new VectorSource();
+  const accuracyFeature = new Feature();
+  const positionFeature = new Feature();
+
+  geolocSource.addFeatures([accuracyFeature, positionFeature]);
+
+  const geolocLayer = new VectorLayer({
+    source: geolocSource,
+    zIndex: 8,
+    style: (feature) => {
+      const geometry = feature.getGeometry();
+      if (geometry instanceof Point) {
+        return new Style({
+          image: new CircleStyle({
+            radius: 8,
+            fill: new Fill({ color: "rgba(33, 150, 83, 0.9)" }),
+            stroke: new Stroke({ color: "#ffffff", width: 2 }),
+          }),
+        });
+      }
+      return new Style({
+        stroke: new Stroke({ color: "rgba(33, 150, 83, 0.6)", width: 2 }),
+        fill: new Fill({ color: "rgba(33, 150, 83, 0.15)" }),
+      });
+    },
+  });
+
+  map.addLayer(geolocLayer);
+
   const geolocation = new Geolocation({
     projection: map.getView().getProjection(),
     trackingOptions: { enableHighAccuracy: true },
@@ -47,6 +81,8 @@ export const setupGeolocation = (map: OlMap, setStatus: SetStatusFn) => {
 
   geolocation.on("error", (error) => {
     setStatus(t("status.geolocUnavailable", { error: error.message }), true);
+    accuracyFeature.setGeometry(undefined);
+    positionFeature.setGeometry(undefined);
   });
 
   const locate = (): void => {
@@ -56,8 +92,12 @@ export const setupGeolocation = (map: OlMap, setStatus: SetStatusFn) => {
       geolocation.setTracking(false);
       if (!position) {
         setStatus(t("status.positionError"), true);
+        accuracyFeature.setGeometry(undefined);
+        positionFeature.setGeometry(undefined);
         return;
       }
+      accuracyFeature.setGeometry(geolocation.getAccuracyGeometry() ?? undefined);
+      positionFeature.setGeometry(new Point(position));
       map.getView().animate({ center: position, zoom: 14, duration: 350 });
       setStatus(t("status.centered"));
     });

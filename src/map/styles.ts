@@ -59,7 +59,7 @@ export const getFeatureStyle = (feature: CacheFeature): Style | Style[] => {
   const iconStyle = new Style({
     image: new Icon({
       src: iconSrc,
-      anchor: [0.5, 1],
+      anchor: [0.5, 0.5],
       scale: 1,
     }),
   });

@@ -61,11 +61,9 @@ export const createInfoOverlay = (): {
 
     infoContent.innerHTML = `
       <h3 class="popup-title">${escapeHtml(name ?? t("info.name"))}</h3>
-      <div class="pill-row">
-        <span class="pill">${escapeHtml(type ?? "Geocache")}</span>
-        <span class="pill">${escapeHtml(container ?? "Unknown")}</span>
-      </div>
       <dl class="meta">
+        <div><dt>${t("info.type")}</dt><dd>${escapeHtml(type ?? "Geocache")}</dd></div>
+        <div><dt>${t("info.size")}</dt><dd>${escapeHtml(container ?? "Unknown")}</dd></div>
         <div><dt>${t("info.geocode")}</dt><dd>${
           url && code
             ? `<a href="${escapeAttribute(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(code)}</a>`

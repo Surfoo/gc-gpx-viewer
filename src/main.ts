@@ -14,6 +14,7 @@ import { initI18nDom } from "@/ui/i18nDom";
 import { initPanelToggle } from "@/ui/panel";
 import { initState } from "@/ui/state";
 import { applyDocumentLanguage, t } from "./i18n";
+import { createLabelLayer, createPerimeterLayer, updateLabels, updatePerimeters } from "./map/overlaysLayers";
 
 const statusBar = document.querySelector<HTMLDivElement>("#status");
 const statsCount = document.querySelector<HTMLSpanElement>("#cache-count");
@@ -24,6 +25,9 @@ const loadUrlButton = document.querySelector<HTMLButtonElement>("#load-url");
 const fileInput = document.querySelector<HTMLInputElement>("#gpx-file");
 const clearButton = document.querySelector<HTMLButtonElement>("#clear-map");
 const focusButton = document.querySelector<HTMLButtonElement>("#fit-data");
+const displayLabelsCheckbox = document.querySelector<HTMLInputElement>("#display-labels");
+const displayPerimetersCheckbox =
+  document.querySelector<HTMLInputElement>("#display-perimeters");
 const togglePanelButton = document.querySelector<HTMLButtonElement>("#toggle-panel");
 const togglePanelFloatingButton =
   document.querySelector<HTMLButtonElement>("#toggle-panel-floating");
@@ -39,6 +43,25 @@ const locateControl = createLocateControl(() => {
   geolocation.locate();
 }, t("btn.locate"));
 map.addControl(locateControl);
+const labelLayer = createLabelLayer();
+const perimeterLayer = createPerimeterLayer();
+map.addLayer(perimeterLayer);
+map.addLayer(labelLayer);
+
+const refreshOverlayLayers = (): void => {
+  const features = vectorSource.getFeatures() as CacheFeature[];
+  if (displayLabelsCheckbox?.checked) {
+    updateLabels(labelLayer, features);
+  } else {
+    labelLayer.getSource()?.clear();
+  }
+
+  if (displayPerimetersCheckbox?.checked) {
+    updatePerimeters(perimeterLayer, features);
+  } else {
+    perimeterLayer.getSource()?.clear();
+  }
+};
 
 const updateControlLabels = (): void => {
   locateControl.updateLabel(t("btn.locate"));
@@ -90,6 +113,7 @@ const addFeaturesToMap = (features: Feature<Point>[], sourceLabel: string): void
     map.getView().fit(extent, { padding: [32, 32, 32, 32], duration: 300, maxZoom: 15 });
   }
   setStatus(t("status.loaded", { source: sourceLabel, count: features.length }));
+  refreshOverlayLayers();
 };
 
 const loadGpxText = (gpxText: string, sourceLabel: string): void => {
@@ -142,6 +166,7 @@ clearButton?.addEventListener("click", () => {
   infoOverlay.hide();
   updateStats();
   setStatus(t("status.cleared"));
+  refreshOverlayLayers();
 });
 
 focusButton?.addEventListener("click", () => {
@@ -154,6 +179,9 @@ focusButton?.addEventListener("click", () => {
   map.getView().fit(extent, { padding: [32, 32, 32, 32], duration: 300, maxZoom: 15 });
 });
 
+displayLabelsCheckbox?.addEventListener("change", refreshOverlayLayers);
+displayPerimetersCheckbox?.addEventListener("change", refreshOverlayLayers);
+
 baseLayerSelect?.addEventListener("change", (event) => {
   const value = (event.target as HTMLSelectElement).value;
   baseLayers.forEach(({ id, layer }) => {
@@ -163,10 +191,18 @@ baseLayerSelect?.addEventListener("change", (event) => {
 
 map.on("singleclick", (event) => {
   let foundFeature: CacheFeature | null = null;
-  map.forEachFeatureAtPixel(event.pixel, (feature) => {
-    foundFeature = feature as CacheFeature;
-    return true;
-  });
+  map.forEachFeatureAtPixel(
+    event.pixel,
+    (feature) => {
+      // Ignore clicks on label/perimeter layers
+      if (feature.getGeometry()?.getType() === "Circle" || feature.get("label")) {
+        return false;
+      }
+      foundFeature = feature as CacheFeature;
+      return true;
+    },
+    { hitTolerance: 5 },
+  );
   if (foundFeature) {
     infoOverlay.render(foundFeature, event.coordinate as Coordinate);
   } else {

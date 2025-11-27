@@ -14,6 +14,7 @@ export const vectorSource = new VectorSource();
 export const vectorLayer = new VectorLayer({
   source: vectorSource,
   style: getFeatureStyle,
+  zIndex: 10,
 });
 
 export const createMap = (targetId: string, overlay?: Overlay): OlMap => {
